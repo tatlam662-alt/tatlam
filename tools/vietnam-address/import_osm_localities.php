@@ -1,13 +1,8 @@
 <?php
 /** Import ward-matched OpenStreetMap locality suggestions into OpenCart. */
-if (PHP_SAPI !== 'cli') {
-	http_response_code(403);
-	exit("CLI only.\n");
-}
+require_once __DIR__ . '/cli-bootstrap.php';
 
-require __DIR__ . '/upload/config.php';
-
-$dataFile = __DIR__ . '/data/vietnam_osm_localities_2026-10-18.json';
+$dataFile = $projectRoot . '/data/vietnam_osm_localities_2026-10-18.json';
 if (!is_file($dataFile)) {
 	fwrite(STDERR, 'OSM locality data file was not found: ' . $dataFile . PHP_EOL);
 	exit(1);
@@ -19,18 +14,13 @@ if (!is_array($rows)) {
 	exit(1);
 }
 
-$db = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, (int)DB_PORT);
-if ($db->connect_errno) {
-	fwrite(STDERR, 'Database connection failed: ' . $db->connect_error . PHP_EOL);
-	exit(1);
-}
-$db->set_charset('utf8mb4');
+$db = panda_tools_database();
 
 $table = DB_PREFIX . 'vn_hamlet';
 $wardTable = DB_PREFIX . 'vn_ward';
 $columnResult = $db->query("SHOW COLUMNS FROM `{$table}` LIKE 'source_name'");
 if (!$columnResult || !$columnResult->num_rows) {
-	fwrite(STDERR, 'Run sync_vietnam_locations_2026.php first to prepare the locality source columns.' . PHP_EOL);
+	fwrite(STDERR, 'Run tools/vietnam-address/sync_vietnam_locations_2026.php first to prepare the locality source columns.' . PHP_EOL);
 	exit(1);
 }
 
@@ -109,4 +99,4 @@ echo 'Skipped (existing/invalid): ' . $skipped . PHP_EOL;
 echo 'Reclassified by explicit locality type: ' . $reclassified . PHP_EOL;
 echo 'Duplicate suggestions deactivated: ' . $duplicatesDeactivated . PHP_EOL;
 echo 'OSM suggestions now available: ' . (int)$count->fetch_assoc()['total'] . PHP_EOL;
-echo 'Source data: Geofabrik Vietnam OSM extract, 2026-10-18; see data/OPENSTREETMAP-LICENSE.md' . PHP_EOL;
+echo 'Source data: Geofabrik Vietnam OSM extract, 2026-10-18; see ' . $projectRoot . '/data/OPENSTREETMAP-LICENSE.md' . PHP_EOL;

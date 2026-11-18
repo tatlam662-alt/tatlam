@@ -1,5 +1,12 @@
 # OpenCart
 
+## PanDaShop project layout
+
+- `upload/` contains the OpenCart storefront and administration code.
+- `data/` contains locality datasets and their source/licensing notes.
+- `tools/` contains catalog utilities, Vietnam address importers, and SQL
+  migrations. See [the tools index](tools/README.md).
+
 ## Overview
 
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.0-8892BF.svg?style=flat-square)](https://php.net/)
@@ -42,12 +49,14 @@ Please be very clear on your commit messages and pull request, empty pull reques
 
 Your code standards should match the [OpenCart coding standards](https://github.com/opencart/opencart/wiki/Coding-standards). We use an automated code scanner to check for most basic mistakes - if the test fails your pull request will be rejected.
 
-## How to run the application Locally (Docker Image)
+## Run PanDaShop locally with XAMPP
 
-### Windows OS
-
-* make sure you have Docker Desktop installed on your Local Machine
-* in the terminal in the file containing the projects run `docker-compose up -d`
+1. Place the repository at `C:\xampp\htdocs\panda`.
+2. Configure the local, untracked OpenCart files `upload/config.php` and
+   `upload/panda/config.php` for the local database.
+3. Open `http://localhost/panda/upload/`.
+4. See [the tools index](tools/README.md) for catalog, address-data, and
+   migration utilities.
 
 ## Versioning
 

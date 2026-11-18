@@ -5,11 +5,11 @@ declare(strict_types=1);
  * PanDaShop catalog synchronization utility for OpenCart 4.
  *
  * CLI only. Safe preview is the default:
- *   php sync_panda_master.php
+ *   php tools/sync_panda_master.php
  * Apply brand/image/category changes:
- *   php sync_panda_master.php --apply
+ *   php tools/sync_panda_master.php --apply
  * Also delete products whose brands cannot be identified:
- *   php sync_panda_master.php --apply --delete-unmatched
+ *   php tools/sync_panda_master.php --apply --delete-unmatched
  *
  * A JSON backup is written under .backups/ before any changes are applied.
  */
@@ -19,7 +19,8 @@ if (PHP_SAPI !== 'cli') {
 	exit("Not found\n");
 }
 
-require_once __DIR__ . '/upload/config.php';
+$projectRoot = dirname(__DIR__);
+require_once $projectRoot . '/upload/config.php';
 
 const PANDA_BRANDS = [
 	'ASUS' => ['asus', 'rog', 'tuf'],
@@ -326,7 +327,7 @@ if (!$apply) {
 	exit(0);
 }
 
-$backupDirectory = __DIR__ . DIRECTORY_SEPARATOR . '.backups';
+$backupDirectory = $projectRoot . DIRECTORY_SEPARATOR . '.backups';
 if (!is_dir($backupDirectory) && !mkdir($backupDirectory, 0700, true) && !is_dir($backupDirectory)) {
 	throw new RuntimeException('Unable to create backup directory.');
 }

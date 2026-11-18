@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Normalize UTF-8 language/template files and activate Vietnamese/English.
- * Run once from a terminal: php fix_master_panda.php
+ * Run once from a terminal: php tools/fix_master_panda.php
  * This utility is deliberately CLI-only. It creates backups under .backups/.
  */
 
@@ -12,7 +12,8 @@ if (PHP_SAPI !== 'cli') {
 	exit("Not found\n");
 }
 
-require_once __DIR__ . '/upload/config.php';
+$projectRoot = dirname(__DIR__);
+require_once $projectRoot . '/upload/config.php';
 
 if (!extension_loaded('mysqli') || !extension_loaded('mbstring')) {
 	fwrite(STDERR, "Required PHP extensions: mysqli and mbstring.\n");
@@ -26,7 +27,7 @@ if (!preg_match('/^[a-zA-Z0-9_]+$/', $prefix)) {
 }
 
 $timestamp = date('Ymd-His');
-$backupRoot = __DIR__ . '/.backups/fix-master-' . $timestamp;
+$backupRoot = $projectRoot . '/.backups/fix-master-' . $timestamp;
 $backupFiles = $backupRoot . '/files';
 if (!mkdir($backupFiles, 0775, true) && !is_dir($backupFiles)) {
 	fwrite(STDERR, "Cannot create backup directory.\n");
@@ -34,9 +35,9 @@ if (!mkdir($backupFiles, 0775, true) && !is_dir($backupFiles)) {
 }
 
 $roots = [
-	__DIR__ . '/upload/catalog/language/vi-vn',
-	__DIR__ . '/upload/catalog/language/en-gb',
-	__DIR__ . '/upload/catalog/view/template'
+	$projectRoot . '/upload/catalog/language/vi-vn',
+	$projectRoot . '/upload/catalog/language/en-gb',
+	$projectRoot . '/upload/catalog/view/template'
 ];
 $changed = [];
 $invalidUtf8 = [];
@@ -79,7 +80,7 @@ foreach ($roots as $root) {
 		}
 
 		if ($contents !== $original) {
-			$relative = substr($file, strlen(__DIR__) + 1);
+			$relative = substr($file, strlen($projectRoot) + 1);
 			$backup = $backupFiles . '/' . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $relative);
 			if (!is_dir(dirname($backup))) {
 				mkdir(dirname($backup), 0775, true);
@@ -94,8 +95,8 @@ foreach ($roots as $root) {
 }
 
 // Fill only absent counterpart files; existing translations are never overwritten.
-$viRoot = __DIR__ . '/upload/catalog/language/vi-vn';
-$enRoot = __DIR__ . '/upload/catalog/language/en-gb';
+$viRoot = $projectRoot . '/upload/catalog/language/vi-vn';
+$enRoot = $projectRoot . '/upload/catalog/language/en-gb';
 foreach ([$viRoot, $enRoot] as $sourceRoot) {
 	$targetRoot = $sourceRoot === $viRoot ? $enRoot : $viRoot;
 	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($sourceRoot, FilesystemIterator::SKIP_DOTS));
@@ -114,7 +115,7 @@ foreach ([$viRoot, $enRoot] as $sourceRoot) {
 				fwrite(STDERR, "Could not copy missing language file: {$target}\n");
 				exit(1);
 			}
-			$changed[] = substr($target, strlen(__DIR__) + 1) . ' (copied fallback; translate content separately)';
+			$changed[] = substr($target, strlen($projectRoot) + 1) . ' (copied fallback; translate content separately)';
 		}
 	}
 }
@@ -204,13 +205,13 @@ echo "Backup: {$backupRoot}\n";
 if ($replacementChars) {
 	echo "Files containing Unicode replacement characters need manual text restoration:\n";
 	foreach (array_unique($replacementChars) as $file) {
-		echo ' - ' . substr($file, strlen(__DIR__) + 1) . "\n";
+		echo ' - ' . substr($file, strlen($projectRoot) + 1) . "\n";
 	}
 }
 if ($invalidUtf8) {
 	echo "Files that could not be converted safely:\n";
 	foreach ($invalidUtf8 as $file) {
-		echo ' - ' . substr($file, strlen(__DIR__) + 1) . "\n";
+		echo ' - ' . substr($file, strlen($projectRoot) + 1) . "\n";
 	}
 }
 echo "Review copied fallback language files and translate them before publishing.\n";

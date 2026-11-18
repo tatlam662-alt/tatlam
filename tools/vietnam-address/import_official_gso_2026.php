@@ -4,14 +4,9 @@
  * directory web service. CLI only; fetches/validates the complete snapshot
  * before replacing ward rows. Does not touch customer/order data or hamlets.
  *
- * Usage: php import_official_gso_2026.php [--date=dd/mm/yyyy]
+ * Usage: php tools/vietnam-address/import_official_gso_2026.php [--date=dd/mm/yyyy]
  */
-if (PHP_SAPI !== 'cli') {
-	http_response_code(403);
-	exit("CLI only.\n");
-}
-
-require __DIR__ . '/upload/config.php';
+require_once __DIR__ . '/cli-bootstrap.php';
 
 if (!extension_loaded('curl') || !extension_loaded('SimpleXML')) {
 	fwrite(STDERR, "PHP extensions curl and SimpleXML are required.\n");
@@ -136,9 +131,7 @@ try {
 		throw new RuntimeException('NSO returned an incomplete ward dataset (' . count($wards) . ' rows). No database changes were made.');
 	}
 
-	$db = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, (int)DB_PORT);
-	if ($db->connect_errno) throw new RuntimeException('Database connection failed: ' . $db->connect_error);
-	$db->set_charset('utf8mb4');
+	$db = panda_tools_database();
 	$prefix = DB_PREFIX;
 	$zoneMap = [];
 	$zoneResult = $db->query("SELECT `code`, `zone_id` FROM `{$prefix}vn_province`");

@@ -7,7 +7,7 @@
 Nạp hoặc cập nhật danh sách bằng lệnh trong thư mục gốc dự án:
 
 ```powershell
-C:\xampp\php\php.exe import_official_localities.php
+C:\xampp\php\php.exe tools\vietnam-address\import_official_localities.php
 ```
 
 Importer chỉ ghi dữ liệu sau khi mọi tên xã/phường khớp duy nhất với danh mục Thanh Hóa hiện hành. Các tên được đánh dấu đã xác minh và giữ tên nguồn trong cơ sở dữ liệu. Lệnh có thể chạy lại an toàn.
@@ -17,7 +17,7 @@ Importer chỉ ghi dữ liệu sau khi mọi tên xã/phường khớp duy nhấ
 `official_bdttg_803_localities_2026.json` chứa 14.692 mục đọc được và đối chiếu theo thứ tự trong các phụ lục PDF của Bộ Dân tộc và Tôn giáo. Các mục được nạp chỉ khi toàn bộ danh sách của xã/phường trong phụ lục khớp đủ số lượng và thứ tự dòng; 68 nhóm không trích xuất đủ đã bị bỏ qua. Dữ liệu đến từ 27 tỉnh/thành và hiện có gợi ý ở 1.329 phường/xã. Lệnh nạp:
 
 ```powershell
-C:\xampp\php\php.exe import_bdttg_803_localities.php
+C:\xampp\php\php.exe tools\vietnam-address\import_bdttg_803_localities.php
 ```
 
 Nguồn chính thức: <https://bdttg.gov.vn/thong-bao/danh-sach-thon-xa-vung-dtts-mn-xa-khu-vuc-i-ii-iii-giai-doan-2026-2030.htm>. Danh sách kèm Quyết định 803 chỉ bao gồm thôn thuộc vùng đồng bào dân tộc thiểu số và miền núi và thôn đặc biệt khó khăn ở 27 tỉnh/thành; không phải danh mục đầy đủ thôn, tổ dân phố của các địa phương đó. Các mục này vẫn được lưu là dữ liệu đã xác minh vì tên xuất hiện trong phụ lục chính thức.
