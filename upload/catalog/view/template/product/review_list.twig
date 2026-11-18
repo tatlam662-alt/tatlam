@@ -1,0 +1,20 @@
+{% if reviews %}
+  <div class="pd-pdp-review-list">
+  {% for review in reviews %}
+    <article class="pd-pdp-review-card">
+      <header><strong>{{ review.author|e }}</strong>{% if review.verified %}<span class="pd-pdp-review-verified">{{ text_verified_purchase }}</span>{% endif %}<time>{{ review.date_added|e }}</time></header>
+      <div class="pd-pdp-review-stars" aria-label="{{ review.rating }} / 5 {{ text_stars }}">
+        {% for i in 1..5 %}{% if review.rating < i %}<i class="fa-regular fa-star"></i>{% else %}<i class="fa-solid fa-star"></i>{% endif %}{% endfor %}
+      </div>
+      <p>{{ review.text|e|nl2br }}</p>
+    </article>
+  {% endfor %}
+  </div>
+  <div class="text-end">{{ pagination }}</div>
+{% else %}
+  <div class="pd-pdp-review-empty">
+    <span><i class="fa-regular fa-comment-dots" aria-hidden="true"></i></span>
+    <strong>{{ text_review_list_empty }}</strong>
+    <a class="pd-pdp-write-review" href="#form-review">{{ text_review_write }}</a>
+  </div>
+{% endif %}

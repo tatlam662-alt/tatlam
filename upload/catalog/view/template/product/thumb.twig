@@ -1,0 +1,56 @@
+<div class="product-thumb pd-product-card">
+  <form id="form-thumb-{{ product_id }}" action="{{ cart_add }}" method="post" data-oc-toggle="ajax" data-oc-load="{{ cart }}" data-oc-target="#cart" class="d-flex flex-column h-100">
+    <div class="pd-card-image-wrap" style="position:relative;width:min(100%,190px);max-height:190px;margin:0 auto 8px;aspect-ratio:1/1;overflow:hidden;border-radius:10px;background:#111827;">
+      <a href="{{ href }}" style="display:grid;width:100%;height:100%;place-items:center;">
+        <img src="{{ thumb }}" alt="{{ name }}" title="{{ name }}" loading="lazy" width="360" height="360" style="display:block;width:100%;height:100%;padding:8px;object-fit:contain;" />
+      </a>
+      {% if badge %}<span class="pd-card-badge pd-card-badge-new">{{ badge }}</span>{% endif %}
+      {% if special %}<span class="pd-card-badge pd-card-badge-sale" data-calc-sale data-price="{{ price }}" data-special="{{ special }}">{{ text_sale }}</span>{% endif %}
+      {% if coins %}<span class="pd-card-badge pd-card-badge-coins"><i class="fa-solid fa-coins" aria-hidden="true"></i> +{{ coins }} điểm</span>{% endif %}
+
+      <div class="pd-card-quick-actions">
+        {% if is_wishlist %}
+          <a href="{{ wishlist_remove }}" class="pd-btn-icon-action pd-wishlist-remove btn-danger" title="{{ button_wishlist_remove }}" aria-label="{{ button_wishlist_remove }}: {{ name }}"><i class="fa-solid fa-heart" aria-hidden="true"></i></a>
+        {% else %}
+          <button type="button" data-product-id="{{ product_id }}" data-wishlist-add="{{ wishlist_add }}" data-wishlist-remove="{{ wishlist_remove }}" data-wishlist-label="{{ button_wishlist }}" data-wishlist-added-label="{{ text_wishlist_added }}" class="pd-btn-icon-action pd-btn-wishlist-add{% if is_wishlist_added %} is-wishlisted{% endif %}" data-bs-toggle="tooltip" title="{% if is_wishlist_added %}{{ text_wishlist_added }}{% else %}{{ button_wishlist }}{% endif %}" aria-label="{% if is_wishlist_added %}{{ text_wishlist_added }}{% else %}{{ button_wishlist }}{% endif %}"><i class="{% if is_wishlist_added %}fa-solid{% else %}fa-regular{% endif %} fa-heart" aria-hidden="true"></i></button>
+        {% endif %}
+        <button type="button" data-product-id="{{ product_id }}" data-compare-add="{{ compare_add }}" class="pd-btn-icon-action pd-btn-compare-add" data-bs-toggle="tooltip" title="{{ button_compare }}" aria-label="{{ button_compare }}"><i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i></button>
+      </div>
+    </div>
+
+    <div class="pd-card-body" style="display:flex;min-width:0;flex:1 1 auto;flex-direction:column;gap:6px;padding:10px;">
+      <h3 class="pd-card-title" style="min-height:2.6em;margin:0;overflow:hidden;font-size:13px;line-height:1.35;-webkit-line-clamp:2;">
+        <a href="{{ href }}" title="{{ name }}">{{ name }}</a>
+      </h3>
+
+      <div class="pd-card-meta-row" style="display:flex;min-height:18px;align-items:center;justify-content:space-between;gap:6px;">
+        {% if review_status and rating %}
+          <div class="pd-card-rating" aria-label="{{ rating }} / 5" style="display:flex;align-items:center;gap:2px;color:#fbbf24;font-size:10px;">
+            {% for i in 1..5 %}
+              {% if rating >= i %}<i class="fa-solid fa-star text-warning"></i>{% elseif rating >= i - 0.5 %}<i class="fa-solid fa-star-half-stroke text-warning"></i>{% else %}<i class="fa-regular fa-star text-muted"></i>{% endif %}
+            {% endfor %}
+            <span style="margin-left:3px;color:#94a3b8;">{{ rating }}</span>
+          </div>
+        {% endif %}
+        {% if stock_status %}<div class="pd-card-stock{% if not stock_available %} is-out-of-stock{% endif %}" style="margin:0;font-size:10px;"><span aria-hidden="true"></span>{{ stock_status }}</div>{% endif %}
+      </div>
+
+      {% if price %}
+        <div class="pd-card-price-wrap" style="min-height:0;margin:2px 0 4px;">
+          {% if not special %}<span class="pd-price-current">{{ price }}</span>{% else %}<span class="pd-price-current has-sale">{{ special }}</span><span class="pd-price-old">{{ price }}</span>{% endif %}
+        </div>
+      {% endif %}
+
+      <div class="mt-auto pd-card-buy-actions" style="display:flex;flex-direction:row;align-items:stretch;gap:6px;margin-top:auto;">
+        <button type="button" data-product-id="{{ product_id }}" data-cart-add="{{ cart_add }}" data-cart-info="{{ cart_info }}" data-checkout="{{ checkout }}" data-cart-success="{{ text_cart_added }}" class="pd-btn-add-cart btn-add-cart" title="{{ button_cart }}" aria-label="{{ button_cart }}" style="display:inline-flex;width:36px;min-width:36px;min-height:34px;flex:0 0 36px;align-items:center;justify-content:center;padding:0;">
+          <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+        </button>
+        <button type="button" data-product-id="{{ product_id }}" data-cart-add="{{ cart_add }}" data-cart-info="{{ cart_info }}" data-checkout="{{ checkout }}" data-cart-success="{{ text_cart_added }}" class="pd-btn-buy-now btn-buy-now" style="display:inline-flex;width:auto;min-width:0;min-height:34px;flex:1 1 auto;align-items:center;justify-content:center;gap:5px;padding:4px 8px;font-size:11px;white-space:nowrap;">
+          <i class="fa-solid fa-bolt" aria-hidden="true"></i><span>{{ button_buy_now }}</span>
+        </button>
+      </div>
+    </div>
+    <input type="hidden" name="product_id" value="{{ product_id }}" />
+    <input type="hidden" name="quantity" value="{{ minimum }}" />
+  </form>
+</div>

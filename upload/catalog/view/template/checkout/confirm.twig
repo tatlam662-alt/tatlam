@@ -1,0 +1,85 @@
+{% if products %}
+<div class="summary-product-list" style="max-height: 350px; overflow-y: auto;">
+  {% for product in products %}
+  <div class="summary-product-entry">
+    <div class="summary-product-item">
+      <div class="summary-thumb-container">
+        <img src="{{ product.thumb|escape }}" alt="{{ product.name|escape }}" title="{{ product.name|escape }}" loading="lazy" />
+      </div>
+      <div class="flex-grow-1 min-w-0">
+        <a class="summary-product-name" href="{{ product.href|escape }}" title="{{ product.name|escape }}">{{ product.name|escape }}</a>
+        <div class="summary-product-model">Mã SP: <span>{{ product.model|escape }}</span></div>
+        <div class="summary-product-quantity"><span class="summary-quantity-badge" data-pd-quantity="{{ product.quantity }}">x{{ product.quantity }}</span>{% if product.price %}<span class="summary-unit-price">({{ product.price }})</span>{% endif %}</div>
+      </div>
+      <div class="summary-product-total">
+        <div>{{ product.total }}</div>
+        <button type="button" class="pd-checkout-remove btn-delete-summary" data-pd-cart-remove data-cart-id="{{ product.cart_id }}" data-remove-url="{{ product.remove|escape }}" aria-label="{{ text_remove_one|escape('html_attr') }}: {{ product.name|escape('html_attr') }}" title="{{ text_remove_one|escape('html_attr') }}"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button>
+      </div>
+    </div>
+    {% if product.option or product.subscription or product.reward %}
+    <ul class="summary-product-options">
+      {% for option in product.option %}<li>{{ option.name|escape }}: {{ option.value|escape }}</li>{% endfor %}
+      {% if product.subscription %}<li>{{ text_subscription|escape }}: {{ product.subscription|escape }}</li>{% endif %}
+      {% if product.reward %}<li>{{ text_points|escape }}: {{ product.reward|escape }}</li>{% endif %}
+    </ul>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% if reward_module %}{{ reward_module }}{% endif %}
+{% if totals %}
+<div class="summary-totals">
+  {% for total in totals %}
+  <div class="summary-total-row{% if loop.last %} is-grand-total{% endif %}">
+    <span>{{ total.title|escape }}:</span><strong>{{ total.text }}</strong>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}<script>
+(function ($, window, document) {
+  'use strict';
+  $(document).off('click.pdCheckoutRemove', '[data-pd-cart-remove]').on('click.pdCheckoutRemove', '[data-pd-cart-remove]', function () {
+    var button = this;
+    if (button.disabled) return;
+    button.disabled = true;
+    $('#pd-checkout-cart-remove-status').addClass('visually-hidden').text('');
+    // The product URL already carries the authoritative cart key. Some Twig
+    // render paths omit data-cart-id, so do not send an empty POST key over it.
+    $.ajax({ url: button.dataset.removeUrl, type: 'get', dataType: 'json', cache: false })
+      .done(function (json) {
+        if (json.error) {
+          button.disabled = false;
+          $('#pd-checkout-cart-remove-status').attr('role', 'alert').removeClass('visually-hidden').addClass('alert alert-danger').text(json.error);
+          return;
+        }
+        // Reload from the server's fresh cart/session state; fragment replacement can leave stale rows and totals.
+        if (json.redirect) {
+          window.pdNavigateWithinShop(json.redirect);
+        } else {
+          window.pdReloadWithinShop();
+        }
+      })
+      .fail(function (xhr) {
+        button.disabled = false;
+        var message = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Không xóa được sản phẩm (HTTP ' + xhr.status + '). Vui lòng thử lại.';
+        $('#pd-checkout-cart-remove-status').attr('role', 'alert').removeClass('visually-hidden').addClass('alert alert-danger').text(message);
+      });
+  });
+})(jQuery, window, document);
+</script>
+{% else %}
+<div class="pd-checkout-cart-empty text-center py-4" role="status">
+  <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i>
+  <h3>Giỏ hàng trống</h3>
+  <p>Sản phẩm trong đơn đã được xóa.</p>
+  <a class="btn btn-primary" href="{{ continue_url|escape }}">Tiếp tục mua hàng</a>
+</div>
+{% endif %}
+<div id="checkout-payment">
+  {% if error_vn_address %}<div class="alert alert-danger" role="alert">{{ error_vn_address|escape }}</div>{% endif %}
+  {% if payment %}
+    {{ payment }}
+  {% else %}
+    <div class="text-end"><button type="button" class="btn btn-primary" disabled>{{ button_confirm }}</button></div>
+  {% endif %}
+</div>

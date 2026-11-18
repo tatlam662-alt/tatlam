@@ -1,0 +1,19 @@
+<?php
+$_['text_home_title'] = html_entity_decode('PanDaShop &mdash; Flycam, thi&#7871;t b&#7883; s&#225;ng t&#7841;o, gaming v&#224; linh ki&#7879;n PC', ENT_QUOTES, 'UTF-8');
+$_['text_service_commitment'] = html_entity_decode('Cam k&#7871;t d&#7883;ch v&#7909; PanDaShop', ENT_QUOTES, 'UTF-8');
+$_['text_genuine'] = html_entity_decode('Ch&#237;nh h&#227;ng', ENT_QUOTES, 'UTF-8');
+$_['text_return_policy'] = html_entity_decode('&#272;&#7893;i tr&#7843; 7 ng&#224;y', ENT_QUOTES, 'UTF-8');
+$_['text_technical_support'] = html_entity_decode('H&#7895; tr&#7907; k&#7929; thu&#7853;t', ENT_QUOTES, 'UTF-8');
+$_['text_fast_delivery'] = html_entity_decode('Giao nhanh', ENT_QUOTES, 'UTF-8');
+$_['text_discover_categories'] = html_entity_decode('Kh&#225;m ph&#225; danh m&#7909;c PanDaShop', ENT_QUOTES, 'UTF-8');
+$_['text_all_deals'] = html_entity_decode('Xem t&#7845;t c&#7843; &#432;u &#273;&#227;i', ENT_QUOTES, 'UTF-8');
+$_['text_flash_sale'] = 'Flash Sale';
+$_['text_home_explore'] = 'Khám phá';
+$_['text_brand'] = 'Thương hiệu';
+$_['text_flash_eyebrow'] = 'Deal chớp nhoáng';
+$_['text_view_all'] = 'Xem tất cả';
+$_['text_refresh_in'] = 'Đổi sản phẩm sau';
+$_['text_category_aria_label'] = 'Danh mục %s';
+$_['text_category_eyebrow'] = 'Khám phá ngành hàng';
+$_['text_category_description'] = 'Khám phá các sản phẩm thuộc danh mục %s tại PanDaShop.';
+$_['text_explore_now'] = 'Khám phá ngay';

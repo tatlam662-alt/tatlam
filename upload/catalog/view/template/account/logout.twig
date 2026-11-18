@@ -1,0 +1,40 @@
+{{ header }}
+<main id="account-logout-success" class="container pd-logout-page">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      {% for breadcrumb in breadcrumbs %}
+        {% if loop.last %}
+          <li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.text|escape }}</li>
+        {% else %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href|escape }}">{{ breadcrumb.text|escape }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+  </nav>
+
+  {{ content_top }}
+  <section class="pd-logout-card" aria-labelledby="pd-logout-title">
+    <span class="pd-logout-card__topline" aria-hidden="true"></span>
+    <span class="pd-logout-card__icon" aria-hidden="true"><i class="fa-solid fa-right-from-bracket"></i></span>
+    <span class="pd-logout-card__eyebrow">PANDASHOP · THÀNH VIÊN</span>
+    <h1 id="pd-logout-title">{{ text_logout_success_title|escape }}</h1>
+    <p class="pd-logout-card__message">{{ text_logout_success_body|escape }}</p>
+
+    <div class="pd-logout-shortcuts">
+      <a href="{{ continue|escape }}" class="pd-logout-shortcut">
+        <span class="pd-logout-shortcut__icon" aria-hidden="true"><i class="fa-solid fa-bag-shopping"></i></span>
+        <span><strong>{{ text_logout_shop_title|escape }}</strong><small>{{ text_logout_shop_body|escape }}</small></span>
+        <i class="fa-solid fa-arrow-up-right-from-square pd-logout-shortcut__arrow" aria-hidden="true"></i>
+      </a>
+      <a href="{{ login|escape }}" class="pd-logout-shortcut">
+        <span class="pd-logout-shortcut__icon" aria-hidden="true"><i class="fa-solid fa-user-lock"></i></span>
+        <span><strong>{{ text_logout_login_title|escape }}</strong><small>{{ text_logout_login_body|escape }}</small></span>
+        <i class="fa-solid fa-arrow-up-right-from-square pd-logout-shortcut__arrow" aria-hidden="true"></i>
+      </a>
+    </div>
+
+    <a href="{{ continue|escape }}" class="pd-logout-home-button">{{ text_logout_home_button|escape }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+  </section>
+  {{ content_bottom }}
+</main>
+{{ footer }}

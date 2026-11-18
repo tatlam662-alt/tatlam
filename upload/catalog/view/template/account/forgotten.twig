@@ -1,0 +1,130 @@
+{{ header }}
+<div id="account-forgotten" class="container pd-recovery-page">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb py-2 px-0 bg-transparent mb-3">
+      {% for breadcrumb in breadcrumbs %}
+        {% if loop.last %}<li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.text }}</li>
+        {% else %}<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endif %}
+      {% endfor %}
+    </ol>
+  </nav>
+  <div class="pd-recovery-card">
+    <div class="pd-recovery-glow" aria-hidden="true"></div>
+    <div class="text-center mb-4">
+      <div class="pd-recovery-mark" aria-hidden="true"><i class="fa-solid fa-key"></i></div>
+      <h1>{{ heading_title }}</h1>
+      <p class="pd-recovery-intro">{{ text_email }}</p>
+    </div>
+
+    <form id="form-forgotten-ajax" action="{{ action }}" method="post" novalidate>
+      <div class="mb-4">
+        <label for="input-email" class="form-label">{{ entry_email }}</label>
+        <div class="input-group pd-recovery-input-group">
+          <span class="input-group-text" aria-hidden="true"><i class="fa-solid fa-envelope"></i></span>
+          <input type="email" name="email" id="input-email" class="form-control" placeholder="vidou@gmail.com" required autocomplete="email" autocapitalize="none" spellcheck="false" inputmode="email" maxlength="96" aria-describedby="error-email">
+        </div>
+        <div id="error-email" class="invalid-feedback"></div>
+      </div>
+
+      <button type="submit" id="btn-submit-forgot" class="btn w-100 pd-recovery-submit">
+        <i class="fa-solid fa-paper-plane me-2" aria-hidden="true"></i>{{ button_send_recovery }}
+      </button>
+
+      <div class="pd-recovery-links">
+        <a class="pd-recovery-back" href="{{ back }}"><i class="fa-solid fa-arrow-left me-2" aria-hidden="true"></i>{{ button_back }}</a>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+
+  var form = document.getElementById('form-forgotten-ajax');
+  var email = document.getElementById('input-email');
+  var emailError = document.getElementById('error-email');
+  var submit = document.getElementById('btn-submit-forgot');
+
+  if (!form || !email || !emailError || !submit) return;
+
+  function cleanEmail() {
+    email.value = email.value.replace(/[\s\p{Z}\p{C}]/gu, '').trim();
+  }
+
+  function clearEmailError() {
+    email.classList.remove('is-invalid');
+    emailError.textContent = '';
+    emailError.classList.remove('d-block');
+  }
+
+  // Clear browser-restored validation markup on every fresh/BFCache display.
+  clearEmailError();
+  function clearRestoredError() {
+    clearEmailError();
+    window.setTimeout(clearEmailError, 0);
+    window.setTimeout(clearEmailError, 100);
+    window.setTimeout(clearEmailError, 500);
+  }
+
+  window.addEventListener('pageshow', clearRestoredError);
+  window.addEventListener('load', clearRestoredError);
+  email.addEventListener('input', function () {
+    cleanEmail();
+    clearEmailError();
+  });
+  email.addEventListener('change', cleanEmail);
+
+  // Own this form's AJAX request so the generic OpenCart handler cannot send
+  // a second request with a different serialization/validation lifecycle.
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    cleanEmail();
+    clearEmailError();
+
+    var payload = new URLSearchParams(new FormData(form));
+    submit.disabled = true;
+
+    fetch(form.action, {
+      method: 'POST',
+      body: payload.toString(),
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' }
+    }).then(function (response) {
+      if (!response.ok) throw new Error('Request failed');
+      return response.json();
+    }).then(function (result) {
+      if (result.redirect) {
+        window.pdNavigateWithinShop(result.redirect);
+        return;
+      }
+
+      if (result.error && result.error.email) {
+        email.classList.add('is-invalid');
+        emailError.textContent = result.error.email;
+        emailError.classList.add('d-block');
+        return;
+      }
+
+      if (result.success) {
+        var alert = document.createElement('div');
+        alert.className = 'alert alert-success mt-3';
+        alert.setAttribute('role', 'status');
+        alert.textContent = result.success;
+        form.querySelector('.alert')?.remove();
+        form.insertBefore(alert, form.querySelector('.pd-recovery-links'));
+      }
+    }).catch(function () {
+      var alert = document.createElement('div');
+      alert.className = 'alert alert-danger mt-3';
+      alert.setAttribute('role', 'alert');
+      alert.textContent = 'Không thể gửi yêu cầu lúc này. Vui lòng thử lại.';
+      form.querySelector('.alert')?.remove();
+      form.insertBefore(alert, form.querySelector('.pd-recovery-links'));
+    }).finally(function () {
+      submit.disabled = false;
+    });
+  });
+})();
+</script>
+{{ footer }}

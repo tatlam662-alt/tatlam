@@ -1,0 +1,23 @@
+<?php
+$_['heading_title'] = 'Product question messages';
+$_['text_account'] = 'Account';
+$_['text_intro'] = 'Select a conversation to read its history and reply. The most recently active conversation appears first.';
+$_['text_empty'] = 'You do not have any conversations yet. Ask a question from a product page.';
+$_['text_product'] = 'Product';
+$_['text_initial_question'] = 'Your question';
+$_['text_you'] = 'You';
+$_['text_reply'] = 'Message';
+$_['text_send'] = 'Send message';
+$_['text_inbox'] = 'Conversations';
+$_['text_last_activity'] = 'Last activity';
+$_['text_unread'] = 'new';
+$_['text_refresh'] = 'Refresh';
+$_['text_history_retention'] = 'Message history is kept and is not automatically deleted. Use pagination to view older conversations.';
+$_['text_delete'] = 'Hide from inbox';
+$_['text_delete_confirm'] = 'Hide this conversation from your inbox? The store will retain the history.';
+$_['text_deleted'] = 'The conversation was hidden from your inbox. The store retains its history for support.';
+$_['text_reply_sent'] = 'Your message has been sent.';
+$_['text_reply_saved_notification_failed'] = 'Your message was saved, but the shop could not be notified by email. It remains available in the admin inbox.';
+$_['error_message'] = 'Enter a message of up to 2,000 characters.';
+$_['mail_admin_subject'] = 'A customer replied to a product question';
+$_['mail_admin_reply'] = 'There is a new message in product question conversation #%d. Open Catalog > Product questions in the administration panel to reply.';

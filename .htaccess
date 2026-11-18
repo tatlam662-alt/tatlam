@@ -1,0 +1,8 @@
+Options -Indexes
+RewriteEngine On
+RewriteRule ^$ /panda/upload/ [R=302,L]
+
+# Only the OpenCart webroot is public. Block repository files and folders
+# (source code, migrations, backups, tooling and build metadata) under htdocs.
+RewriteRule ^upload(?:/|$) - [L]
+RewriteRule ^ - [F,L]

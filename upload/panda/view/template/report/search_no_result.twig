@@ -1,0 +1,36 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-magnifying-glass"></i> {{ text_list }}</div>
+      <div id="search-no-result" class="card-body" data-error-message="{{ text_error_loading|e('html_attr') }}">{{ list }}</div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('#search-no-result').on('click', '.pagination a', function(e) {
+    e.preventDefault();
+    var $results = $('#search-no-result');
+    $results.find('.pd-report-load-error').remove();
+    $results.attr('aria-busy', 'true');
+    $results.load(this.href, function(_response, status) {
+        $results.attr('aria-busy', 'false');
+        if (status === 'error') {
+            $('<div>', { 'class': 'alert alert-danger pd-report-load-error', 'role': 'alert' })
+                .text($results.data('error-message'))
+                .prependTo($results);
+        }
+    });
+});
+//--></script>
+{{ footer }}

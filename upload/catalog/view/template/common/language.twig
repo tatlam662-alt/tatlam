@@ -1,0 +1,21 @@
+{% if languages %}
+  <div class="dropdown panda-native-language">
+    <button class="pd-language-toggle btn btn-sm btn-outline-slate d-flex align-items-center gap-2 border-slate-700 text-light rounded-3{% if languages|length > 1 %} dropdown-toggle{% endif %}" type="button"{% if languages|length > 1 %} data-bs-toggle="dropdown" aria-expanded="false"{% endif %} aria-label="{{ text_language }}: {{ name }}">
+        <i class="fa-solid fa-globe text-cyan fs-14" aria-hidden="true"></i>
+        <span class="pd-language-current fs-12 fw-bold text-light">{{ name }}</span>
+        {% if languages|length > 1 %}<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>{% endif %}
+    </button>
+    {% if languages|length > 1 %}
+      <ul class="pd-language-menu dropdown-menu dropdown-menu-end glass-dropdown p-1 shadow-2xl bg-slate-900 border-slate-800 rounded-3">
+        {% for language in languages %}
+          <li>
+            <a class="dropdown-item language-select d-flex align-items-center gap-2 py-2 rounded-2 fs-12 text-slate-200{% if language.code == code %} active{% endif %}" href="{{ language.href }}"{% if language.code == code %} aria-current="true"{% endif %}>
+              <i class="fa-solid fa-globe" aria-hidden="true"></i>
+              <span>{{ language.name }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+{% endif %}

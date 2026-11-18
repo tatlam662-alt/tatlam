@@ -1,0 +1,381 @@
+{{ header }}
+<div id="account-register" class="container pd-register-page">
+  <nav aria-label="breadcrumb">
+  <ul class="breadcrumb pd-register-breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  </nav>
+  <div class="pd-register-layout">
+    <aside class="pd-register-aside" aria-labelledby="pd-register-welcome">
+      <div>
+        <span class="pd-register-member-badge"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> {{ text_member_badge }}</span>
+        <h2 id="pd-register-welcome">{{ text_join_community }}</h2>
+        <p class="pd-register-aside-copy">{{ text_register_intro }}</p>
+        <div class="pd-register-benefits">
+          <div><span><i class="fa-solid fa-gift" aria-hidden="true"></i></span><p><strong>{{ text_member_offers }}</strong><small>{{ text_member_offers_detail }}</small></p></div>
+          <div><span><i class="fa-solid fa-box-open" aria-hidden="true"></i></span><p><strong>{{ text_order_tracking }}</strong><small>{{ text_order_tracking_detail }}</small></p></div>
+          <div><span><i class="fa-solid fa-heart" aria-hidden="true"></i></span><p><strong>{{ text_saved_favorites }}</strong><small>{{ text_saved_favorites_detail }}</small></p></div>
+        </div>
+      </div>
+      <div class="pd-register-login-note">{{ text_account_already }}</div>
+    </aside>
+
+    <main id="content" class="pd-register-form-card">
+      {{ content_top }}
+      <div class="pd-register-form-heading">
+        <span class="pd-register-form-icon" aria-hidden="true"><i class="fa-solid fa-user-plus"></i></span>
+        <div><span class="pd-register-eyebrow">{{ text_create_account }}</span><h1>{{ heading_title }}</h1><p>{{ text_register_form_intro }}</p></div>
+      </div>
+      <form id="form-register" action="{{ register }}" method="post" autocomplete="off" novalidate>
+        {% if redirect %}<input type="hidden" name="redirect" value="{{ redirect|e('html_attr') }}"/>{% endif %}
+        <fieldset id="account">
+          <legend>{{ text_your_details }}</legend>
+          {% if customer_groups|length > 1 %}
+            <div class="row mb-3 required">
+              <label class="col-sm-2 col-form-label">{{ entry_customer_group }}</label>
+              <div class="col-sm-10">
+                <select name="customer_group_id" id="input-customer-group" class="form-select">
+                  {% for customer_group in customer_groups %}
+                    <option value="{{ customer_group.customer_group_id }}"{% if customer_group.customer_group_id == customer_group_id %} selected{% endif %}>{{ customer_group.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          {% endif %}
+          <div class="row mb-3 required">
+            <label for="input-firstname" class="col-sm-2 col-form-label">{{ entry_firstname }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="firstname" value="{{ firstname|default('')|e('html_attr') }}" placeholder="{{ text_enter_firstname }}" id="input-firstname" class="form-control" autocomplete="given-name"/>
+              <div id="error-firstname" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-lastname" class="col-sm-2 col-form-label">{{ entry_lastname }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="lastname" value="{{ lastname|default('')|e('html_attr') }}" placeholder="{{ text_enter_lastname }}" id="input-lastname" class="form-control" autocomplete="family-name"/>
+              <div id="error-lastname" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-email" class="col-sm-2 col-form-label">{{ entry_email }}</label>
+            <div class="col-sm-10">
+              <input type="email" name="email" value="{{ email|default('')|e('html_attr') }}" placeholder="{{ text_enter_email }}" id="input-email" class="form-control" autocomplete="email" autocapitalize="none" spellcheck="false"/>
+              <div id="error-email" class="invalid-feedback"></div>
+            </div>
+          </div>
+
+          {% if config_telephone_display %}
+            <div class="row mb-3 required">
+              <label for="input-telephone" class="col-sm-2 col-form-label">{{ entry_telephone }}</label>
+              <div class="col-sm-10">
+                <input type="tel" name="telephone" value="{{ telephone|default('')|e('html_attr') }}" placeholder="{{ text_enter_telephone }}" id="input-telephone" class="form-control" autocomplete="tel" inputmode="tel" maxlength="16" required="required"/>
+                <div id="error-telephone" class="invalid-feedback"></div>
+              </div>
+            </div>
+          {% endif %}
+
+          {% for custom_field in custom_fields %}
+
+            {% if custom_field.type == 'select' %}
+              <div class="row mb-3 custom-field custom-field-{{ custom_field.custom_field_id }}">
+                <label for="input-custom-field-{{ custom_field.custom_field_id }}" class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <select name="custom_field[{{ custom_field.custom_field_id }}]" id="input-custom-field-{{ custom_field.custom_field_id }}" class="form-select">
+                    <option value="">{{ text_select }}</option>
+                    {% for custom_field_value in custom_field.custom_field_value %}
+                      <option value="{{ custom_field_value.custom_field_value_id }}">{{ custom_field_value.name }}</option>
+                    {% endfor %}
+                  </select>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'radio' %}
+              <div class="row mb-3 custom-field custom-field-{{ custom_field.custom_field_id }}">
+                <label class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <div id="input-custom-field-{{ custom_field.custom_field_id }}">
+                    {% for custom_field_value in custom_field.custom_field_value %}
+                      <div class="form-check">
+                        <input type="radio" name="custom_field[{{ custom_field.custom_field_id }}]" value="{{ custom_field_value.custom_field_value_id }}" id="input-custom-value-{{ custom_field_value.custom_field_value_id }}" class="form-check-input"/> <label for="input-custom-value-{{ custom_field_value.custom_field_value_id }}" class="form-check-label">{{ custom_field_value.name }}</label>
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'checkbox' %}
+              <div class="row mb-3 custom-field custom-field-{{ custom_field.custom_field_id }}">
+                <label class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <div id="input-custom-field-{{ custom_field.custom_field_id }}">
+                    {% for custom_field_value in custom_field.custom_field_value %}
+                      <div class="form-check">
+                        <input type="checkbox" name="custom_field[{{ custom_field.custom_field_id }}][]" value="{{ custom_field_value.custom_field_value_id }}" id="input-custom-value-{{ custom_field_value.custom_field_value_id }}" class="form-check-input"/> <label for="input-custom-value-{{ custom_field_value.custom_field_value_id }}" class="form-check-label">{{ custom_field_value.name }}</label>
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'text' %}
+              <div class="row mb-3 custom-field custom-field-{{ custom_field.custom_field_id }}">
+                <label for="input-custom-field-{{ custom_field.custom_field_id }}" class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="custom_field[{{ custom_field.custom_field_id }}]" value="{{ custom_field.value }}" placeholder="{{ custom_field.name }}" id="input-custom-field-{{ custom_field.custom_field_id }}" class="form-control"/>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'textarea' %}
+              <div class="row mb-3 custom-field custom-field-{{ custom_field.custom_field_id }}">
+                <label for="input-custom-field-{{ custom_field.custom_field_id }}" class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <textarea name="custom_field[{{ custom_field.custom_field_id }}]" rows="5" placeholder="{{ custom_field.name }}" id="input-custom-field-{{ custom_field.custom_field_id }}" class="form-control">{{ custom_field.value }}</textarea>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'file' %}
+              <div class="row mb-3 custom-field custom-field-{{ custom_field.custom_field_id }}">
+                <label class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <div>
+                    <button type="button" data-oc-toggle="upload" data-oc-url="{{ upload }}" data-oc-size-max="{{ config_file_max_size }}" data-oc-size-error="{{ error_upload_size }}" data-oc-target="#input-custom-field-{{ custom_field.custom_field_id }}" class="btn btn-light"><i class="fa-solid fa-upload"></i> {{ button_upload }}</button>
+                    <input type="hidden" name="custom_field[{{ custom_field.custom_field_id }}]" value="" id="input-custom-field-{{ custom_field.custom_field_id }}"/>
+                  </div>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'date' %}
+              <div class="row mb-3 custom-field custom-field-{{ custom_field.custom_field_id }}">
+                <label for="input-custom-field-{{ custom_field.custom_field_id }}" class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <input type="date" name="custom_field[{{ custom_field.custom_field_id }}]" value="{{ custom_field.value }}" placeholder="{{ custom_field.name }}" id="input-custom-field-{{ custom_field.custom_field_id }}" class="form-control"/>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'time' %}
+              <div class="row mb-3 custom-field custom-field-{{ custom_field.custom_field_id }}">
+                <label for="input-custom-field-{{ custom_field.custom_field_id }}" class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <input type="time" name="custom_field[{{ custom_field.custom_field_id }}]" value="{{ custom_field.value }}" placeholder="{{ custom_field.name }}" id="input-custom-field-{{ custom_field.custom_field_id }}" class="form-control"/>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'datetime' %}
+              <div class="row mb-3 custom-field custom-field-{{ custom_field.custom_field_id }}">
+                <label for="input-custom-field-{{ custom_field.custom_field_id }}" class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <input type="datetime-local" name="custom_field[{{ custom_field.custom_field_id }}]" value="{{ custom_field.value }}" placeholder="{{ custom_field.name }}" id="input-custom-field-{{ custom_field.custom_field_id }}" class="form-control"/>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+          {% endfor %}
+        </fieldset>
+
+        <fieldset>
+          <legend>{{ text_your_password }}</legend>
+          <div class="row mb-3 required">
+            <label for="input-password" class="col-sm-2 col-form-label">{{ entry_password }}</label>
+            <div class="col-sm-10">
+              <div class="input-group pd-register-password-field">
+                <input type="password" name="password" value="" placeholder="{{ text_enter_password }}" id="input-password" class="form-control" autocomplete="new-password" required="required"/>
+                <button type="button" class="pd-register-password-toggle" data-password-target="input-password" aria-label="{{ text_show_password }}" aria-pressed="false"><i class="fa-regular fa-eye" aria-hidden="true"></i></button>
+              </div>
+              <div id="error-password" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-confirm" class="col-sm-2 col-form-label">{{ text_confirm_password }}</label>
+            <div class="col-sm-10">
+              <div class="input-group pd-register-password-field">
+                <input type="password" name="confirm" value="" placeholder="{{ text_reenter_password }}" id="input-confirm" class="form-control" autocomplete="new-password" required="required"/>
+                <button type="button" class="pd-register-password-toggle" data-password-target="input-confirm" aria-label="{{ text_show_confirm_password }}" aria-pressed="false"><i class="fa-regular fa-eye" aria-hidden="true"></i></button>
+              </div>
+              <div id="error-confirm" class="invalid-feedback"></div>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>{{ text_newsletter }}</legend>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_newsletter }}</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="newsletter" value="0"/>
+                <input type="checkbox" name="newsletter" value="1" id="input-newsletter" class="form-check-input"/>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        {{ captcha }}
+        <div class="d-flex flex-column align-items-end gap-3 mt-3">
+          {% if text_agree %}
+            <div class="form-check d-flex align-items-center gap-2 mb-0 me-auto">
+              <input type="checkbox" name="agree" value="1" id="input-agree" class="form-check-input" required/>
+              <label class="form-check-label" for="input-agree">{{ text_agreement_before }} <a href="{{ agree_href }}" target="_blank" rel="noopener noreferrer" class="text-info text-decoration-underline">{{ agree_title }}</a></label>
+              <div id="error-agree" class="invalid-feedback"></div>
+            </div>
+          {% endif %}
+          <button type="submit" id="button-register" class="pd-register-submit"><span>{{ button_continue }}</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+        </div>
+      </form>
+      {{ content_bottom }}
+    </main>
+  </div>
+</div>
+<script>
+(function () {
+  var form = document.getElementById('form-register');
+  if (!form) return;
+  form.querySelectorAll('[data-password-target]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var field = document.getElementById(button.getAttribute('data-password-target'));
+      if (!field) return;
+      var visible = field.type === 'password';
+      field.type = visible ? 'text' : 'password';
+      button.setAttribute('aria-pressed', visible ? 'true' : 'false');
+      button.setAttribute('aria-label', visible ? '{{ text_hide_password|e('js') }}' : '{{ text_show_password|e('js') }}');
+      button.innerHTML = visible ? '<i class="fa-regular fa-eye-slash" aria-hidden="true"></i>' : '<i class="fa-regular fa-eye" aria-hidden="true"></i>';
+    });
+  });
+  var email = document.getElementById('input-email');
+  var phone = document.getElementById('input-telephone');
+  var password = document.getElementById('input-password');
+  var confirm = document.getElementById('input-confirm');
+  var givenName = document.getElementById('input-firstname');
+  var familyName = document.getElementById('input-lastname');
+  if (givenName && familyName && familyName.closest('.row') && givenName.closest('.row')) {
+    givenName.closest('.row').parentNode.insertBefore(familyName.closest('.row'), givenName.closest('.row'));
+  }
+  ['input-firstname', 'input-lastname', 'input-email', 'input-telephone'].forEach(function (id) {
+    var field = document.getElementById(id);
+    if (field && field.value.trim().toLowerCase() === 'admin') field.value = '';
+  });
+  form.addEventListener('submit', function (event) {
+    if (password && confirm && password.value !== confirm.value) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      var confirmError = document.getElementById('error-confirm');
+      confirm.classList.add('is-invalid');
+      if (confirmError) { confirmError.textContent = '{{ text_confirm_mismatch|e('js') }}'; confirmError.classList.add('d-block'); }
+      confirm.focus();
+      return;
+    }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      var emailError = document.getElementById('error-email');
+      email.classList.add('is-invalid');
+      if (emailError) { emailError.textContent = '{{ text_invalid_email|e('js') }}'; emailError.classList.add('d-block'); }
+      email.focus();
+      return;
+    }
+    if (phone) {
+      var digits = phone.value.replace(/\D/g, '');
+      phone.value = digits;
+      if (!/^0\d{9}$/.test(digits)) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        var phoneError = document.getElementById('error-telephone');
+        phone.classList.add('is-invalid');
+        if (phoneError) { phoneError.textContent = '{{ text_invalid_phone|e('js') }}'; phoneError.classList.add('d-block'); }
+        phone.focus();
+      }
+    }
+  }, true);
+  if (window.jQuery) {
+    var $form = window.jQuery(form);
+    var $button = window.jQuery('#button-register');
+    var defaultButtonHtml = $button.html();
+
+    $form.on('submit', function (event) {
+      event.preventDefault();
+      window.jQuery.ajax({
+        url: form.action,
+        type: 'post',
+        data: $form.serialize(),
+        dataType: 'json',
+        beforeSend: function () {
+          $button.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin me-1"></i> {{ text_processing|e('js') }}');
+          form.querySelectorAll('.text-danger-err').forEach(function (error) { error.remove(); });
+          form.querySelectorAll('.is-invalid').forEach(function (field) { field.classList.remove('is-invalid'); });
+        },
+        complete: function () {
+          $button.prop('disabled', false).html(defaultButtonHtml);
+        },
+        success: function (json) {
+          if (json && json.redirect) {
+            window.pdNavigateWithinShop(json.redirect);
+            return;
+          }
+          if (!json || !json.error) return;
+          if (json.error.warning) window.pdAlert(json.error.warning, { title: '{{ text_registration_failed|e('js') }}', variant: 'error' });
+
+          Object.keys(json.error).forEach(function (key) {
+            if (key === 'warning') return;
+            var inputId = 'input-' + key.replace(/_/g, '-');
+            var input = document.getElementById(inputId);
+            if (!input) return;
+            input.classList.add('is-invalid');
+            var message = document.createElement('div');
+            message.className = 'text-danger text-danger-err fs-12 mt-1';
+            message.textContent = json.error[key];
+            input.insertAdjacentElement('afterend', message);
+          });
+        },
+        error: function () {
+          window.pdAlert('{{ text_registration_request_failed|e('js') }}', { title: '{{ text_registration_failed|e('js') }}', variant: 'error' });
+        }
+      });
+    });
+  }
+})();
+</script>
+<script type="text/javascript"><!--
+$('#input-customer-group').on('change', function() {
+    $.ajax({
+        url: 'index.php?route=account/custom_field&customer_group_id=' + this.value + '&language={{ language }}',
+        dataType: 'json',
+        success: function(json) {
+            $('.custom-field').hide();
+            $('.custom-field').removeClass('required');
+
+            for (i = 0; i < json.length; i++) {
+                custom_field = json[i];
+
+                $('.custom-field-' + custom_field['custom_field_id']).show();
+
+                if (custom_field['required']) {
+                    $('.custom-field-' + custom_field['custom_field_id']).addClass('required');
+                }
+            }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+});
+
+$('#input-customer-group').trigger('change');
+//--></script>
+{{ footer }}

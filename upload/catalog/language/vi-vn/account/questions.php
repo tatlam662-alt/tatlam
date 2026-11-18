@@ -1,0 +1,23 @@
+<?php
+$_['heading_title'] = 'Tin nhắn hỏi sản phẩm';
+$_['text_account'] = 'Tài khoản';
+$_['text_intro'] = 'Chọn một cuộc trò chuyện để đọc lịch sử và tiếp tục trao đổi. Tin mới nhất sẽ được đưa lên đầu danh sách.';
+$_['text_empty'] = 'Bạn chưa có cuộc trò chuyện nào. Hãy gửi câu hỏi từ trang sản phẩm.';
+$_['text_product'] = 'Sản phẩm';
+$_['text_initial_question'] = 'Câu hỏi của bạn';
+$_['text_you'] = 'Bạn';
+$_['text_reply'] = 'Tin nhắn';
+$_['text_send'] = 'Gửi tin nhắn';
+$_['text_inbox'] = 'Cuộc trò chuyện';
+$_['text_last_activity'] = 'Hoạt động gần nhất';
+$_['text_unread'] = 'tin mới';
+$_['text_refresh'] = 'Làm mới';
+$_['text_history_retention'] = 'Lịch sử tin nhắn được giữ nguyên, không tự động xóa. Dùng phân trang để xem các cuộc trò chuyện cũ hơn.';
+$_['text_delete'] = 'Ẩn khỏi hộp thư';
+$_['text_delete_confirm'] = 'Ẩn cuộc trò chuyện này khỏi hộp thư của bạn? Quản trị viên vẫn lưu được lịch sử.';
+$_['text_deleted'] = 'Cuộc trò chuyện đã được ẩn khỏi hộp thư của bạn. Shop vẫn lưu lịch sử để hỗ trợ khi cần.';
+$_['text_reply_sent'] = 'Tin nhắn đã được gửi.';
+$_['text_reply_saved_notification_failed'] = 'Tin nhắn đã lưu nhưng chưa gửi được thông báo cho shop. Shop vẫn sẽ thấy tin nhắn trong hộp thư quản trị.';
+$_['error_message'] = 'Vui lòng nhập tin nhắn (tối đa 2.000 ký tự).';
+$_['mail_admin_subject'] = 'Khách hàng đã trả lời câu hỏi sản phẩm';
+$_['mail_admin_reply'] = 'Có tin nhắn mới trong cuộc trò chuyện câu hỏi sản phẩm #%d. Mở mục Catalog > Câu hỏi sản phẩm trong trang quản trị để trả lời.';

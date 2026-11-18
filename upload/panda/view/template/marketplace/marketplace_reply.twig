@@ -1,0 +1,17 @@
+<div>
+  {% if replies %}
+    {% for reply in replies %}
+      <div class="media">
+        <div class="media-left"><img src="{{ reply.image|e }}" alt="{{ reply.member|e }}" title="{{ reply.member|e }}" class="media-object"/></div>
+        <div class="media-body">
+          <p class="media-heading">{{ reply.member|e }} <span>{{ reply.date_added|e }}</span></p>
+          <p>{{ reply.comment|e|nl2br }}</p>
+        </div>
+      </div>
+    {% endfor %}
+    {% if next %}
+      <div class="text-center"><a href="{{ next|e }}" class="btn btn-block">{{ text_more }}</a></div>
+    {% endif %}
+  {% endif %}
+  <a href="{{ refresh|e }}" class="reply-refresh hide">{{ button_refresh }}</a>
+</div>

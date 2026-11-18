@@ -1,0 +1,71 @@
+{% if categories %}
+  <section class="panda-flyout-sidebar" aria-label="{{ text_catalog_categories }}">
+    <header class="flyout-sidebar-header">
+      <h2><i class="fa-solid fa-bars" aria-hidden="true"></i> {{ text_catalog_categories }}</h2>
+    </header>
+
+    <nav class="flyout-cat-list" aria-label="{{ text_subcategories }}">
+      {% for category in categories %}
+        <div class="flyout-cat-item{% if category.category_id == category_id %} active{% endif %}">
+          <a href="{{ category.href }}" class="flyout-cat-link"{% if category.category_id == category_id and not child_id %} aria-current="page"{% endif %}>
+            <span class="cat-info">
+              <i class="fa-solid fa-layer-group cat-icon" aria-hidden="true"></i>
+              <span class="cat-name">{{ category.name }}</span>
+            </span>
+            <span class="cat-right-side">
+              {% if category.product_count is not null %}<span class="cat-badge">{{ category.product_count }}</span>{% endif %}
+              {% if category.children %}<i class="fa-solid fa-chevron-right flyout-arrow" aria-hidden="true"></i>{% endif %}
+            </span>
+          </a>
+
+          {% if category.children %}
+            <div class="flyout-menu-panel" aria-label="{{ text_subcategories }}: {{ category.name }}">
+              <header class="flyout-panel-header">
+                <span class="flyout-panel-eyebrow">{{ text_catalog_categories }}</span>
+                <strong>{{ category.name }}</strong>
+                <a href="{{ category.href }}">{{ text_view_all }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+              </header>
+
+              <div class="flyout-panel-grid">
+                <section class="flyout-panel-column flyout-panel-brands">
+                  <h3>{{ text_featured_brands }}</h3>
+                  <div class="flyout-brand-chips">
+                    {% for brand in category.brands %}<a href="{{ brand.href }}">{{ brand.name }}</a>
+                    {% else %}<span class="flyout-panel-empty">{{ text_updating_brands }}</span>{% endfor %}
+                  </div>
+                </section>
+
+                <section class="flyout-panel-column flyout-panel-new">
+                  <h3><i class="fa-solid fa-fire" aria-hidden="true"></i> {{ text_new_products }}</h3>
+                  <div class="flyout-new-products">
+                    {% for product in category.new_products %}
+                      <a href="{{ product.href }}" title="{{ product.name }}"><i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i><span>{{ product.name }}</span></a>
+                    {% else %}<span class="flyout-panel-empty">{{ text_no_new_products }}</span>{% endfor %}
+                  </div>
+                </section>
+
+                <section class="flyout-panel-column flyout-panel-series">
+                  <h3>{{ text_product_lines }}</h3>
+                  <div class="flyout-series-links">
+                    {% for child in category.children %}
+                      <a href="{{ child.href }}"{% if child.category_id == child_id %} aria-current="page"{% endif %}>
+                        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span>{{ child.name }}</span>
+                        {% if child.product_count is not null %}<small>{{ child.product_count }}</small>{% endif %}
+                      </a>
+                    {% endfor %}
+                  </div>
+                </section>
+
+                <section class="flyout-panel-column flyout-panel-prices">
+                  <h3>{{ text_reference_prices }}</h3>
+                  {% for price in category.reference_prices %}<a href="{{ price.href }}">{{ price.name }}</a>{% endfor %}
+                  <small>{{ text_budget_help }}</small>
+                </section>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </nav>
+  </section>
+{% endif %}

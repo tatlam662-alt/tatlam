@@ -1,0 +1,23 @@
+<?php
+$_['heading_title'] = 'Messages sur les produits';
+$_['text_account'] = 'Compte';
+$_['text_intro'] = 'Sélectionnez une conversation pour lire son historique et répondre. La conversation la plus récente apparaît en premier.';
+$_['text_empty'] = 'Vous n’avez pas encore de conversation. Posez une question depuis une page produit.';
+$_['text_product'] = 'Produit';
+$_['text_initial_question'] = 'Votre question';
+$_['text_you'] = 'Vous';
+$_['text_reply'] = 'Message';
+$_['text_send'] = 'Envoyer le message';
+$_['text_inbox'] = 'Conversations';
+$_['text_last_activity'] = 'Dernière activité';
+$_['text_unread'] = 'nouveau';
+$_['text_refresh'] = 'Actualiser';
+$_['text_history_retention'] = 'Les messages sont conservés et ne sont pas supprimés automatiquement. Utilisez la pagination pour voir les conversations plus anciennes.';
+$_['text_delete'] = 'Masquer de la boîte de réception';
+$_['text_delete_confirm'] = 'Masquer cette conversation de votre boîte de réception ? La boutique conservera son historique.';
+$_['text_deleted'] = 'La conversation a été masquée de votre boîte de réception. La boutique en conserve l’historique pour le support.';
+$_['text_reply_sent'] = 'Votre message a été envoyé.';
+$_['text_reply_saved_notification_failed'] = 'Votre message a été enregistré, mais la boutique n’a pas pu être avertie par e-mail. Il reste visible dans la boîte de réception de l’administration.';
+$_['error_message'] = 'Saisissez un message de 2 000 caractères maximum.';
+$_['mail_admin_subject'] = 'Un client a répondu à une question sur un produit';
+$_['mail_admin_reply'] = 'Un nouveau message est disponible dans la conversation produit #%d. Ouvrez Catalogue > Questions produits dans l’administration pour répondre.';

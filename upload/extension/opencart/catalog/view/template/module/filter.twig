@@ -1,0 +1,111 @@
+﻿<aside class="panda-top-filter-controls" aria-label="{{ heading_title }}">
+  <div class="panda-filter-heading">{{ text_filter_title }}</div>
+  <form id="panda-ajax-filter-form" action="{{ action }}" method="get">
+    {% if manufacturers %}
+      <div class="filter-dropdown-chip panda-filter-dropdown" data-filter-group="manufacturer">
+        <button type="button" class="btn-chip panda-filter-trigger" aria-expanded="false"><i class="fa-solid fa-tag" aria-hidden="true"></i><span>{{ text_manufacturer }}</span><span class="panda-filter-count" hidden></span><i class="fa-solid fa-chevron-down filter-chevron" aria-hidden="true"></i></button>
+        <div class="glass-dropdown panda-filter-menu" hidden>
+          <label class="panda-filter-option"><input type="radio" name="manufacturer_id" value=""{% if not manufacturer_id %} checked{% endif %}><span>{{ text_all_manufacturers }}</span></label>
+          {% for manufacturer in manufacturers %}<label class="panda-filter-option"><input type="radio" name="manufacturer_id" value="{{ manufacturer.manufacturer_id }}"{% if manufacturer.selected %} checked{% endif %}><span>{{ manufacturer.name }}</span></label>{% endfor %}
+          <div class="panda-filter-menu-actions"><button type="button" class="panda-filter-reset">{{ text_reset }}</button><button type="button" class="panda-filter-apply-button">{{ text_apply }}</button></div>
+        </div>
+      </div>
+    {% endif %}
+    <div class="filter-dropdown-chip panda-filter-dropdown" data-filter-group="price">
+      <button type="button" class="btn-chip panda-filter-trigger" aria-expanded="false"><i class="fa-solid fa-coins" aria-hidden="true"></i><span>{{ text_price }}</span><span class="panda-filter-count" hidden></span><i class="fa-solid fa-chevron-down filter-chevron" aria-hidden="true"></i></button>
+      <div class="glass-dropdown panda-filter-menu" hidden>
+        <label class="panda-filter-option"><input type="radio" name="price_range" value=""{% if not price_range %} checked{% endif %}><span>{{ text_all_prices }}</span></label>
+        {% for price_option in price_ranges %}<label class="panda-filter-option"><input type="radio" name="price_range" value="{{ price_option.value }}"{% if price_option.selected %} checked{% endif %}><span>{{ price_option.name }}</span></label>{% endfor %}
+        <div class="panda-filter-menu-actions"><button type="button" class="panda-filter-reset">{{ text_reset }}</button><button type="button" class="panda-filter-apply-button">{{ text_apply }}</button></div>
+      </div>
+    </div>
+    {% for filter_group in filter_groups %}
+      <div class="filter-dropdown-chip panda-filter-dropdown" data-filter-group="attribute">
+        <button type="button" class="btn-chip panda-filter-trigger" aria-expanded="false"><i class="fa-solid fa-sliders" aria-hidden="true"></i><span>{{ filter_group.name }}</span><span class="panda-filter-count" hidden></span><i class="fa-solid fa-chevron-down filter-chevron" aria-hidden="true"></i></button>
+        <div class="glass-dropdown panda-filter-menu" hidden>
+          <div class="chip-grid panda-filter-options">
+            {% for filter in filter_group.filter %}
+              {% set filter_id_string = filter.filter_id ~ '' %}
+              <label class="panda-filter-option" for="input-filter-{{ filter.filter_id }}">
+                <input type="checkbox" class="ajax-filter-input" id="input-filter-{{ filter.filter_id }}" value="{{ filter.filter_id }}"{% if filter_id_string in filter_category %} checked{% endif %}>
+                <span>{{ filter.name }}</span>
+              </label>
+            {% endfor %}
+          </div>
+          <div class="panda-filter-menu-actions"><button type="button" class="panda-filter-reset">{{ text_reset }}</button><button type="button" class="panda-filter-apply-button">{{ text_apply }}</button></div>
+        </div>
+      </div>
+    {% endfor %}
+  </form>
+  {% if manufacturer_id or price_range or filter_category %}<a href="{{ clear_filters_href }}" class="panda-filter-clear-all">{{ text_clear_all_filters }}</a>{% endif %}
+  <div class="panda-filter-mobile-actions"><a href="{{ clear_filters_href }}" class="panda-filter-clear-link">{{ text_clear_all }}</a><button type="button" class="panda-filter-apply-button">{{ text_apply_filters }}</button></div>
+</aside>
+
+<script>
+(() => {
+  const init = () => {
+    const form = document.getElementById('panda-ajax-filter-form');
+    if (!form || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
+
+    const updateCounts = () => {
+      form.querySelectorAll('.panda-filter-dropdown').forEach((group) => {
+        const selected = group.dataset.filterGroup === 'manufacturer' || group.dataset.filterGroup === 'price'
+          ? [...group.querySelectorAll('input:checked')].filter((input) => input.value !== '').length
+          : group.querySelectorAll('input[type="checkbox"]:checked').length;
+        const badge = group.querySelector('.panda-filter-count');
+        if (badge) {
+          badge.hidden = selected === 0;
+          badge.textContent = selected ? String(selected) : '';
+        }
+        group.querySelector('.panda-filter-trigger').classList.toggle('has-selection', selected > 0);
+      });
+    };
+    const apply = () => {
+      const target = new URL(window.location.href);
+      const manufacturer = form.querySelector('input[name="manufacturer_id"]:checked');
+      const price = form.querySelector('input[name="price_range"]:checked');
+      const selectedFilters = [...form.querySelectorAll('.ajax-filter-input[type="checkbox"]:checked')].map((input) => input.value);
+      if (manufacturer && manufacturer.value) target.searchParams.set('manufacturer_id', manufacturer.value);
+      else target.searchParams.delete('manufacturer_id');
+      if (price && price.value) target.searchParams.set('price_range', price.value);
+      else target.searchParams.delete('price_range');
+      if (selectedFilters.length) target.searchParams.set('filter', selectedFilters.join(','));
+      else target.searchParams.delete('filter');
+      target.searchParams.delete('filter[]');
+      target.searchParams.delete('page');
+      if (target.toString() !== window.location.href) window.pdNavigateWithinShop(target.toString());
+      else document.body.classList.remove('pd-toolbar-filter-open');
+    };
+
+    form.addEventListener('change', updateCounts);
+    form.querySelectorAll('.panda-filter-trigger').forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        const menu = trigger.parentElement.querySelector('.panda-filter-menu');
+        const shouldOpen = menu.hidden;
+        form.querySelectorAll('.panda-filter-menu').forEach((item) => { item.hidden = true; });
+        form.querySelectorAll('.panda-filter-trigger').forEach((item) => item.setAttribute('aria-expanded', 'false'));
+        menu.hidden = !shouldOpen;
+        trigger.setAttribute('aria-expanded', String(shouldOpen));
+      });
+    });
+    form.closest('.panda-top-filter-controls').querySelectorAll('.panda-filter-apply-button').forEach((button) => button.addEventListener('click', apply));
+    form.querySelectorAll('.panda-filter-reset').forEach((button) => button.addEventListener('click', () => {
+      const group = button.closest('.panda-filter-dropdown');
+      const radios = group.querySelectorAll('input[type="radio"]');
+      if (radios.length) radios[0].checked = true;
+      group.querySelectorAll('input[type="checkbox"]').forEach((input) => { input.checked = false; });
+      updateCounts();
+    }));
+    updateCounts();
+    document.addEventListener('click', (event) => {
+      if (form.contains(event.target)) return;
+      if (event.target.closest('.pd-toolbar-filter-toggle')) return;
+      form.querySelectorAll('.panda-filter-menu').forEach((menu) => { menu.hidden = true; });
+      form.querySelectorAll('.panda-filter-trigger').forEach((trigger) => trigger.setAttribute('aria-expanded', 'false'));
+    });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
+  else init();
+})();
+</script>

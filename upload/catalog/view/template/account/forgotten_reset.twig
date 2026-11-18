@@ -1,0 +1,33 @@
+{{ header }}
+<div id="account-reset" class="container pd-recovery-page">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb py-2 px-0 bg-transparent mb-3">
+      {% for breadcrumb in breadcrumbs %}
+        {% if loop.last %}<li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.text }}</li>
+        {% else %}<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endif %}
+      {% endfor %}
+    </ol>
+  </nav>
+  <div class="pd-recovery-card">
+    <div class="pd-recovery-mark" aria-hidden="true"><i class="fa-solid fa-key"></i></div>
+    <p class="pd-recovery-kicker">BẢO MẬT TÀI KHOẢN PANDASHOP</p>
+    <h1>{{ heading_reset }}</h1>
+    <p class="pd-recovery-intro">{{ text_password }}</p>
+    <form id="form-reset" action="{{ save }}" method="post" data-oc-toggle="ajax">
+      <div class="mb-3">
+        <label for="input-password" class="form-label">{{ entry_password }}</label>
+        <input type="password" name="password" value="" id="input-password" class="form-control" autocomplete="new-password" required>
+        <div id="error-password" class="invalid-feedback"></div>
+      </div>
+      <div class="mb-3">
+        <label for="input-confirm" class="form-label">{{ entry_confirm }}</label>
+        <input type="password" name="confirm" value="" id="input-confirm" class="form-control" autocomplete="new-password" required>
+        <div id="error-confirm" class="invalid-feedback"></div>
+      </div>
+      <button type="submit" class="btn btn-primary w-100 pd-recovery-submit"><i class="fa-solid fa-check me-2" aria-hidden="true"></i>{{ button_continue }}</button>
+    </form>
+    <div class="pd-recovery-footnote"><i class="fa-solid fa-shield-halved me-2" aria-hidden="true"></i>{{ text_reset_security }}</div>
+    <a class="pd-recovery-back" href="{{ back }}"><i class="fa-solid fa-arrow-left me-2" aria-hidden="true"></i>{{ button_back }}</a>
+  </div>
+</div>
+{{ footer }}

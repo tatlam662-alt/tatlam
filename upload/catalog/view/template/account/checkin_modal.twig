@@ -1,0 +1,113 @@
+{% if checkin_global %}
+  <div id="account-reward">
+{% endif %}
+<div id="pd-checkin-modal" class="modal fade pd-checkin-modal" tabindex="-1" aria-labelledby="pd-checkin-modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="pd-checkin-kicker">{{ text_checkin_modal_kicker }}</span>
+          <h2 id="pd-checkin-modal-title" class="modal-title">{{ text_checkin_modal_title }}</h2>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ text_checkin_close }}"></button>
+      </div>
+      <div class="modal-body">
+        <p class="pd-checkin-modal-intro">{{ text_checkin_description }}</p>
+        <div class="pd-checkin-modal-progress">
+          <span>{{ text_checkin_streak_label }}</span>
+          <strong id="pd-checkin-modal-streak">{{ checkin_streak_text }}</strong>
+          <div class="pd-checkin-streak-track"><span id="pd-checkin-modal-streak-bar" style="width: {{ checkin_streak_percent }}%"></span></div>
+        </div>
+        <div class="pd-checkin-week" role="list" aria-label="{{ text_checkin_week_title }}">
+          {% for reward in checkin_week_rewards %}
+            <div id="pd-checkin-day-{{ reward.number }}" class="pd-checkin-week-day{% if reward.is_checked %} is-checked{% elseif reward.is_today %} is-today{% elseif reward.is_missed %} is-missed{% endif %}" data-weekday="{{ reward.number }}" role="listitem">
+              <span class="pd-checkin-week-name">{{ reward.day }}</span>
+              <span class="pd-checkin-week-icon" aria-hidden="true">
+                {% if reward.is_checked %}<i class="fa-solid fa-check"></i>{% elseif reward.is_today %}<i class="fa-solid fa-bolt"></i>{% else %}<i class="fa-regular fa-calendar"></i>{% endif %}
+              </span>
+              <strong>{{ reward.points }}</strong>
+              {% if reward.bonus %}<small>{{ reward.bonus }}</small>{% endif %}
+              <span class="pd-checkin-week-status">{{ reward.status }}</span>
+            </div>
+          {% endfor %}
+        </div>
+        <p class="pd-checkin-week-rule">{{ text_checkin_week_rule }}</p>
+        <div id="pd-checkin-feedback" class="pd-checkin-feedback" role="status" aria-live="polite" hidden></div>
+      </div>
+      <div class="modal-footer">
+        <button id="pd-checkin-button" class="btn btn-primary" type="button" data-url="{{ checkin_action }}"{% if checked_in_today %} disabled aria-disabled="true"{% endif %}>
+          <i class="fa-solid fa-bolt" aria-hidden="true"></i> {{ text_checkin_button }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ text_checkin_close }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% if checkin_global %}
+  </div>
+{% endif %}
+<script>
+$(function() {
+  $('#pd-checkin-button').on('click', function() {
+    var button = this;
+    var $button = $(button);
+    var $feedback = $('#pd-checkin-feedback');
+
+    if (button.disabled) return;
+
+    button.disabled = true;
+    $button.attr('aria-busy', 'true').addClass('is-loading');
+    $feedback.prop('hidden', true).removeClass('is-error is-success').text('');
+
+    $.ajax({
+      url: $button.data('url'),
+      type: 'POST',
+      dataType: 'json',
+      success: function(json) {
+        if (json.error) {
+          $feedback.addClass('is-error').text(json.error).prop('hidden', false);
+          return;
+        }
+
+        if (json.checked_in) {
+          if ($('#pd-reward-total').length) {
+            $('#pd-reward-total').html($('<span>').text(json.total_points).html() + ' <small>{{ text_points|e('js') }}</small>');
+            $('.pd-reward-estimate b').text(json.equivalent_money);
+          }
+          $feedback.addClass('is-success').text(json.success).prop('hidden', false);
+          if (json.streak_progress_text) $('#pd-checkin-streak').text(json.streak_progress_text);
+          if (json.streak_progress_percent !== undefined) $('#pd-checkin-streak-bar').css('width', json.streak_progress_percent + '%');
+          $('#pd-checkin-modal-streak').text(json.streak_progress_text);
+          $('#pd-checkin-modal-streak-bar').css('width', json.streak_progress_percent + '%');
+          $('#pd-checkin-day-' + json.week_day)
+            .removeClass('is-today')
+            .addClass('is-checked')
+            .find('.pd-checkin-week-status')
+            .text(json.day_done_text);
+          $('#pd-checkin-day-' + json.week_day + ' .pd-checkin-week-icon').html('<i class="fa-solid fa-check" aria-hidden="true"></i>');
+          $('.pd-checkin-kicker').first().text(json.done_text);
+          $button.prop('disabled', true).attr('aria-disabled', 'true').html('<i class="fa-solid fa-check" aria-hidden="true"></i> {{ text_checkin_done|e('js') }}');
+        }
+      },
+      error: function(xhr) {
+        var message = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : '{{ error_checkin_save|e('js') }}';
+        $feedback.addClass('is-error').text(message).prop('hidden', false);
+        if (xhr.status === 409) {
+          $button.prop('disabled', true).attr('aria-disabled', 'true').html('<i class="fa-solid fa-check" aria-hidden="true"></i> {{ text_checkin_done|e('js') }}');
+        }
+      },
+      complete: function() {
+        $button.removeAttr('aria-busy').removeClass('is-loading');
+        if (!$button.prop('disabled')) button.disabled = false;
+      }
+    });
+  });
+
+  {% if checkin_auto_open %}
+    var modalElement = document.getElementById('pd-checkin-modal');
+    if (modalElement && window.bootstrap && window.bootstrap.Modal) {
+      window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
+    }
+  {% endif %}
+});
+</script>

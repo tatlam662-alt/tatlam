@@ -1,0 +1,55 @@
+<div class="dropdown pd-header-hover" style="width:44px;height:44px;min-height:44px;display:flex;align-items:center;justify-content:center;margin:0;padding:0;">
+  <button type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" class="pd-action-btn pd-cart-btn dropdown-toggle" aria-label="{{ text_items }}" aria-haspopup="true" aria-expanded="false" style="width:44px;height:44px;min-width:44px;min-height:44px;max-width:44px;max-height:44px;flex:0 0 44px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;align-self:center;margin:0;padding:0;line-height:1;">
+    <span class="pd-action-icon"><i class="fa-solid fa-cart-shopping"></i></span>
+    {% if cart_count > 0 %}<span class="pd-count-badge pd-cart-count-badge" aria-label="{{ text_cart_product_count }}" aria-live="polite">{{ cart_count }}</span>{% endif %}
+    <span class="visually-hidden">{{ text_items }}</span>
+  </button>
+
+  <div class="dropdown-menu dropdown-menu-end pd-cart-dropdown shadow-lg">
+    {% if products %}
+      <div class="pd-cart-popover-heading">
+        <strong>{{ text_shopping_cart }}</strong>
+        <span>{{ text_cart_product_count }}</span>
+      </div>
+
+      <div class="pd-cart-items">
+        {% for product in products %}
+          <div class="pd-cart-item">
+            <a href="{{ product.href }}" class="pd-cart-item-image">
+              {% if product.thumb %}<img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}"/>{% endif %}
+            </a>
+            <div class="pd-cart-item-info">
+              <a href="{{ product.href }}" class="pd-cart-item-name">{{ product.name }}</a>
+              {% for option in product.option %}
+                <small class="pd-cart-item-option">{{ option.name }}: {{ option.value }}</small>
+              {% endfor %}
+              <div class="pd-cart-item-meta"><span>x {{ product.quantity }}</span><strong>{{ product.total }}</strong></div>
+            </div>
+            <form action="{{ product.remove }}" method="post" data-oc-load="{{ list }}" class="pd-cart-item-remove-form">
+              <input type="hidden" name="key" value="{{ product.cart_id }}"/>
+              <button type="submit" class="pd-cart-item-remove" data-bs-toggle="tooltip" title="{{ text_remove_one }}" aria-label="{{ text_remove_one }}: {{ product.name }}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </form>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="pd-cart-summary">
+        {% for total in totals %}
+          <div class="pd-cart-summary-row{% if loop.last %} is-grand-total{% endif %}">
+            <span>{{ total.title }}</span><strong>{{ total.text }}</strong>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="pd-cart-actions">
+        <a href="{{ cart }}" class="pd-cart-view-button"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> {{ text_cart }}</a>
+        <a href="{{ checkout }}" class="pd-cart-checkout-button"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> {{ text_checkout }}</a>
+      </div>
+    {% else %}
+      <div class="pd-cart-empty">
+        <span><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i></span>
+        <strong>{{ text_no_results }}</strong>
+      </div>
+    {% endif %}
+  </div>
+</div>

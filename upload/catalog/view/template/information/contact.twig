@@ -1,0 +1,111 @@
+{{ header }}
+<div id="information-contact" class="container pd-contact-page">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      {% for breadcrumb in breadcrumbs %}
+        {% if loop.last %}
+          <li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.text|escape }}</li>
+        {% else %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href|escape }}">{{ breadcrumb.text|escape }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+  </nav>
+
+  {{ content_top }}
+  <header class="pd-contact-heading">
+    <span class="pd-contact-heading__badge"><i class="fa-solid fa-headset" aria-hidden="true"></i> Trung tâm hỗ trợ PanDaShop</span>
+    <h1>{{ heading_title|escape }}</h1>
+    <p>{{ text_contact_intro }}</p>
+  </header>
+
+  <div class="pd-contact-layout">
+    <aside class="pd-contact-info" aria-label="{{ text_contact_info_label }}">
+      <span class="pd-contact-card__topline" aria-hidden="true"></span>
+      <h2><i class="fa-solid fa-building" aria-hidden="true"></i> {{ text_store_information }}</h2>
+
+      <div class="pd-contact-detail">
+        <span class="pd-contact-detail__icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span>
+        <div><small>{{ text_head_office }}</small><address>{{ address ? address : text_default_address }}</address></div>
+      </div>
+      {% if telephone %}
+        <div class="pd-contact-detail">
+          <span class="pd-contact-detail__icon"><i class="fa-solid fa-phone-volume" aria-hidden="true"></i></span>
+          <div><small>{{ text_support_hotline }}</small><a href="tel:{{ telephone|replace({' ': '', '-': '', '(': '', ')': ''}) }}">{{ telephone|escape }}</a></div>
+        </div>
+      {% endif %}
+      {% if email %}
+        <div class="pd-contact-detail">
+          <span class="pd-contact-detail__icon"><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i></span>
+          <div><small>{{ text_customer_service_email }}</small><a href="mailto:{{ email|escape }}">{{ email|escape }}</a></div>
+        </div>
+      {% endif %}
+      {% if open %}
+        <div class="pd-contact-detail">
+          <span class="pd-contact-detail__icon"><i class="fa-regular fa-clock" aria-hidden="true"></i></span>
+          <div><small>{{ text_business_hours }}</small><p>{{ open }}</p></div>
+        </div>
+      {% endif %}
+
+      {% if geocode %}
+        <a class="pd-contact-map" href="https://maps.google.com/maps?q={{ geocode|url_encode }}&amp;hl={{ geocode_hl|url_encode }}&amp;t=m&amp;z=15" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i> {{ button_map|escape }}</a>
+      {% endif %}
+
+      {% if locations %}
+        <div class="pd-contact-locations">
+          <h3>{{ text_store|escape }}</h3>
+          {% for location in locations %}
+            <details class="pd-contact-location">
+              <summary>{{ location.name|escape }}</summary>
+              <div><address>{{ location.address }}</address>{% if location.telephone %}<a href="tel:{{ location.telephone|replace({' ': '', '-': '', '(': '', ')': ''}) }}">{{ location.telephone|escape }}</a>{% endif %}{% if location.open %}<p>{{ location.open }}</p>{% endif %}</div>
+            </details>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="pd-contact-channels">
+        <span>{{ text_support_channels }}</span>
+        <div>
+          {% if zalo %}<a href="{{ zalo|escape }}" target="_blank" rel="noopener noreferrer" class="pd-contact-channel pd-contact-channel--zalo"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i> Zalo</a>{% endif %}
+          <a href="https://t.me/tatlam8686" onclick="window.open('https://web.telegram.org/a/#@tatlam8686','_blank','noopener,noreferrer'); return false;" target="_blank" rel="noopener noreferrer" class="pd-contact-channel" aria-label="Telegram: @tatlam8686"><i class="fa-brands fa-telegram" aria-hidden="true"></i> Telegram</a>
+          {% if email %}<a href="mailto:{{ email|escape }}" class="pd-contact-channel"><i class="fa-regular fa-envelope" aria-hidden="true"></i> Email</a>{% endif %}
+        </div>
+      </div>
+    </aside>
+
+    <section class="pd-contact-form-card" aria-labelledby="pd-contact-form-title">
+      <span class="pd-contact-card__topline" aria-hidden="true"></span>
+      <div class="pd-contact-form-heading">
+        <span><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></span>
+        <div><h2 id="pd-contact-form-title">{{ text_contact|escape }}</h2><p>{{ text_contact_form_intro }}</p></div>
+      </div>
+
+      <form id="form-contact" action="{{ send }}" method="post" data-oc-toggle="ajax">
+        <div class="pd-contact-fields">
+          <div class="pd-contact-field required">
+            <label for="input-name">{{ entry_name|escape }} <b>*</b></label>
+            <div class="pd-contact-input"><i class="fa-regular fa-user" aria-hidden="true"></i><input type="text" name="name" value="{{ name|escape }}" id="input-name" class="form-control" autocomplete="name" required /></div>
+            <div id="error-name" class="invalid-feedback"></div>
+          </div>
+          <div class="pd-contact-field required">
+            <label for="input-email">{{ entry_email|escape }} <b>*</b></label>
+            <div class="pd-contact-input"><i class="fa-regular fa-envelope" aria-hidden="true"></i><input type="email" name="email" value="{{ email|escape }}" id="input-email" class="form-control" autocomplete="email" required /></div>
+            <div id="error-email" class="invalid-feedback"></div>
+          </div>
+          <div class="pd-contact-field pd-contact-field--wide required">
+            <label for="input-enquiry">{{ entry_enquiry|escape }} <b>*</b></label>
+            <textarea name="enquiry" rows="6" id="input-enquiry" class="form-control" required></textarea>
+            <div id="error-enquiry" class="invalid-feedback"></div>
+          </div>
+          <div class="pd-contact-field pd-contact-field--wide">{{ captcha }}</div>
+        </div>
+        <div class="pd-contact-submit-row">
+          <button type="submit" class="pd-contact-submit"><span>{{ button_submit|escape }}</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+        </div>
+      </form>
+    </section>
+  </div>
+  {{ content_bottom }}
+</div>
+</main>
+{{ footer }}

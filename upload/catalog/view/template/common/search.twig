@@ -1,0 +1,7 @@
+<div class="pd-search-autocomplete">
+	<form action="{{ action }}" method="post" class="pd-search-form" role="search">
+		<input type="search" name="search" value="{{ search|escape }}" placeholder="{{ text_search_placeholder }}" class="pd-search-input pd-search-input-autocomplete" aria-label="{{ text_search }}" aria-autocomplete="list" aria-expanded="false" autocomplete="off" data-suggest-url="{{ action|replace({'common/search.redirect': 'extension/pandashop/search.autocomplete'}) }}" data-suggestion-loading="{{ text_suggestion_loading|e('html_attr') }}" data-suggestion-empty="{{ text_suggestion_empty|e('html_attr') }}" data-suggestion-error="{{ text_suggestion_error|e('html_attr') }}" data-suggestion-products="{{ text_suggestion_products|e('html_attr') }}" data-suggestion-categories="{{ text_suggestion_categories|e('html_attr') }}"/>
+		<button type="submit" class="pd-search-btn" aria-label="{{ text_search }}"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
+	</form>
+	<ul class="pd-search-suggestions" role="listbox" hidden></ul>
+</div>

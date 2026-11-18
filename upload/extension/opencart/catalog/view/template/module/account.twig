@@ -1,0 +1,28 @@
+<aside class="panda-account-sidebar" aria-label="{{ text_account }}">
+  {% if logged %}
+    <div class="panda-account-mini-profile">
+      <div class="panda-avatar-circle-sm" aria-hidden="true"><i class="fa-solid fa-user-astronaut"></i></div>
+      <div class="overflow-hidden">
+        <h2 class="panda-account-customer-name">{{ customer_name }}</h2>
+      <span class="panda-account-member-badge">PanDaMember{% if customer_group_name %} · {{ customer_group_name }}{% endif %}</span>
+      </div>
+    </div>
+    <nav class="panda-account-nav" aria-label="{{ text_account }}">
+      <a href="{{ account }}" class="account-nav-item{% if current_route == 'account/account' %} active{% endif %}"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i><span>{{ text_nav_account }}</span></a>
+      <a href="{{ order }}" class="account-nav-item{% if 'account/order' in current_route %} active{% endif %}"><i class="fa-solid fa-box-archive" aria-hidden="true"></i><span>{{ text_nav_orders }}</span></a>
+      <a href="{{ wishlist }}" class="account-nav-item{% if current_route == 'account/wishlist' %} active{% endif %}"><i class="fa-solid fa-heart" aria-hidden="true"></i><span>{{ text_nav_wishlist }}</span></a>
+      <a href="{{ edit }}" class="account-nav-item{% if current_route == 'account/edit' %} active{% endif %}"><i class="fa-solid fa-user-gear" aria-hidden="true"></i><span>{{ text_nav_profile }}</span></a>
+      <a href="{{ password }}" class="account-nav-item{% if current_route == 'account/password' %} active{% endif %}"><i class="fa-solid fa-lock" aria-hidden="true"></i><span>{{ text_nav_password }}</span></a>
+      <a href="{{ address }}" class="account-nav-item{% if 'account/address' in current_route %} active{% endif %}"><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span>{{ text_nav_address }}</span></a>
+      <a href="{{ reward }}" class="account-nav-item{% if current_route == 'account/reward' %} active{% endif %}"><i class="fa-solid fa-coins" aria-hidden="true"></i><span>{{ text_nav_reward }}</span></a>
+      <a href="{{ return }}" class="account-nav-item{% if 'account/returns' in current_route %} active{% endif %}"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span>{{ text_nav_returns }}</span></a>
+      <a href="{{ logout }}" class="account-nav-item account-nav-logout"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i><span>{{ text_nav_logout }}</span></a>
+    </nav>
+  {% else %}
+    <nav class="panda-account-nav" aria-label="{{ text_account }}">
+      <a href="{{ login }}" class="account-nav-item"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i><span>{{ text_login }}</span></a>
+      <a href="{{ register }}" class="account-nav-item"><i class="fa-solid fa-user-plus" aria-hidden="true"></i><span>{{ text_register }}</span></a>
+      <a href="{{ forgotten }}" class="account-nav-item"><i class="fa-solid fa-key" aria-hidden="true"></i><span>{{ text_forgotten }}</span></a>
+    </nav>
+  {% endif %}
+</aside>

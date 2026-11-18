@@ -1,0 +1,192 @@
+{{ header }}
+<div id="account-order" class="container pd-order-page">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <div class="row">
+    {{ column_left }}
+    <main id="content" class="col">
+      <header class="pd-order-hero">
+        <div class="pd-order-hero-copy">
+          <span class="pd-order-eyebrow">PanDaShop <span aria-hidden="true">/</span> {{ text_history }}</span>
+          <h1>{{ heading_title }}</h1>
+          <div class="pd-order-hero-meta"><span>{{ text_date_ordered }} <strong>{{ date_added }}</strong></span><span>{{ text_order_id }} <strong>#{{ order_id }}</strong></span></div>
+        </div>
+        <div class="pd-order-hero-actions">
+          {% if order_status %}<span class="pd-order-status-badge is-{{ order_status_class }}"><i class="fa-solid fa-circle" aria-hidden="true"></i>{{ order_status }}</span>{% endif %}
+          {% if can_cancel_order %}<button type="button" id="button-cancel-order" class="btn btn-outline-danger pd-order-cancel-button" data-url="{{ cancel_order }}" data-confirm="{{ text_cancel_order_confirm }}" data-error="{{ error_cancel_order }}"><i class="fa-solid fa-ban" aria-hidden="true"></i>{{ text_cancel_order }}</button>{% endif %}
+          <span class="pd-order-invoice-chip"><i class="fa-solid fa-receipt" aria-hidden="true"></i>{{ text_invoice_no }}: {{ invoice_no ? invoice_no : text_tbc }}</span>
+          <a href="{{ continue }}" class="btn btn-outline-secondary pd-order-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>{{ text_back_to_orders }}</a>
+        </div>
+      </header>
+
+      {% if order_cancelled %}<div class="pd-order-cancelled-banner"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i><span>{{ order_status }}</span></div>{% else %}<section class="pd-order-progress" aria-label="{{ heading_title }}">
+        {% for step_label in order_steps %}
+          <div class="pd-order-progress-step{% if loop.index < order_step %} is-complete{% elseif loop.index == order_step %} is-current{% endif %}">
+            <span class="pd-order-progress-icon"><i class="fa-solid {% if loop.index == 1 %}fa-bag-shopping{% elseif loop.index == 2 %}fa-clipboard-check{% elseif loop.index == 3 %}fa-truck-fast{% else %}fa-check{% endif %}" aria-hidden="true"></i></span>
+            <span class="pd-order-progress-label">{{ step_label }}</span>
+          </div>
+        {% endfor %}
+      </section>{% endif %}
+
+      <section class="pd-order-dashboard">
+        <div class="pd-order-main-column">
+          <section class="pd-order-card pd-order-products-card">
+            <div class="pd-order-card-heading">
+              <div><h2>{{ text_order_product }}</h2></div>
+              <span class="pd-order-count">{{ products|length }}</span>
+            </div>
+            <div class="table-responsive">
+              <table class="table pd-order-items">
+                <thead><tr>
+                  <th>{{ column_product }}</th>
+                  <th class="text-center">{{ column_quantity }}</th>
+                  <th class="text-end">{{ column_price }}</th>
+                  <th class="text-end">{{ column_total }}</th>
+                  <th class="text-end">{{ column_action }}</th>
+                </tr></thead>
+                <tbody>
+                  {% set product_row = 0 %}
+                  {% for product in products %}
+                    <tr id="product-row-{{ product_row }}">
+                      <td>
+                        <div class="pd-order-product">
+                          {% if product.thumb %}<a class="pd-order-product-image" href="{{ product.view }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" width="64" height="64" loading="lazy"></a>{% endif %}
+                          <div class="pd-order-product-copy">
+                            <a class="pd-order-product-name" href="{{ product.view }}">{{ product.name }}</a>
+                            <span class="pd-order-product-model">{{ text_model }}: {{ product.model }}</span>
+                            {% if product.option %}<ul class="pd-order-options">{% for option in product.option %}<li>{{ option.name }}: {{ option.value }}<div id="error-{{ product_row }}-option-{{ option.product_option_id }}" class="invalid-feedback mt-0"></div></li>{% endfor %}</ul>{% endif %}
+                            {% if product.subscription %}<span class="pd-order-product-model">{{ text_subscription }}: <a href="{{ product.subscription }}" target="_blank" rel="noopener">{{ product.subscription_plan }}</a><div id="error-{{ product_row }}-subscription" class="invalid-feedback mt-0"></div></span>{% endif %}
+                            {% if product.reward %}<span class="pd-order-product-model">{{ text_points }}: {{ product.reward }}</span>{% endif %}
+                            <div id="error-{{ product_row }}-product" class="invalid-feedback mt-0"></div>
+                          </div>
+                        </div>
+                        <form id="form-product-{{ product_row }}">
+                          <input type="hidden" name="product_id" value="{{ product.product_id }}"><input type="hidden" name="quantity" value="{{ product.quantity }}">
+                          {% for option in product.option %}
+                            {% if option.type == 'select' or option.type == 'radio' %}<input type="hidden" name="option[{{ option.product_option_id }}]" value="{{ option.product_option_value_id }}">{% endif %}
+                            {% if option.type == 'checkbox' %}<input type="hidden" name="option[{{ option.product_option_id }}][]" value="{{ option.product_option_value_id }}">{% endif %}
+                            {% if option.type == 'text' or option.type == 'textarea' or option.type == 'file' or option.type == 'date' or option.type == 'datetime' or option.type == 'time' %}<input type="hidden" name="option[{{ option.product_option_id }}]" value="{{ option.value }}">{% endif %}
+                          {% endfor %}
+                          <input type="hidden" name="subscription_plan_id" value="{{ product.subscription_plan_id }}">
+                        </form>
+                      </td>
+                      <td class="text-center pd-order-quantity">{{ product.quantity }}</td>
+                      <td class="text-end pd-order-money">{{ product.price }}</td>
+                      <td class="text-end pd-order-money pd-order-line-total">{{ product.total }}</td>
+                      <td class="text-end pd-order-actions"><button type="submit" form="form-product-{{ product_row }}" class="btn btn-primary">{{ button_reorder }}</button>{% if not order_cancelled %}<a href="{{ product.return }}" class="btn btn-outline-secondary">{{ button_return }}</a>{% endif %}</td>
+                    </tr>
+                    {% set product_row = product_row + 1 %}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <div class="pd-order-address-grid"><section class="pd-order-card pd-order-address-card">
+            <div class="pd-order-card-heading"><div><span class="pd-order-eyebrow">{{ text_shipping_method }}</span><h2>{{ text_shipping_address }}</h2></div><span class="pd-order-heading-icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span></div>
+            {% if shipping_address_clean %}<address class="pd-order-address">{{ shipping_address_clean }}</address>{% else %}<p class="pd-order-muted">{{ shipping_address }}</p>{% endif %}
+            {% if shipping_method %}<div class="pd-order-delivery-line"><i class="fa-solid fa-truck-fast" aria-hidden="true"></i><span>{{ shipping_method }}</span></div>{% endif %}
+          </section>
+
+          {% if payment_address or payment_method %}
+            <section class="pd-order-card pd-order-payment-card">
+              <div class="pd-order-card-heading"><div><span class="pd-order-eyebrow">{{ text_payment_method }}</span><h2>{{ text_payment_address }}</h2></div><span class="pd-order-heading-icon"><i class="fa-regular fa-credit-card" aria-hidden="true"></i></span></div>
+              {% if payment_address %}<address class="pd-order-address">{{ payment_address }}</address>{% endif %}
+              {% if payment_method %}<div class="pd-order-delivery-line"><i class="fa-solid fa-wallet" aria-hidden="true"></i><span>{{ payment_method }}</span></div>{% endif %}
+            </section>
+          {% endif %}</div>
+
+          {% if comment %}<section class="pd-order-card pd-order-comment"><h2><i class="fa-regular fa-message" aria-hidden="true"></i>{{ text_comment }}</h2><p>{{ comment|e|nl2br }}</p></section>{% endif %}
+
+          <section class="pd-order-card pd-order-history-card">
+            <div class="pd-order-card-heading"><div><span class="pd-order-eyebrow">{{ text_order_step_1 }} · {{ text_order_step_4 }}</span><h2>{{ text_history }}</h2></div><span class="pd-order-heading-icon"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i></span></div>
+            <div id="history">{{ history }}</div>
+          </section>
+        </div>
+
+        <aside class="pd-order-side-column">
+          <section class="pd-order-card pd-order-total-card">
+            <div class="pd-order-card-heading"><div><span class="pd-order-eyebrow">{{ text_order_id }} #{{ order_id }}</span><h2>{{ text_order_total }}</h2></div><span class="pd-order-heading-icon"><i class="fa-solid fa-receipt" aria-hidden="true"></i></span></div>
+            <dl class="pd-order-meta-list"><div><dt>{{ text_invoice_no }}</dt><dd>{{ invoice_no ? invoice_no : text_tbc }}</dd></div><div><dt>{{ text_date_ordered }}</dt><dd>{{ date_added }}</dd></div><div><dt>{{ text_payment_method }}</dt><dd>{{ payment_method }}</dd></div></dl>
+            <div class="pd-order-totals">
+              {% for total in totals %}<div class="pd-order-total-row{% if loop.last %} is-grand-total{% endif %}"><span>{{ total.title }}</span><strong>{{ total.text }}</strong></div>{% endfor %}
+            </div>
+          </section>
+          <section class="pd-order-help-card pd-order-status-card">
+            <span class="pd-order-help-icon"><i class="fa-regular fa-clock" aria-hidden="true"></i></span>
+            <div class="pd-order-help-content">
+              <span class="pd-order-status-caption">{{ text_order_status }}</span>
+              <strong class="pd-order-status-value">{{ order_status }}</strong>
+              <span class="pd-order-number">{{ text_order_id }} #{{ order_id }}</span>
+            </div>
+          </section>
+        </aside>
+      </section>
+
+      <footer class="pd-order-footer">
+        <a href="{{ continue }}" class="btn btn-primary"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>{{ button_continue }}</a>
+      </footer>
+      {{ content_bottom }}
+    </main>
+    {{ column_right }}
+  </div>
+</div>
+
+<script type="text/javascript"><!--
+var product_row = 0;
+
+$('form[id^="form-product-"]').on('submit', function(e) {
+    e.preventDefault();
+    var element = this;
+    var button = e.originalEvent && e.originalEvent.submitter ? e.originalEvent.submitter : '';
+
+    $.ajax({
+        url: 'index.php?route=checkout/cart.add&language={{ language }}',
+        type: 'post', data: $(element).serialize(), dataType: 'json', cache: false,
+        beforeSend: function() { $(button).button('loading'); },
+        complete: function() { $(button).button('reset'); },
+        success: function(json) {
+            $('#account-order .invalid-feedback').removeClass('d-block');
+            if (json.error) {
+                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> {{ error_reorder }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                product_row = $(element).attr('id').substr(13);
+                if (json.error.warning) { $('#alert').prepend('<div class="alert alert-danger alert-dismissible">' + json.error.warning + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>'); delete json.error.warning; }
+                for (var key in json.error) { $('#error-' + product_row + '-' + key.replaceAll('_', '-')).html(json.error[key]).addClass('d-block'); }
+            }
+            if (json.success) {
+                $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> ' + json.success + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                $('#cart').load('index.php?route=common/cart.info&language={{ language }}');
+            }
+        }
+    });
+});
+
+$('#history').on('click', '.pagination a', function(e) { e.preventDefault(); $('#history').load(this.href); });
+
+$('#button-cancel-order').on('click', function() {
+    var button = this;
+    window.pdConfirm($(button).data('confirm'), { title: 'Hủy đơn hàng', confirmText: 'Hủy đơn', danger: true }).then(function(confirmed) {
+        if (!confirmed) return;
+        $.ajax({
+            url: $(button).data('url'), type: 'POST', data: { cancel_order: '1' }, headers: { 'X-Requested-With': 'XMLHttpRequest' }, dataType: 'json', cache: false,
+            beforeSend: function() { $(button).prop('disabled', true); },
+            complete: function() { $(button).prop('disabled', false); },
+            success: function(json) {
+                if (json.redirect) {
+                    window.pdNavigateWithinShop(json.redirect);
+                }
+                else window.pdAlert(json.error || $(button).data('error'), { title: 'Không thể hủy đơn', variant: 'error' });
+            },
+            error: function(xhr) {
+                var response = xhr && xhr.responseJSON;
+                window.pdAlert((response && response.error) || $(button).data('error'), { title: 'Không thể hủy đơn', variant: 'error' });
+            }
+        });
+    });
+});
+//--></script>
+{{ footer }}

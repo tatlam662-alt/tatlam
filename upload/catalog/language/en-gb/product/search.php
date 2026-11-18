@@ -1,0 +1,72 @@
+<?php
+// Heading
+$_['heading_title']     = 'Search';
+$_['heading_tag']       = 'Tag - ';
+
+// Text
+$_['text_search']       = 'Products meeting the search criteria';
+$_['text_keyword']      = 'Keywords';
+$_['text_category']     = 'All Categories';
+$_['text_sub_category'] = 'Search in subcategories';
+$_['text_no_results']   = 'There is no product that matches the search criteria.';
+$_['text_compare']      = 'Product Compare (%s)';
+$_['text_sort']         = 'Sort By';
+$_['text_default']      = 'Default';
+$_['text_date_desc']      = 'Newest';
+$_['text_name_asc']     = 'Name (A - Z)';
+$_['text_name_desc']    = 'Name (Z - A)';
+$_['text_price_asc']    = 'Price (Low &gt; High)';
+$_['text_price_desc']   = 'Price (High &gt; Low)';
+$_['text_rating_asc']   = 'Rating (Lowest)';
+$_['text_rating_desc']  = 'Rating (Highest)';
+$_['text_model_asc']    = 'Model (A - Z)';
+$_['text_model_desc']   = 'Model (Z - A)';
+$_['text_limit']        = 'Show';
+$_['text_filter_in_stock'] = 'Show in-stock products only';
+
+// Entry
+$_['entry_search']      = 'Search Criteria';
+$_['entry_description'] = 'Search in product descriptions';
+$_['text_search_eyebrow'] = 'PANDA SHOP · SEARCH';
+$_['text_search_found'] = 'Found';
+$_['text_products_matching'] = 'products matching';
+$_['text_search_category_results'] = 'Showing';
+$_['text_products'] = 'products';
+$_['text_search_intro'] = 'Quickly find the products, categories, and devices you need.';
+$_['text_find_products'] = 'FIND PRODUCTS';
+$_['text_search_keyword'] = 'Search keywords';
+$_['text_clear_search'] = 'Clear search';
+$_['text_clear_keyword'] = 'Clear keyword';
+$_['text_product_category'] = 'Product category';
+$_['text_popular_keywords'] = 'Popular searches';
+$_['text_results'] = 'RESULTS';
+$_['text_matching_products'] = 'Matching products';
+$_['text_search_result_controls'] = 'Search result controls';
+$_['text_view_type'] = 'View type';
+$_['text_grid_view'] = 'Grid view';
+$_['text_list_view'] = 'List view';
+$_['text_compare_button'] = 'Compare';
+$_['text_no_matching_products'] = 'No matching products found';
+$_['text_search_suggestions_hint'] = 'Try a shorter keyword, check the spelling, or choose a popular search below.';
+$_['text_clear_and_search_again'] = 'Clear and search again';
+$_['text_search_prompt'] = 'What are you looking for?';
+$_['text_search_prompt_hint'] = 'Enter a product name or choose a popular search to see the latest products.';
+$_['text_enter_search_keyword'] = 'Please enter a search keyword.';
+$_['text_new_arrivals_title'] = 'New arrivals';
+$_['text_arrivals_eyebrow'] = 'JUST LANDED AT PANDASHOP';
+$_['text_arrivals_intro'] = 'Discover the latest products, freshly updated from the brands you love.';
+$_['text_arrivals_updated'] = 'New picks every 2 days';
+$_['text_arrivals_authentic'] = 'Authentic products';
+$_['text_arrivals_categories'] = 'Shop by category';
+$_['text_arrivals_all'] = 'All new products';
+$_['text_arrivals_collection'] = 'THE LATEST COLLECTION';
+$_['text_arrivals_badge'] = 'New';
+$_['text_arrivals_empty_title'] = 'No new products in this category yet';
+$_['text_arrivals_empty_description'] = 'Explore other categories to discover the latest products.';
+$_['text_products'] = 'products';
+$_['text_arrivals_random_sort'] = 'Random discovery';
+$_['text_suggestion_loading'] = 'Searching products…';
+$_['text_suggestion_empty'] = 'No matching products or categories found.';
+$_['text_suggestion_error'] = 'Could not load suggestions. Please try searching.';
+$_['text_suggestion_products'] = 'Products';
+$_['text_suggestion_categories'] = 'Categories';

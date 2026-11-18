@@ -1,0 +1,27 @@
+<?php
+$_['heading_title'] = 'Liên hệ với chúng tôi';
+$_['text_location'] = 'Địa điểm';
+$_['text_store'] = 'Cửa hàng';
+$_['text_contact'] = 'Biểu mẫu liên hệ';
+$_['text_address'] = 'Địa chỉ';
+$_['text_telephone'] = 'Điện thoại';
+$_['text_open'] = 'Giờ mở cửa';
+$_['text_comment'] = 'Ghi chú';
+$_['text_message'] = '<p>Yêu cầu của bạn đã được gửi đến cửa hàng.</p>';
+$_['entry_name'] = 'Họ và tên';
+$_['entry_email'] = 'Địa chỉ email';
+$_['entry_enquiry'] = 'Nội dung liên hệ';
+$_['email_subject'] = 'Yêu cầu liên hệ %s';
+$_['error_name'] = 'Tên phải có từ 3 đến 32 ký tự.';
+$_['error_email'] = 'Địa chỉ email không hợp lệ.';
+$_['error_enquiry'] = 'Nội dung phải có từ 10 đến 3.000 ký tự.';
+$_['text_contact_intro'] = 'Chúng tôi luôn sẵn sàng hỗ trợ bạn về sản phẩm, đơn hàng và giải pháp công nghệ.';
+$_['text_store_information'] = 'Thông tin PanDaShop';
+$_['text_head_office'] = 'Trụ sở & showroom';
+$_['text_default_address'] = 'TP. Bắc Ninh, Việt Nam';
+$_['text_support_hotline'] = 'Hotline tư vấn';
+$_['text_customer_service_email'] = 'Email chăm sóc khách hàng';
+$_['text_business_hours'] = 'Thời gian phục vụ';
+$_['text_support_channels'] = 'Kênh hỗ trợ trực tiếp';
+$_['text_contact_form_intro'] = 'Gửi câu hỏi hoặc yêu cầu hỗ trợ đến đội ngũ PanDaShop.';
+$_['text_contact_info_label'] = 'Thông tin liên hệ PanDaShop';

@@ -1,0 +1,1075 @@
+{{ header }}
+<div id="product-info" class="container pd-standard-page">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  {% if stock_alert_message %}<div class="alert alert-success" role="status">{{ stock_alert_message }}</div>{% endif %}
+  {% if stock_alert_error %}<div class="alert alert-danger" role="alert">{{ stock_alert_error }}</div>{% endif %}
+  <div class="row">{{ column_left }}
+    <div id="content" class="col">
+      {{ content_top }}
+      <div class="row mb-3 pd-product-detail-wrap pd-pdp-layout">
+        {% if thumb or images %}
+          <div class="col-sm pd-pdp-gallery-column">
+            <div class="image pd-pdp-gallery" data-product-model="{{ model|e('html_attr') }}" data-language="{{ language|e('html_attr') }}">
+              <div class="pd-pdp-gallery-stage" data-pd-gallery-stage>
+                {% if thumb %}
+                  <a href="{{ popup }}" title="{{ heading_title }}" class="pd-pdp-main-image" data-pd-main-image role="button" aria-label="{{ heading_title|e('html_attr') }}"><img src="{{ thumb }}" title="{{ heading_title }}" alt="{{ heading_title }}" class="img-thumbnail mb-3"/></a>
+                {% endif %}
+                {% if product_detail_highlights %}
+                  <section id="pd-pdp-feature-slide" class="pd-pdp-feature-slide" data-pd-feature-slide hidden aria-label="{{ text_product_highlights }}">
+                    {% if thumb %}<div class="pd-pdp-feature-slide-image"><img src="{{ popup }}" alt="{{ heading_title|e('html_attr') }}" loading="lazy"/></div>{% endif %}
+                    <div class="pd-pdp-feature-slide-content">
+                      <h2><span class="pd-pdp-feature-star"><i class="fa-solid fa-star" aria-hidden="true"></i></span>{{ text_product_highlights }}</h2>
+                      <ul>
+                        {% for highlight in product_detail_highlights %}
+                          <li>{{ highlight }}</li>
+                        {% endfor %}
+                      </ul>
+                      {% if product_detail_source %}
+                        <p>{{ text_highlights_source_before }} <a href="{{ product_detail_source|e('html_attr') }}" target="_blank" rel="noopener noreferrer">{{ text_manufacturer_documentation }}</a></p>
+                      {% endif %}
+                    </div>
+                  </section>
+                {% endif %}
+                <button type="button" class="pd-pdp-gallery-arrow pd-pdp-gallery-arrow-prev" data-pd-gallery-step="-1" aria-label="{{ text_previous_image }}"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+                <button type="button" class="pd-pdp-gallery-arrow pd-pdp-gallery-arrow-next" data-pd-gallery-step="1" aria-label="{{ text_next_image }}"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+              </div>
+              <div class="pd-pdp-thumbnails" aria-label="{{ text_product_gallery }}">
+                {% if product_detail_highlights %}
+                  <a href="#pd-pdp-feature-slide" class="pd-pdp-feature-thumb" data-pd-feature-thumb aria-label="{{ text_product_highlights }}" title="{{ text_product_highlights }}"><i class="fa-solid fa-star" aria-hidden="true"></i><span>{{ text_product_highlights }}</span></a>
+                {% endif %}
+                {% if thumb %}
+                  <a href="{{ popup }}" title="{{ heading_title }}" data-pd-gallery-thumb data-pd-gallery-main-thumb aria-label="{{ heading_title }}"><img src="{{ thumb }}" title="{{ heading_title }}" alt="{{ heading_title }}" loading="lazy"/></a>
+                {% endif %}
+                {% for image in images %}
+                  <a href="{{ image.popup }}" title="{{ heading_title }}" data-pd-gallery-thumb><img src="{{ image.thumb }}" title="{{ heading_title }}" alt="{{ heading_title }}" loading="lazy"/></a>
+                {% endfor %}
+              </div>
+            </div>
+            {% if product_detail_video %}
+              <div class="pd-pdp-video-actions">
+                <a href="{{ product_detail_video|e('html_attr') }}" target="_blank" rel="noopener noreferrer" class="pd-pdp-video-link"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> {{ text_video_intro }}</a>
+                <span>{{ text_video_official }} {{ product_detail_video_title }}</span>
+              </div>
+            {% endif %}
+            <script>
+            (() => {
+              const gallery = document.querySelector('.pd-pdp-gallery[data-product-model]');
+              if (!gallery) return;
+
+              const officialImages = {
+                'MS-LOGI-01': [
+                  ['image/catalog/pandashop-detail/b4f3b1e3a65adf413ab1.png', 'Góc nhìn từ trên'],
+                  ['image/catalog/pandashop-detail/ad5160bc2032eee5f59e.png', 'Góc nghiêng'],
+                  ['image/catalog/pandashop-detail/7c011cd0ef556ead3f5b.png', 'Góc cạnh']
+                ],
+                'MS-LOGI-02': [
+                  ['image/catalog/pandashop-detail/5308ca2aeaf9afd4b6de.png', 'Góc nhìn từ trên'],
+                  ['image/catalog/pandashop-detail/efe5ccf9c40a15986145.png', 'Chi tiết sản phẩm'],
+                  ['image/catalog/pandashop-detail/85ec557b9babf8217fc5.png', 'Góc cạnh']
+                ],
+                'MS-RAZER-01': [
+                  ['image/catalog/pandashop-detail/5494c4f76775351b0756.jpg', 'Mặt trước'],
+                  ['image/catalog/pandashop-detail/08acf044487045447d31.jpg', 'Góc bên'],
+                  ['image/catalog/pandashop-detail/03400aa8d7015d442e87.jpg', 'Góc nhìn chi tiết']
+                ],
+                'MS-RAZER-02': [
+                  ['image/catalog/pandashop-detail/ef6197ce323e746354b8.jpg', 'Mặt trước'],
+                  ['image/catalog/pandashop-detail/e046c4a734ca4c75217f.jpg', 'Góc bên']
+                ],
+                'FLY-DJI-01': [
+                  ['image/catalog/pandashop-detail/agtek-a7dc720241ff48c004ee.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-c31042e6079428c33c16.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-5f1775a3cfd57567cab5.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-f68e203ccbb6fba30ce2.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-78eaafc44a979e175ff7.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-8e02f80d23ea0bfcf9ed.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-2147c1e45cb685f1fc9d.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'DJI-MINI4PRO-FMC': [
+                  ['image/catalog/pandashop-detail/agtek-a7dc720241ff48c004ee.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-c31042e6079428c33c16.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-5f1775a3cfd57567cab5.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-f68e203ccbb6fba30ce2.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-78eaafc44a979e175ff7.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-8e02f80d23ea0bfcf9ed.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-2147c1e45cb685f1fc9d.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'DJI-AIR3S': [
+                  ['image/catalog/pandashop-detail/agtek-1fc04292ec7d640f65b6.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-a535f1249253b2dbb579.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-e961ed94d4c793ee85be.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-5d54c0891aa78acd350b.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-c9a9f9a2c212ffe23d2e.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-68d83927ba61bb805ce1.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-de6b9abb4a464fa3bd8c.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'FLY-DJI-02': [
+                  ['image/catalog/pandashop-detail/agtek-1fc04292ec7d640f65b6.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-a535f1249253b2dbb579.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-e961ed94d4c793ee85be.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-5d54c0891aa78acd350b.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-c9a9f9a2c212ffe23d2e.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-68d83927ba61bb805ce1.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-de6b9abb4a464fa3bd8c.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'DJI-POCKET3': [
+                  ['image/catalog/pandashop-detail/agtek-7ce5557d6967ccdbbeb3.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-085062eb441acca61d4d.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-67a978f4cf9f7ad16183.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-fc7ed5b898109809db05.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-2c5c07487684d5f769a7.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-eff659bf174588983317.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-71605653abd2781c6335.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'CAM-DJI-01': [
+                  ['image/catalog/nexora/dji-pocket3-cc.jpg', 'DJI Osmo Pocket 3 Creator Combo'],
+                  ['image/catalog/nexora/dji-pocket3.jpg', 'DJI Osmo Pocket 3 — góc chính diện'],
+                  ['image/catalog/su-dung-pocket-3-6.jpg', 'DJI Osmo Pocket 3 — ảnh sử dụng']
+                ],
+                'DJI-ACTION5': [
+                  ['image/catalog/pandashop-detail/agtek-e31d388e79224fd72881.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-f12ebe13c51da0c18b6e.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-6ebd23805951f1d10605.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-2d26d5d65140675718f3.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-e6b0bb4e76c080b3dce6.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-04b20daf925d0720d654.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-fde24370b9f153641b22.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'CAM-DJI-03': [
+                  ['image/catalog/pandashop-detail/agtek-e31d388e79224fd72881.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-f12ebe13c51da0c18b6e.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-6ebd23805951f1d10605.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-2d26d5d65140675718f3.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-e6b0bb4e76c080b3dce6.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-04b20daf925d0720d654.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-fde24370b9f153641b22.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'DJI-MAVIC3PRO': [
+                  ['image/catalog/pandashop-detail/agtek-cd4fe9042b38568e4f68.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-a4aa0e667b8eb8304641.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-1b66a15f48a24a2aa610.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-3b38e345cda4334e779b.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-9c70d5b2901a88ddc43c.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-751584be1f3f344efc49.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-cd62536bb9ee4147801a.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'FLY-DJI-04': [
+                  ['image/catalog/pandashop-detail/agtek-cd4fe9042b38568e4f68.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-a4aa0e667b8eb8304641.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-1b66a15f48a24a2aa610.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-3b38e345cda4334e779b.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-9c70d5b2901a88ddc43c.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-751584be1f3f344efc49.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-cd62536bb9ee4147801a.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'DJI-NEO': [
+                  ['image/catalog/pandashop-detail/agtek-17db50969659dd3aa156.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-50f2421ac6e3d6ccebed.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-0977c4088c662e4bf422.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-b4f3cc1263b90a76a89b.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-5b8f54150b0b4d883b7e.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-184b5a3c3f830892b3f4.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-9e7a65fbcf1159e84846.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'DJI-NEO-FMC': [
+                  ['image/catalog/pandashop-detail/agtek-17db50969659dd3aa156.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-50f2421ac6e3d6ccebed.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-0977c4088c662e4bf422.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-b4f3cc1263b90a76a89b.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-5b8f54150b0b4d883b7e.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-184b5a3c3f830892b3f4.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-9e7a65fbcf1159e84846.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'KB-WOOT-01': [
+                  ['image/catalog/pandashop-detail/9562c62306015acf2c5b.jpg', 'Wooting 60HE+ — góc nhìn tổng thể'],
+                  ['image/catalog/pandashop-detail/e175c2cd7c4cfb19183c.jpg', 'Wooting 60HE+ — mặt trước và dây đeo']
+                ],
+                'KB-ASUS-01': [
+                  ['image/catalog/pandashop-detail/eefe8e31847c2bf35541.jpg', 'ROG Azoth — mặt trên'],
+                  ['image/catalog/pandashop-detail/de5e2692c5f25ce75f3e.jpg', 'ROG Azoth — góc nghiêng'],
+                  ['image/catalog/pandashop-detail/ce826e6f8f354edd861c.jpg', 'ROG Azoth — mặt sau'],
+                  ['image/catalog/pandashop-detail/988de1947d30c124b971.jpg', 'ROG Azoth — chi tiết switch']
+                ],
+                'KB-AKKO-01': [
+                  ['image/catalog/pandashop-detail/576d7d4dfa2da8422ed3.jpg', 'Akko 3068B Plus — góc nhìn tổng thể'],
+                  ['image/catalog/pandashop-detail/ef5d7e9d3dce666d9855.jpg', 'Akko 3068B Plus — góc nhìn chi tiết']
+                ],
+                'KB-MONS-01': [
+                  ['image/catalog/pandashop-detail/97871a0c98bf4b42fe9f.png', 'MonsGeek M1W V3 — góc nhìn tổng thể'],
+                  ['image/catalog/pandashop-detail/b78d0f606537cbe44958.png', 'MonsGeek M1W V3 — góc nhìn chi tiết']
+                ],
+                'KB-LOGI-01': [
+                  ['image/catalog/pandashop-detail/13d22095b20d607a72d6.png', 'Logitech G915 TKL — góc nhìn từ trên'],
+                  ['image/catalog/pandashop-detail/572de1820dd861f8c79e.png', 'Logitech G915 TKL — góc nghiêng'],
+                  ['image/catalog/pandashop-detail/575853a7563a5b44db5a.png', 'Logitech G915 TKL — chi tiết bàn phím'],
+                  ['image/catalog/pandashop-detail/f38715ea896d582bf1ab.png', 'Logitech G915 TKL — cấu tạo']
+                ],
+                'HP-SONY-01': [
+                  ['image/catalog/products/HP-SONY-01.jpg', 'Tai nghe Sony INZONE H9']
+                ],
+                'HP-RAZER-01': [
+                  ['image/catalog/pandashop-detail/94e958bcb9367bbdc955.png', 'Razer BlackShark V2 Pro 2023 — ảnh sản phẩm chính thức'],
+                  ['image/catalog/pandashop-detail/19f54d5ad3b01441955b.png', 'Razer BlackShark V2 Pro 2023 — chi tiết microphone'],
+                  ['image/catalog/pandashop-detail/2337d141b9124db5f368.png', 'Razer BlackShark V2 Pro 2023 — chi tiết thiết kế']
+                ],
+                'ACC-ANKER-01': [
+                  ['image/catalog/pandashop-detail/e11b23e7830819d9b73c.jpg', 'Anker Prime 67W — thiết kế và chân cắm'],
+                  ['image/catalog/pandashop-detail/d8a4d179ba3583e39ad7.jpg', 'Anker Prime 67W — cổng sạc'],
+                  ['image/catalog/pandashop-detail/fd43812bd62b7b33a8b2.jpg', 'Anker Prime 67W — kích thước nhỏ gọn']
+                ],
+                'AUD-JBL-01': [
+                  ['image/catalog/pandashop-detail/ac440e9a7df3d87a970a.png', 'JBL Charge 5 — mặt trước màu đen']
+                ],
+                'AUD-SHURE-01': [
+                  ['image/catalog/pandashop-detail/92b52332a8484ee70fb0.webp', 'Shure MV7+ — micro podcast USB/XLR']
+                ],
+                'FLY-DJI-05': [
+                  ['image/catalog/pandashop-detail/agtek-17db50969659dd3aa156.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-50f2421ac6e3d6ccebed.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-0977c4088c662e4bf422.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-b4f3cc1263b90a76a89b.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-5b8f54150b0b4d883b7e.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-184b5a3c3f830892b3f4.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-9e7a65fbcf1159e84846.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'DJI-MIC2': [
+                  ['image/catalog/pandashop-detail/agtek-eb0bbdab4e7d3b48c940.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-375c7c526d26c7a0c507.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-c355e5fd4dccbd4a884b.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-98fe9ec3b1792c0c9fb8.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-1fa802632744590eb463.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-718b909eabbe0b750105.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-b6e23c63910620677f83.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'CAM-DJI-06': [
+                  ['image/catalog/products/CAM-DJI-06.jpg', 'Gimbal điện thoại DJI Osmo Mobile 6']
+                ],
+                'FLY-DJI-06': [
+                  ['image/catalog/pandashop-detail/agtek-47ae622e9b88fbb4b705.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-30f2287d51edf26e116c.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-e3dc711ce7f71c2c1c32.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-7f70e55ad8aa242b9794.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-50fa368f982ebf9b3758.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-82867cb30745e60e0bdc.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-4e333486506386a9a61e.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'KIT-CREATOR-AIR': [
+                  ['image/catalog/pandashop-detail/agtek-1fc04292ec7d640f65b6.webp', 'DJI-AIR3S - ảnh chi tiết'],
+                  ['image/catalog/pandashop-detail/agtek-eb0bbdab4e7d3b48c940.webp', 'DJI-MIC2 - ảnh chi tiết'],
+                  ['image/catalog/pandashop-detail/agtek-e31d388e79224fd72881.webp', 'DJI-ACTION5 - ảnh chi tiết']
+                ],
+                'KIT-PANDA-02': [
+                  ['image/catalog/nexora/dji-pocket3-cc.jpg', 'DJI Osmo Pocket 3 Creator Combo'],
+                  ['image/catalog/nexora/dji-pocket3.jpg', 'DJI Osmo Pocket 3 — góc chính diện'],
+                  ['image/catalog/su-dung-pocket-3-6.jpg', 'DJI Osmo Pocket 3 — ảnh sử dụng'],
+                ],
+                'CAM-DJI-05': [
+                  ['image/catalog/pandashop-detail/agtek-e0bac7a6f6fdbddcd018.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-4fddbf415e35a577025a.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-bd59490a97e5c39bb689.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-4300f846318cf5062bb1.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-753e9f169a088374ecc9.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-bfc0429c464728f96c57.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-933a8593b77d6007437c.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'CAM-DJI-04': [
+                  ['image/catalog/pandashop-detail/agtek-eb0bbdab4e7d3b48c940.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-375c7c526d26c7a0c507.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-c355e5fd4dccbd4a884b.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-98fe9ec3b1792c0c9fb8.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-1fa802632744590eb463.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-718b909eabbe0b750105.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-b6e23c63910620677f83.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'AUDIO-DJI-02': [
+                  ['image/catalog/pandashop-detail/agtek-bc5b8145a790461c0c94.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-9281340c9175ea364ca4.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-e9716d59b299937fcf5f.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-46fd5cf8e49ce7cfb405.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-649ae2c258f4e88a78ed.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-5fc766d2d3f035b5ca97.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-25c5a7de03737a9178fa.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'AUDIO-DJI-01': [
+                  ['image/catalog/pandashop-detail/agtek-eb0bbdab4e7d3b48c940.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-375c7c526d26c7a0c507.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-c355e5fd4dccbd4a884b.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-98fe9ec3b1792c0c9fb8.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-1fa802632744590eb463.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-718b909eabbe0b750105.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-b6e23c63910620677f83.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'DJI-RS4MINI': [
+                  ['image/catalog/pandashop-detail/agtek-cd74b7921498fb19a5fd.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-25717993a23b55da59df.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-7b0368aa5388ac908634.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-117dc31ac1802eedfbae.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-7c495c7450cf19709772.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-b64a21dcfcaf920dda6a.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-2055de723f42bd079415.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'DJI-RS4': [
+                  ['image/catalog/pandashop-detail/agtek-bc024747cc734da0f231.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-a92eafdefd0ce3396593.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-989f88f974be3916a835.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-ebb5bb1c8b4b0fc27d01.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-b36d680188bea818f467.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-366e1b88999c239e2633.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-15567c2e8e4b29b3f41d.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'CAM-DJI-02': [
+                  ['image/catalog/pandashop-detail/agtek-bc024747cc734da0f231.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-a92eafdefd0ce3396593.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-989f88f974be3916a835.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-ebb5bb1c8b4b0fc27d01.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-b36d680188bea818f467.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-366e1b88999c239e2633.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-15567c2e8e4b29b3f41d.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'DJI-RC2': [
+                  ['image/catalog/pandashop-detail/dji-rc-2-4.webp', 'Tay điều khiển DJI RC 2']
+                ],
+                'DJI-BAT-MINI4': [
+                  ['image/catalog/pandashop-detail/mini4-battery-plus.webp', 'Pin thông minh DJI Mini 4 Pro']
+                ],
+                'DJI-HUB-MINI4': [
+                  ['image/catalog/pandashop-detail/mini4-charging-hub.webp', 'Hub sạc DJI Mini 4 Pro']
+                ],
+                'DJI-PROP-MINI4': [
+                  ['image/catalog/pandashop-detail/mini4-propellers.webp', 'Cánh quạt DJI Mini 4 Pro']
+                ],
+                'DJI-ND-MINI4': [
+                  ['image/catalog/pandashop-detail/mini4-kf-nd-set.jpg', 'Bộ kính lọc ND cho Mini 4 Pro']
+                ],
+                'KIT-FPV-NIGHT': [
+                  ['image/catalog/pandashop-detail/agtek-5c2fb763dcf8f30a2967.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-25d6748e7a2d84ca36cc.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-51ddb34c3b42743c2af7.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-1cab68a1bffca60e9065.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-8e38fa8b0c1bc939a006.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-609cd11ffca393bf8383.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-588f2d3f42546ad57246.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'FLY-DJI-03': [
+                  ['image/catalog/pandashop-detail/agtek-5c2fb763dcf8f30a2967.webp', 'Ảnh chi tiết sản phẩm 1'],
+                  ['image/catalog/pandashop-detail/agtek-25d6748e7a2d84ca36cc.webp', 'Ảnh chi tiết sản phẩm 2'],
+                  ['image/catalog/pandashop-detail/agtek-51ddb34c3b42743c2af7.webp', 'Ảnh chi tiết sản phẩm 3'],
+                  ['image/catalog/pandashop-detail/agtek-1cab68a1bffca60e9065.webp', 'Ảnh chi tiết sản phẩm 4'],
+                  ['image/catalog/pandashop-detail/agtek-8e38fa8b0c1bc939a006.webp', 'Ảnh chi tiết sản phẩm 5'],
+                  ['image/catalog/pandashop-detail/agtek-609cd11ffca393bf8383.webp', 'Ảnh chi tiết sản phẩm 6'],
+                  ['image/catalog/pandashop-detail/agtek-588f2d3f42546ad57246.webp', 'Ảnh chi tiết sản phẩm 7'],
+                ],
+                'PC-GPU-01': [
+                  ['image/catalog/pandashop-detail/28c4936c525e8701c4c3.jpg', 'Mặt trước và hệ thống quạt'],
+                  ['image/catalog/pandashop-detail/e9c916df01935682e64b.jpg', 'Góc nghiêng'],
+                  ['image/catalog/pandashop-detail/1e55c612d74875aa231e.jpg', 'Tản nhiệt và cổng kết nối'],
+                  ['image/catalog/pandashop-detail/e38ae883ec43dbac1628.jpg', 'Mặt sau card đồ họa']
+                ],
+                'PC-GPU-02': [
+                  ['image/catalog/pandashop-detail/f84af048b58cc6e3dc27.png', 'MSI RTX 4080 SUPER — mặt quạt'],
+                  ['image/catalog/pandashop-detail/e3cf1369e484541fd8d6.png', 'MSI RTX 4080 SUPER — mặt backplate']
+                ],
+                'MON-ASUS-01': [
+                  ['image/catalog/pandashop-detail/6aa4e568e079a07b06f4.jpg', 'ROG Swift OLED PG27AQDM — mặt trước'],
+                  ['image/catalog/pandashop-detail/db0916dd89905bca1353.jpg', 'ROG Swift OLED PG27AQDM — mặt sau'],
+                  ['image/catalog/pandashop-detail/cd121d0e6c912b6cd59e.jpg', 'ROG Swift OLED PG27AQDM — góc nghiêng'],
+                  ['image/catalog/pandashop-detail/78e4e0104452bf7cdff8.jpg', 'ROG Swift OLED PG27AQDM — cổng kết nối']
+                ],
+                'PC-MB-01': [
+                  ['image/catalog/pandashop-detail/57b96b005f479d94937a.jpg', 'Góc nhìn tổng thể'],
+                  ['image/catalog/pandashop-detail/6d3f4c86f6fec0a90aae.jpg', 'Khe cắm và tản nhiệt'],
+                  ['image/catalog/pandashop-detail/e0e033ff26c49668ab7a.jpg', 'Cổng kết nối phía sau']
+                ],
+                'PC-SSD-01': [
+                  ['https://images.samsung.com/is/image/samsung/p6pim/us/mz-v9p1t0b-am/gallery/us-nvme-ssd-mz-v9p1t0b-am-----pro---tb-ssd-nvme--m---black-551141121?$product-details-jpg$=', 'Mặt trên SSD'],
+                  ['image/catalog/pandashop-detail/591c3fb8808f4dce2890.jpg', 'Thiết kế M.2 NVMe'],
+                  ['https://images.samsung.com/is/image/samsung/p6pim/us/mz-v9p1t0b-am/gallery/us-nvme-ssd-mz-v9p1t0b-am-----pro---tb-ssd-nvme--m---black-551141125?$product-details-jpg$=', 'Cấu tạo sản phẩm'],
+                  ['image/catalog/pandashop-detail/6870225d5aabedecb5c1.jpg', 'Ảnh giới thiệu 990 PRO']
+                ],
+                'PC-CPU-02': [
+                  ['image/catalog/pandashop-detail/a079f83bb83eb59e377c.jpg', 'Ryzen 7 7800X3D — mặt trước hộp xử lý'],
+                  ['image/catalog/pandashop-detail/8e58d878dec5b65babf6.jpg', 'Ryzen 7 7800X3D — góc nhìn sản phẩm'],
+                  ['image/catalog/pandashop-detail/a21ec89adb6406060927.jpg', 'Ryzen 7 7800X3D — hình sản phẩm chính thức']
+                ],
+                'HP-STEEL-01': [
+                  ['image/catalog/pandashop-detail/e223fe9f377d82fbd895.png', 'Tai nghe và trạm pin'],
+                  ['image/catalog/pandashop-detail/f2a75fa9f2928b6de5ba.png', 'Thay pin nóng'],
+                  ['image/catalog/pandashop-detail/0a7d94577a567c5ea93d.png', 'Kết nối đa hệ thống']
+                ],
+                'HP-HYPER-01': [
+                  ['image/catalog/pandashop-detail/33e7a9a7f16f41754cbc.jpg', 'Góc nhìn tổng thể'],
+                  ['image/catalog/pandashop-detail/37010bdcc7efb2bcdabe.jpg', 'Thời lượng pin'],
+                  ['image/catalog/pandashop-detail/8970340f6a44b6905389.jpg', 'Màng loa 53 mm'],
+                  ['image/catalog/pandashop-detail/8456bdc5113d032d9818.jpg', 'Micro tháo rời']
+                ],
+                'ACC-DJI-01': [
+                  ['image/catalog/pandashop-detail/mini4-battery-plus.webp', 'Pin thông minh DJI Mini 4 Pro']
+                ],
+                'ACC-DJI-03': [
+                  ['image/catalog/pandashop-detail/dji-air-3s-nd-filters-set-5.webp', 'Bộ lọc ND DJI Air 3S']
+                ],
+                'DJI-GOGGLES3': [
+                  ['image/catalog/pandashop-detail/dji-goggles-3-5.webp', 'DJI Goggles 3']
+                ],
+                'DJI-PAD-75': [
+                  ['image/catalog/pandashop-detail/8058b2c6e8da5879ecb9.png', 'PGYTECH landing pad 75 cm']
+                ],
+                'FLY-DJI-07': [
+                  ['image/catalog/products/FLY-DJI-07.jpg', 'Flycam DJI Mavic 3 Classic']
+                ],
+                'AUD-RODE-01': [
+                  ['image/catalog/pandashop-detail/64aa0cecef66d48eac56.jpg', 'Wireless PRO in use'],
+                  ['image/catalog/pandashop-detail/a45479ee6653df614ebd.jpg', 'Wireless PRO recording setup'],
+                  ['image/catalog/pandashop-detail/0b1044fe2012e8232ecd.jpg', 'Wireless PRO accessories']
+                ],
+                'HP-CORSAIR-01': [
+                  ['image/catalog/pandashop-detail/e2551a73e708405046a0.webp', 'HS80 RGB Wireless headset'],
+                  ['image/catalog/pandashop-detail/9ac46f24d32cd74c7083.webp', 'HS80 RGB Wireless side view']
+                ],
+                'FLY-AUTEL-01': [
+                  ['image/catalog/pandashop-detail/85944c5b621dafa174fa.png', 'Autel EVO Lite+ drone'],
+                  ['image/catalog/pandashop-detail/ed2e22ec60833cbc538f.jpg', 'EVO Lite+ camera and drone view'],
+                  ['image/catalog/pandashop-detail/643e3b9355c8408b54d2.png', 'EVO Lite+ product details']
+                ],
+                'FLY-BETA-01': [
+                  ['image/catalog/pandashop-detail/3848f68e448a586a9daa.jpg', 'Cetus Pro FPV kit'],
+                  ['image/catalog/pandashop-detail/d1968c317ef338c87386.jpg', 'Cetus Pro quad detail'],
+                  ['image/catalog/pandashop-detail/f8fc3fcf79be1ba00a4b.jpg', 'Cetus Pro kit components']
+                ],
+                'MON-DELL-01': [
+                  ['image/catalog/products/MON-DELL-01.jpg', 'Màn hình Dell UltraSharp U2724D']
+                ],
+                'MON-SAMS-01': [
+                  ['image/catalog/pandashop-detail/e80f8c2529de3627d3b0.jpg', 'Samsung Odyssey OLED G8 front view']
+                ],
+                'PC-PSU-01': [
+                  ['image/catalog/pandashop-detail/0798e13d79f1fa84cc32.png', 'Corsair RM1000e modular power supply'],
+                  ['image/catalog/pandashop-detail/0e324b0f3ac486a49cd2.png', 'Corsair RM1000e fan'],
+                  ['image/catalog/pandashop-detail/24a8a59bf1babf9e5b1b.png', 'Corsair RM1000e specifications']
+                ],
+                'ACC-DJI-02': [
+                  ['image/catalog/pandashop-detail/128cb8b0f56211d2648e.png', 'SanDisk Extreme PRO 256GB microSDXC card']
+                ],
+                'ACC-SMALL-01': [
+                  ['image/catalog/pandashop-detail/0eeaeb4cfb2b11e486dd.jpg', 'SmallRig 3667B cage for Sony A7 series'],
+                  ['image/catalog/pandashop-detail/883c6df1f42ab420b7cc.jpg', 'SmallRig full camera cage mounted on Sony camera']
+                ],
+                'ACC-UGREEN-01': [
+                  ['image/catalog/pandashop-detail/cb9a16d1fd3ebd744425.png', 'UGREEN Revodok Pro 207 dual HDMI hub'],
+                  ['image/catalog/pandashop-detail/667c03b0bc9d08d04508.jpg', 'UGREEN Revodok Pro 207 ports and connectivity'],
+                  ['image/catalog/pandashop-detail/847a7767772929964313.jpg', 'UGREEN Revodok Pro 207 detail']
+                ],
+                'DJI-BAG-01': [
+                  ['image/catalog/pandashop-detail/934a404166ddfa91436c.png', 'DJI Shoulder Bag']
+                ],
+                'KIT-RAZER-01': [
+                  ['image/catalog/pandashop-detail/26be38ab49b7843a5774.webp', 'Razer Quartz pink gaming gear collection']
+                ],
+                'PC-RAM-01': [
+                  ['image/catalog/pandashop-detail/08c3c19ca75ee63f7257.webp', 'Corsair Vengeance RGB 32GB DDR5 kit'],
+                  ['image/catalog/pandashop-detail/5a63ddacd090cf6b6f62.png', 'Corsair Vengeance RGB DDR5 heat spreader and lighting']
+                ],
+                'PC-CPU-01': [
+                  ['image/catalog/pandashop-detail/4a242d2fe9f4ee4ced8f.jpg', 'Intel Core 14th Gen desktop processor lineup including i7-14700K']
+                ]
+              };
+
+              const mainLink = gallery.querySelector('[data-pd-main-image]');
+              const mainImage = mainLink && mainLink.querySelector('img.img-thumbnail');
+              if (!mainLink || !mainImage) return;
+
+              // Keep the product image in the page; do not open a full-screen lightbox.
+              mainLink.addEventListener('click', (event) => event.preventDefault());
+
+              const updateImageAccent = () => {
+                if (!mainImage.complete || !mainImage.naturalWidth) return;
+                const canvas = document.createElement('canvas');
+                canvas.width = 32;
+                canvas.height = 32;
+                const context = canvas.getContext('2d', { willReadFrequently: true });
+                if (!context) return;
+                context.drawImage(mainImage, 0, 0, canvas.width, canvas.height);
+                const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+                const createHueBuckets = () => Array.from({ length: 24 }, () => ({ count: 0, red: 0, green: 0, blue: 0 }));
+                const hues = createHueBuckets();
+                const edgeHues = createHueBuckets();
+                for (let index = 0; index < pixels.length; index += 4) {
+                  const pixel = index / 4;
+                  const x = pixel % canvas.width;
+                  const y = Math.floor(pixel / canvas.width);
+                  const red = pixels[index];
+                  const green = pixels[index + 1];
+                  const blue = pixels[index + 2];
+                  const maximum = Math.max(red, green, blue);
+                  const minimum = Math.min(red, green, blue);
+                  const saturation = maximum ? (maximum - minimum) / maximum : 0;
+                  if (saturation < .3 || maximum < 48 || maximum > 238) continue;
+                  let hue = 0;
+                  if (maximum === red) hue = ((green - blue) / (maximum - minimum) + 6) % 6;
+                  else if (maximum === green) hue = (blue - red) / (maximum - minimum) + 2;
+                  else hue = (red - green) / (maximum - minimum) + 4;
+                  const bucketIndex = Math.floor(hue * 4) % hues.length;
+                  const bucket = hues[bucketIndex];
+                  bucket.count++;
+                  bucket.red += red;
+                  bucket.green += green;
+                  bucket.blue += blue;
+                  if (x < 4 || y < 4 || x >= canvas.width - 4 || y >= canvas.height - 4) {
+                    const edgeBucket = edgeHues[bucketIndex];
+                    edgeBucket.count++;
+                    edgeBucket.red += red;
+                    edgeBucket.green += green;
+                    edgeBucket.blue += blue;
+                  }
+                }
+                const edgeAccent = edgeHues.reduce((best, current) => current.count > best.count ? current : best, edgeHues[0]);
+                const accent = edgeAccent.count >= 28
+                  ? edgeAccent
+                  : hues.reduce((best, current) => current.count > best.count ? current : best, hues[0]);
+                if (!accent.count) return;
+                const color = [accent.red, accent.green, accent.blue]
+                  .map((channel) => Math.round(channel / accent.count))
+                  .join(', ');
+                mainLink.style.setProperty('--pd-pdp-image-accent', color);
+              };
+              mainImage.addEventListener('load', updateImageAccent);
+              updateImageAccent();
+
+              const images = officialImages[gallery.dataset.productModel] || [];
+              const englishGalleryLabels = {
+                'Góc nhìn từ trên': 'Top view',
+                'Góc nghiêng': 'Angled view',
+                'Góc cạnh': 'Side angle',
+                'Chi tiết sản phẩm': 'Product detail',
+                'Mặt trước': 'Front view',
+                'Góc bên': 'Side view',
+                'Góc nhìn chi tiết': 'Detailed view',
+                'Tay điều khiển DJI RC 2': 'DJI RC 2 remote controller',
+                'Pin thông minh DJI Mini 4 Pro': 'DJI Mini 4 Pro Intelligent Flight Battery Plus',
+                'Hub sạc DJI Mini 4 Pro': 'DJI Mini 4 Pro charging hub',
+                'Cánh quạt DJI Mini 4 Pro': 'DJI Mini 4 Pro propellers',
+                'Bộ kính lọc ND cho Mini 4 Pro': 'Mini 4 Pro ND filter set',
+                'Mặt trước và hệ thống quạt': 'Front view and fan system',
+                'Tản nhiệt và cổng kết nối': 'Cooling system and ports',
+                'Mặt sau card đồ họa': 'Graphics card backplate',
+                'Khe cắm và tản nhiệt': 'Expansion slots and heatsinks',
+                'Cổng kết nối phía sau': 'Rear I/O ports',
+                'Thiết kế M.2 NVMe': 'M.2 NVMe design',
+                'Cấu tạo sản phẩm': 'Product construction',
+                'Ảnh giới thiệu 990 PRO': '990 PRO product image'
+              };
+              const localizedImages = images.map(([source, label]) => {
+                if (gallery.dataset.language !== 'en-gb' || !/[À-ỹĐđ]/.test(label)) return [source, label];
+                const detailImage = label.match(/^Ảnh chi tiết sản phẩm (\d+)$/);
+                return [source, detailImage ? `Product detail image ${detailImage[1]}` : (englishGalleryLabels[label] || 'Product image')];
+              });
+
+              let strip = gallery.querySelector('.pd-pdp-thumbnails');
+              if (!strip) {
+                strip = document.createElement('div');
+                strip.className = 'pd-pdp-thumbnails pd-pdp-official-thumbnails';
+                strip.setAttribute('aria-label', gallery.dataset.language === 'en-gb' ? 'Product images' : 'Ảnh chi tiết sản phẩm');
+                gallery.appendChild(strip);
+              }
+
+              localizedImages.forEach(([source, label]) => {
+                const button = document.createElement('a');
+                button.href = source;
+                button.className = 'pd-pdp-source-thumb';
+                button.setAttribute('role', 'button');
+                button.setAttribute('aria-label', label);
+                button.title = label;
+
+                const image = document.createElement('img');
+                image.src = source;
+                image.alt = `${gallery.dataset.productModel} — ${label}`;
+                image.loading = 'lazy';
+                image.referrerPolicy = 'no-referrer';
+                image.decoding = 'async';
+                image.addEventListener('error', () => button.remove(), { once: true });
+                button.appendChild(image);
+                strip.appendChild(button);
+              });
+
+              const featureSlide = gallery.querySelector('[data-pd-feature-slide]');
+              const featureThumb = gallery.querySelector('[data-pd-feature-thumb]');
+              const stage = gallery.querySelector('[data-pd-gallery-stage]');
+              const slideButtons = () => Array.from(strip.querySelectorAll('a[data-pd-gallery-thumb], a.pd-pdp-source-thumb, a[data-pd-feature-thumb]'));
+              const selectSlide = (button) => {
+                if (!button) return;
+                const showFeature = button === featureThumb;
+                if (featureSlide) featureSlide.hidden = !showFeature;
+                mainLink.hidden = showFeature;
+                if (stage) stage.classList.toggle('is-feature-slide', showFeature);
+                slideButtons().forEach((item) => {
+                  const active = item === button;
+                  item.classList.toggle('is-active', active);
+                  if (active) {
+                    item.setAttribute('aria-current', 'true');
+                  } else {
+                    item.removeAttribute('aria-current');
+                  }
+                });
+                if (!showFeature) {
+                  const image = button.querySelector('img');
+                  if (image) {
+                    mainLink.href = button.href;
+                    mainImage.src = button.href;
+                    mainImage.alt = image.alt;
+                  }
+                }
+              };
+
+              strip.addEventListener('click', (event) => {
+                const button = event.target.closest('a[data-pd-gallery-thumb], a.pd-pdp-source-thumb, a[data-pd-feature-thumb]');
+                if (!button) return;
+                event.preventDefault();
+                selectSlide(button);
+              });
+
+              const galleryArrows = stage ? stage.querySelectorAll('[data-pd-gallery-step]') : [];
+              galleryArrows.forEach((button) => {
+                button.hidden = slideButtons().length < 2;
+                button.addEventListener('click', () => {
+                  const buttons = slideButtons();
+                  const activeIndex = Math.max(0, buttons.findIndex((item) => item.classList.contains('is-active')));
+                  const step = Number(button.dataset.pdGalleryStep) || 0;
+                  const nextIndex = (activeIndex + step + buttons.length) % buttons.length;
+                  selectSlide(buttons[nextIndex]);
+                });
+              });
+
+              const initialSlide = featureThumb || strip.querySelector('[data-pd-gallery-main-thumb]') || slideButtons()[0];
+              selectSlide(initialSlide);
+            })();
+            </script>
+          </div>
+        {% endif %}
+        <section class="pd-pdp-purchase-card">
+        <div class="pd-pdp-summary">
+          <div class="pd-pdp-eyebrow"><span class="pd-pdp-eyebrow-dot"></span> PANDASHOP <span>/</span> {{ text_product_information }}</div>
+          <h1 class="pd-pdp-title">{{ heading_title }}</h1>
+          <div class="pd-pdp-meta">
+            {% if manufacturer %}
+              <span>{{ text_manufacturer }} <a href="{{ manufacturers }}">{{ manufacturer }}</a></span>
+            {% endif %}
+            <span>{{ text_model }} {{ model }}</span>
+            <span class="pd-pdp-stock{% if not stock_available %} is-out{% endif %}"><i class="fa-solid fa-circle" aria-hidden="true"></i> {% if stock_available %}{{ text_in_stock }}{% else %}{{ text_out_of_stock }}{% endif %}</span>
+          </div>
+          {% for product_code in product_codes %}<div class="pd-pdp-code">{{ product_code.code }}: {{ product_code.value }}</div>{% endfor %}
+          <div class="pd-pdp-rating-row">
+            {% if product_review_count > 0 %}
+              <span class="pd-pdp-stars" aria-label="{{ rating }} / 5">
+                {% for i in 1..5 %}<i class="fa-solid fa-star{% if rating < i %} is-empty{% endif %}" aria-hidden="true"></i>{% endfor %}
+              </span>
+              <a href="#tab-review" data-bs-toggle="tab" class="pd-pdp-review-link">{{ product_review_count }} {{ text_reviews_label|lower }}</a>
+            {% else %}
+              <span class="pd-pdp-review-empty">{{ text_no_reviews_yet }}</span>
+              <a href="#tab-review" data-bs-toggle="tab" class="pd-pdp-review-link">{{ text_reviews_first }}</a>
+            {% endif %}
+            {% if product_review_count > 0 %}<span class="pd-pdp-quality"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> {{ text_customer_reviews }}</span>{% endif %}
+          </div>
+        </div>
+        <div class="pd-pdp-buybox">
+          <form method="post" data-oc-toggle="ajax">
+            <div class="pd-pdp-quick-actions">
+              <button type="submit" formaction="{{ wishlist_add }}" data-bs-toggle="tooltip" class="pd-btn-icon-action" title="{{ button_wishlist }}" aria-label="{{ button_wishlist }}"><i class="fa-solid fa-heart"></i></button>
+              <button type="submit" formaction="{{ compare_add }}" data-bs-toggle="tooltip" class="pd-btn-icon-action" title="{{ button_compare }}" aria-label="{{ button_compare }}"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
+            </div>
+            <input type="hidden" name="product_id" value="{{ product_id }}"/>
+          </form>
+          <div id="product">
+            <form id="form-product">
+              {% if price %}
+                <ul class="list-unstyled pd-pdp-price-list">
+                  {% if not special %}
+                    <li><h2><span class="price-new pd-pdp-price">{{ price }}</span></h2></li>
+                  {% else %}
+                    <li><h2><span class="price-new pd-pdp-price">{{ special }}</span> <span class="price-old">{{ price }}</span></h2></li>
+                  {% endif %}
+                  {% if tax and tax != price and tax != special %}
+                    <li>{{ text_tax }} {{ tax }}</li>
+                  {% endif %}
+                  {% if points %}
+                    <li>{{ text_points }} {{ points }}</li>
+                  {% endif %}
+                  {% if discounts %}
+                    <li><hr></li>
+                    {% for discount in discounts %}
+                      <li>{{ discount.quantity }}{{ text_discount }}{{ discount.price }}</li>
+                    {% endfor %}
+                  {% endif %}
+                </ul>
+              {% endif %}
+              {% if options %}
+                <hr>
+                <h3>{{ text_option }}</h3>
+                <div>
+                  {% for option in options %}
+
+                    {% if option.type == 'select' %}
+                      <div class="mb-3{% if option.required %} required{% endif %}">
+                        <label for="input-option-{{ option.product_option_id }}" class="form-label">{{ option.name }}</label>
+                        <select name="option[{{ option.product_option_id }}]" id="input-option-{{ option.product_option_id }}" class="form-select">
+                          <option value="">{{ text_select }}</option>
+                          {% for option_value in option.product_option_value %}
+                            <option value="{{ option_value.product_option_value_id }}">{{ option_value.name }}
+                              {% if option_value.price %}
+                                ({{ option_value.price_prefix }}{{ option_value.price }})
+                              {% endif %}</option>
+                          {% endfor %}
+                        </select>
+                        <div id="error-option-{{ option.product_option_id }}" class="invalid-feedback"></div>
+                      </div>
+                    {% endif %}
+
+                    {% if option.type == 'radio' %}
+                      <div class="mb-3{% if option.required %} required{% endif %}">
+                        <label class="form-label">{{ option.name }}</label>
+                        <div id="input-option-{{ option.product_option_id }}">
+                          {% for option_value in option.product_option_value %}
+                            <div class="form-check">
+                              <input type="radio" name="option[{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" id="input-option-value-{{ option_value.product_option_value_id }}" class="form-check-input"/>
+                              <label for="input-option-value-{{ option_value.product_option_value_id }}" class="form-check-label">
+                                {% if option_value.image %}
+                                  <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %}{{ option_value.price_prefix }} {{ option_value.price }}{% endif %}" class="img-thumbnail"/>{% endif %}
+                                {{ option_value.name }}
+                                {% if option_value.price %}
+                                  ({{ option_value.price_prefix }}{{ option_value.price }})
+                                {% endif %}</label>
+                            </div>
+                          {% endfor %}
+                        </div>
+                        <div id="error-option-{{ option.product_option_id }}" class="invalid-feedback"></div>
+                      </div>
+                    {% endif %}
+
+                    {% if option.type == 'checkbox' %}
+                      <div class="mb-3{% if option.required %} required{% endif %}">
+                        <label class="form-label">{{ option.name }}</label>
+                        <div id="input-option-{{ option.product_option_id }}">
+                          {% for option_value in option.product_option_value %}
+                            <div class="form-check">
+                              <input type="checkbox" name="option[{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}" id="input-option-value-{{ option_value.product_option_value_id }}" class="form-check-input"/> 
+							                <label for="input-option-value-{{ option_value.product_option_value_id }}" class="form-check-label">
+                                {% if option_value.image %}
+                                  <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %}{{ option_value.price_prefix }} {{ option_value.price }}{% endif %}" class="img-thumbnail"/>{% endif %}
+                                {{ option_value.name }}
+                                {% if option_value.price %}
+                                  ({{ option_value.price_prefix }}{{ option_value.price }})
+                                {% endif %}</label>
+                            </div>
+                          {% endfor %}
+                        </div>
+                        <div id="error-option-{{ option.product_option_id }}" class="invalid-feedback"></div>
+                      </div>
+                    {% endif %}
+
+                    {% if option.type == 'text' %}
+                      <div class="mb-3{% if option.required %} required{% endif %}">
+                        <label for="input-option-{{ option.product_option_id }}" class="form-label">{{ option.name }}</label> <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" placeholder="{{ option.name }}" id="input-option-{{ option.product_option_id }}" class="form-control"/>
+                        <div id="error-option-{{ option.product_option_id }}" class="invalid-feedback"></div>
+                      </div>
+                    {% endif %}
+
+                    {% if option.type == 'textarea' %}
+                      <div class="mb-3{% if option.required %} required{% endif %}">
+                        <label for="input-option-{{ option.product_option_id }}" class="form-label">{{ option.name }}</label> <textarea name="option[{{ option.product_option_id }}]" rows="5" placeholder="{{ option.name }}" id="input-option-{{ option.product_option_id }}" class="form-control">{{ option.value }}</textarea>
+                        <div id="error-option-{{ option.product_option_id }}" class="invalid-feedback"></div>
+                      </div>
+                    {% endif %}
+
+                    {% if option.type == 'file' %}
+                      <div class="mb-3{% if option.required %} required{% endif %}">
+                        <label for="button-upload-{{ option.product_option_id }}" class="form-label">{{ option.name }}</label>
+                        <div>
+                          <button type="button" id="button-upload-{{ option.product_option_id }}" data-oc-toggle="upload" data-oc-url="{{ upload }}" data-oc-target="#input-option-{{ option.product_option_id }}" data-oc-size-max="{{ config_file_max_size }}" data-oc-size-error="{{ error_upload_size }}" class="btn btn-light btn-block"><i class="fa-solid fa-upload"></i> {{ button_upload }}</button>
+                          <input type="hidden" name="option[{{ option.product_option_id }}]" value="" id="input-option-{{ option.product_option_id }}"/>
+                        </div>
+                        <div id="error-option-{{ option.product_option_id }}" class="invalid-feedback"></div>
+                      </div>
+                    {% endif %}
+
+                    {% if option.type == 'date' %}
+                      <div class="mb-3{% if option.required %} required{% endif %}">
+                        <label for="input-option-{{ option.product_option_id }}" class="form-label">{{ option.name }}</label>
+                        <input type="date" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" id="input-option-{{ option.product_option_id }}" class="form-control"/>
+                        <div id="error-option-{{ option.product_option_id }}" class="invalid-feedback"></div>
+                      </div>
+                    {% endif %}
+
+                    {% if option.type == 'time' %}
+                      <div class="mb-3{% if option.required %} required{% endif %}">
+                        <label for="input-option-{{ option.product_option_id }}" class="form-label">{{ option.name }}</label>
+                        <input type="time" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" id="input-option-{{ option.product_option_id }}" class="form-control"/>
+                        <div id="error-option-{{ option.product_option_id }}" class="invalid-feedback"></div>
+                      </div>
+                    {% endif %}
+
+                    {% if option.type == 'datetime' %}
+                      <div class="mb-3{% if option.required %} required{% endif %}">
+                        <label for="input-option-{{ option.product_option_id }}" class="form-label">{{ option.name }}</label>
+                        <input type="datetime-local" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" id="input-option-{{ option.product_option_id }}" class="form-control"/>
+                        <div id="error-option-{{ option.product_option_id }}" class="invalid-feedback"></div>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              {% if subscription_plans %}
+                <hr/>
+                <h3>{{ text_subscription }}</h3>
+                <div class="mb-3 required">
+                  <select name="subscription_plan_id" id="input-subscription" class="form-select">
+                    <option value="">{{ text_select }}</option>
+                    {% for subscription_plan in subscription_plans %}
+                      <option value="{{ subscription_plan.subscription_plan_id }}">{{ subscription_plan.name }}</option>
+                    {% endfor %}
+                  </select>
+                  {% for subscription_plan in subscription_plans %}
+                    <div id="subscription-description-{{ subscription_plan.subscription_plan_id }}" class="form-text subscription d-none">{{ subscription_plan.description }}</div>
+                  {% endfor %}
+                  <div id="error-subscription" class="invalid-feedback"></div>
+                </div>
+              {% endif %}
+              <div class="mb-3 pd-pdp-purchase">
+                <label for="input-quantity" class="form-label">{{ entry_qty }}</label>
+                <div class="pd-pdp-quantity">
+                  <button type="button" class="pd-qty-step" data-qty-step="-1" aria-label="{{ text_decrease_quantity }}">−</button>
+                  <input type="number" name="quantity" value="{{ minimum }}" min="{{ minimum }}" step="1" id="input-quantity" class="form-control"/>
+                  <button type="button" class="pd-qty-step" data-qty-step="1" aria-label="{{ text_increase_quantity }}">+</button>
+                </div>
+                <div class="pd-pdp-cta-row">
+                  <button type="button" id="button-cart" class="pd-pdp-cart-button btn-add-cart" data-product-id="{{ product_id }}" data-cart-add="{{ cart_add }}" data-cart-info="{{ cart_info }}" data-checkout="{{ checkout }}" data-cart-success="{{ text_cart_added }}"><i class="fa-solid fa-cart-plus" aria-hidden="true"></i> {{ button_cart }}</button>
+                  <button type="button" id="button-buy-now" class="pd-pdp-buy-now btn-buy-now" data-product-id="{{ product_id }}" data-cart-add="{{ cart_add }}" data-cart-info="{{ cart_info }}" data-checkout="{{ checkout }}" data-cart-success="{{ text_cart_added }}"><i class="fa-solid fa-bolt" aria-hidden="true"></i> {{ button_buy_now }}</button>
+                </div>
+                <input type="hidden" name="product_id" value="{{ product_id }}" id="input-product-id"/>
+                <div id="error-quantity" class="form-text"></div>
+              </div>
+              {% if minimum > 1 %}
+                <div class="alert alert-warning"><i class="fa-solid fa-circle-info"></i> {{ text_minimum }}</div>
+              {% endif %}
+            </form>
+          </div>
+          {% if stock_alert_needed %}
+            <section class="pd-pdp-stock-alert" aria-labelledby="stock-alert-heading">
+              <h3 id="stock-alert-heading">{{ text_stock_alert_heading }}</h3>
+              <p>{{ text_stock_alert_description }}</p>
+              <form action="{{ stock_alert_action }}" method="post">
+                <input type="hidden" name="product_id" value="{{ product_id }}"/>
+                <input type="hidden" name="stock_alert_token" value="{{ stock_alert_token }}"/>
+                {% if stock_alert_logged %}
+                  <p class="pd-pdp-stock-alert-account">{{ text_stock_alert_account_email }}</p>
+                {% else %}
+                  <div class="mb-3">
+                    <label for="stock-alert-email" class="form-label">{{ text_stock_alert_email }}</label>
+                    <input id="stock-alert-email" type="email" name="email" maxlength="96" class="form-control" autocomplete="email" required/>
+                  </div>
+                {% endif %}
+                <label class="form-check pd-pdp-stock-alert-consent">
+                  <input type="checkbox" name="consent" value="1" class="form-check-input" required/>
+                  <span class="form-check-label">{{ text_stock_alert_consent }}</span>
+                </label>
+                <button type="submit" class="btn btn-primary">{{ text_stock_alert_submit }}</button>
+              </form>
+            </section>
+          {% endif %}
+          {% if compatible_accessories %}
+            <section class="pd-pdp-compatible">
+              <h3><i class="fa-solid fa-link" aria-hidden="true"></i>{{ text_compatible_accessories }}</h3>
+              {% for accessory in compatible_accessories %}
+                <article class="pd-pdp-compatible-item">
+                  <a class="pd-pdp-compatible-image" href="{{ accessory.href }}"><img src="{{ accessory.thumb }}" alt="{{ accessory.name|e('html_attr') }}" loading="lazy"/></a>
+                  <div class="pd-pdp-compatible-info">
+                    <a class="pd-pdp-compatible-name" href="{{ accessory.href }}">{{ accessory.name }}</a>
+                    <span class="pd-pdp-compatible-model">{{ accessory.model }}</span>
+                    {% if accessory.special %}
+                      <strong>{{ accessory.special }}</strong><del>{{ accessory.price }}</del>
+                    {% elseif accessory.price %}
+                      <strong>{{ accessory.price }}</strong>
+                    {% endif %}
+                  </div>
+                  <button type="button" class="pd-pdp-compatible-add btn-add-cart" data-product-id="{{ accessory.product_id }}" data-cart-add="{{ cart_add }}" data-cart-info="{{ cart_info }}" data-cart-success="{{ text_cart_added }}" aria-label="{{ text_add_accessory }}"><i class="fa-solid fa-cart-plus" aria-hidden="true"></i><span>{{ text_add_accessory }}</span></button>
+                </article>
+              {% endfor %}
+              <p>{{ text_compatibility_note }}</p>
+            </section>
+          {% endif %}
+        </div>
+        </section>
+      </div>
+      <div class="pd-pdp-trust" aria-label="{{ text_purchase_information }}">
+        <span><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><b>{{ text_trust_authentic }}</b><small>{{ text_trust_authentic_detail }}</small></span>
+        <span><i class="fa-solid fa-rotate-left" aria-hidden="true"></i><b>{{ text_trust_returns }}</b><small>{{ text_trust_returns_detail }}</small></span>
+        <span><i class="fa-solid fa-truck-fast" aria-hidden="true"></i><b>{{ text_trust_shipping }}</b><small>{{ text_trust_shipping_detail }}</small></span>
+        <span><i class="fa-solid fa-headset" aria-hidden="true"></i><b>{{ text_trust_support }}</b><small>{{ text_trust_support_detail }}</small></span>
+      </div>
+      <section class="pd-pdp-policies" aria-label="{{ text_purchase_information }}">
+        <article class="pd-pdp-policy-card">
+          <span><i class="fa-solid fa-truck-fast" aria-hidden="true"></i>{{ text_delivery_title }}</span>
+          <strong>{{ text_delivery_fee }}</strong>
+          <small>{{ text_delivery_free }}</small>
+          <small>{{ text_delivery_eta }}</small>
+          <a href="{{ delivery_policy_url }}">{{ text_policy_details }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </article>
+        <article class="pd-pdp-policy-card">
+          <span><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>{{ text_returns_title }}</span>
+          <strong>{{ text_returns_summary }}</strong>
+          <a href="{{ returns_policy_url }}">{{ text_policy_details }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </article>
+        <article class="pd-pdp-policy-card">
+          <span><i class="fa-solid fa-shield-halved" aria-hidden="true"></i>{{ text_warranty_title }}</span>
+          <strong>{{ text_warranty_summary }}</strong>
+          <a href="{{ warranty_policy_url }}">{{ text_policy_details }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </article>
+      </section>
+      <div class="pd-pdp-details-layout">
+      <section class="pd-pdp-details-main">
+      <ul class="nav nav-tabs pd-pdp-tabs">
+        <li class="nav-item"><a href="#tab-description" data-bs-toggle="tab" class="nav-link active">{{ tab_description }}</a></li>
+        {% if attribute_groups or product_detail_specs %}
+          <li class="nav-item"><a href="#tab-specification" data-bs-toggle="tab" class="nav-link">{{ text_specifications }}</a></li>
+        {% endif %}
+        {% if has_related_products %}<li class="nav-item"><a href="#tab-accessories" data-bs-toggle="tab" class="nav-link">{{ text_related_products }}</a></li>{% endif %}
+        {% if product_detail_sections or product_in_box %}<li class="nav-item"><a href="#tab-package" data-bs-toggle="tab" class="nav-link">{{ text_in_the_box }}</a></li>{% endif %}
+        {% if review_status %}
+          <li class="nav-item"><a href="#tab-review" data-bs-toggle="tab" class="nav-link">{{ text_reviews_label }} <span class="pd-pdp-review-count">{{ product_review_count }}</span></a></li>
+        {% endif %}
+        {% if product_questions %}
+          <li class="nav-item"><a href="#tab-questions" data-bs-toggle="tab" class="nav-link">{{ text_questions }}</a></li>
+        {% endif %}
+      </ul>
+      <div class="tab-content pd-pdp-tab-content">
+        <div id="tab-description" class="tab-pane fade show active pd-pdp-tab-panel">{{ description }}
+          {% if tags %}
+            <p>{{ text_tags }}
+              {% for tag in tags %}
+                <a href="{{ tag.href }}">{{ tag.tag }}</a>{% if not loop.last %},{% endif %}
+              {% endfor %}
+            </p>
+          {% endif %}
+        </div>
+        {% if attribute_groups or product_detail_specs %}
+          <div id="tab-specification" class="tab-pane fade pd-pdp-tab-panel">
+            <div class="pd-pdp-spec-layout">
+              {% if product_detail_specs %}
+                {% for spec_group in product_detail_specs %}
+                  <section class="pd-pdp-spec-card">
+                    <h3>{{ spec_group.group }}</h3>
+                    <div class="table-responsive">
+                      <table class="table pd-pdp-spec-table"><tbody>
+                        {% for attribute in spec_group.attributes %}
+                          <tr><th scope="row">{{ attribute.name }}</th><td>{{ attribute.text }}</td></tr>
+                        {% endfor %}
+                      </tbody></table>
+                    </div>
+                  </section>
+                {% endfor %}
+              {% else %}
+                {% for attribute_group in attribute_groups %}
+                  <section class="pd-pdp-spec-card">
+                    <h3>{{ attribute_group.name }}</h3>
+                    <div class="table-responsive">
+                      <table class="table pd-pdp-spec-table"><tbody>
+                        {% for attribute in attribute_group.attribute %}
+                          <tr><th scope="row">{{ attribute.name }}</th><td>{{ attribute.text }}</td></tr>
+                        {% endfor %}
+                      </tbody></table>
+                    </div>
+                  </section>
+                {% endfor %}
+              {% endif %}
+            </div>
+            {% if product_detail_source %}
+              <p class="pd-pdp-spec-source">{{ text_specs_source_before }} <a href="{{ product_detail_source|e('html_attr') }}" target="_blank" rel="noopener noreferrer">{{ text_manufacturer_documentation }}</a>. {{ text_specs_source_after }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if has_related_products %}
+          <div id="tab-accessories" class="tab-pane fade pd-pdp-tab-panel"><h2 class="pd-pdp-related-title">{{ text_related_products }}</h2>{{ related }}</div>
+        {% endif %}
+        {% if product_detail_sections or product_in_box %}
+          <div id="tab-package" class="tab-pane fade pd-pdp-tab-panel">
+            <h2 class="pd-pdp-related-title">{{ text_in_the_box }}</h2>
+            {% if product_detail_sections %}
+              <div class="pd-pdp-package-grid">
+                {% for section in product_detail_sections %}
+                  <section class="pd-pdp-package-card"><span class="pd-pdp-package-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span><h3>{{ section.title }}</h3><p>{{ section.text }}</p></section>
+                {% endfor %}
+              </div>
+            {% endif %}
+            {% if product_in_box %}
+              <h3 class="pd-pdp-box-list-title">{{ text_box_contents_list }}</h3>
+              <ul class="pd-pdp-package-list">{% for item in product_in_box %}<li><i class="fa-solid fa-check" aria-hidden="true"></i>{{ item }}</li>{% endfor %}</ul>
+            {% endif %}
+            {% if product_detail_source %}<p class="pd-pdp-spec-source">{{ text_package_source_before }} <a href="{{ product_detail_source|e('html_attr') }}" target="_blank" rel="noopener noreferrer">{{ text_manufacturer_information }}</a>; {{ text_package_source_after }}</p>{% endif %}
+          </div>
+        {% endif %}
+        {% if review_status %}
+          <div id="tab-review" class="tab-pane fade pd-pdp-tab-panel">
+            {% if product_review_count == 0 %}<p class="pd-pdp-review-prompt">{{ text_review_prompt }}</p>{% endif %}
+            {{ review }}
+          </div>
+        {% endif %}
+        {% if product_questions %}
+          <div id="tab-questions" class="tab-pane fade pd-pdp-tab-panel">{{ product_questions }}</div>
+        {% endif %}
+      </div>
+      </section>
+      <aside class="pd-pdp-contact-card">
+        <span class="pd-pdp-contact-kicker"><i class="fa-solid fa-headset" aria-hidden="true"></i> {{ text_footer_support }}</span>
+        <h2>{{ text_footer_contact }}</h2>
+        {% if contact_telephone %}
+          <a class="pd-pdp-contact-link" href="tel:{{ contact_telephone_uri|e('html_attr') }}"><i class="fa-solid fa-phone" aria-hidden="true"></i><span>{{ contact_telephone }}</span></a>
+        {% endif %}
+        {% if contact_email %}
+          <a class="pd-pdp-contact-link" href="mailto:{{ contact_email|e('html_attr') }}"><i class="fa-solid fa-envelope" aria-hidden="true"></i><span>{{ contact_email }}</span></a>
+        {% endif %}
+        <div class="pd-pdp-contact-hours"><span>{{ text_footer_hours }}</span><strong>{{ text_footer_hours_value }}</strong></div>
+        <a class="pd-pdp-contact-cta" href="{{ contact_url }}"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i>{{ text_contact }}</a>
+      </aside>
+      </div>
+      {{ content_bottom }}
+    </div>
+    {{ column_right }}
+  </div>
+</div>
+<div class="pd-mobile-sticky-bar d-lg-none" role="region" aria-label="{{ heading_title }}">
+  {% if price %}
+    <div class="pd-mobile-sticky-price">
+      {% if special %}
+        <small class="text-muted text-decoration-line-through">{{ price }}</small>
+        <strong class="text-danger">{{ special }}</strong>
+      {% else %}
+        <strong>{{ price }}</strong>
+      {% endif %}
+    </div>
+  {% endif %}
+  <button type="button" id="pd-sticky-btn-cart" class="pd-pdp-sticky-add btn-add-cart" data-product-id="{{ product_id }}" data-cart-add="{{ cart_add }}" data-cart-info="{{ cart_info }}" data-checkout="{{ checkout }}" data-cart-success="{{ text_cart_added }}">
+    <i class="fa-solid fa-cart-plus" aria-hidden="true"></i> {{ button_cart }}
+  </button>
+  <button type="button" id="pd-sticky-btn-buy" class="pd-pdp-sticky-buy btn-buy-now" data-product-id="{{ product_id }}" data-cart-add="{{ cart_add }}" data-cart-info="{{ cart_info }}" data-checkout="{{ checkout }}" data-cart-success="{{ text_cart_added }}"><i class="fa-solid fa-bolt" aria-hidden="true"></i> {{ button_buy_now }}</button>
+</div>
+<script type="text/javascript"><!--
+$('#input-subscription').on('change', function(e) {
+    var element = this;
+
+    $('.subscription').addClass('d-none');
+
+    $('#subscription-description-' + $(element).val()).removeClass('d-none');
+});
+
+$('.pd-qty-step').on('click', function() {
+    var input = $('#input-quantity');
+    var min = parseInt(input.attr('min'), 10) || 1;
+    var value = parseInt(input.val(), 10) || min;
+    input.val(Math.max(min, value + (parseInt($(this).data('qty-step'), 10) || 0))).trigger('change');
+});
+
+//--></script>
+{{ footer }}

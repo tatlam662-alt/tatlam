@@ -1,0 +1,15 @@
+<div class="row row-cols-1 row-cols-md-2" id="vietnam-ecommerce-address">
+  <div class="col mb-3 required">
+    <label for="input-shipping-district" class="form-label">{{ entry_district|escape }}</label>
+    <select id="input-shipping-district" class="form-select" autocomplete="address-level2" required>
+      <option value="">{{ text_select|escape }}</option>
+    </select>
+  </div>
+  <div class="col mb-3 required">
+    <label for="input-shipping-ward" class="form-label">{{ entry_ward|escape }}</label>
+    <select id="input-shipping-ward" class="form-select" autocomplete="address-level3" disabled required>
+      <option value="">{{ text_select|escape }}</option>
+    </select>
+    <div id="error-shipping-vn-address" class="invalid-feedback">{{ error_address|escape }}</div>
+  </div>
+</div>

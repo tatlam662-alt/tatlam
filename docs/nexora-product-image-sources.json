@@ -1,0 +1,517 @@
+{
+    "updated_at":  "2026-10-16T16:44:59+07:00",
+    "product_image_directory":  "upload/image/catalog/nexora/",
+    "database_image_path_pattern":  "catalog/nexora/{lowercase-sku}.jpg",
+    "database_fields_changed":  false,
+    "products_updated":  38,
+    "gallery_images_updated":  2,
+    "note":  "38 sản phẩm đang có DB path đúng catalog/nexora/{model-lower}.jpg; ảnh Action 5 và propeller đã được sửa theo đúng loại. Mô tả VI, meta, nhóm thông số và danh mục phụ kiện đã được nghiệm thu.",
+    "products":  [
+                     {
+                         "sku":  "DJI-ACTION5",
+                         "image":  "catalog/nexora/dji-action5.jpg",
+                         "source_key":  "dji-action5-unsplash-177265",
+                         "source_url":  "https://images.unsplash.com/photo-1772650713976-e7ec2bbc45dd?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo — DJI Action 5 Pro",
+                         "source_page":  "https://unsplash.com/photos/a-small-black-action-camera-with-a-silver-frame-zWNwHkz3XPo"
+                     },
+                     {
+                         "sku":  "DJI-AIR3S",
+                         "image":  "catalog/nexora/dji-air3s.jpg",
+                         "source_key":  "drone152",
+                         "source_url":  "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "DJI-AIR3S-FMC",
+                         "image":  "catalog/nexora/dji-air3s-fmc.jpg",
+                         "source_key":  "drone163",
+                         "source_url":  "https://images.unsplash.com/photo-1631052941794-2a6e26d4ac17?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "DJI-AVATA2-FMC",
+                         "image":  "catalog/nexora/dji-avata2-fmc.jpg",
+                         "source_key":  "fpv165428",
+                         "source_url":  "https://images.unsplash.com/photo-1654283627729-8185942506b4?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/a-camera-sitting-on-top-of-a-piece-of-wood-8ylosSJMIKQ"
+                     },
+                     {
+                         "sku":  "DJI-BAG-01",
+                         "image":  "catalog/nexora/dji-bag-01.jpg",
+                         "source_key":  "backpack155",
+                         "source_url":  "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://images.unsplash.com/photo-1553062407-98eeb64c6a62"
+                     },
+                     {
+                         "sku":  "DJI-BAT-MINI4",
+                         "image":  "catalog/nexora/dji-bat-mini4.jpg",
+                         "source_key":  "battery177",
+                         "source_url":  "https://images.unsplash.com/photo-1772289447269-000078170963?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/a-lumix-battery-charger-with-a-battery-and-plug-0TggDUpusx4"
+                     },
+                     {
+                         "sku":  "DJI-GOGGLES3",
+                         "image":  "catalog/nexora/dji-goggles3.jpg",
+                         "source_key":  "vrheadset162",
+                         "source_url":  "https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/pink-and-white-vr-goggles-Zf0mPf4lG-U"
+                     },
+                     {
+                         "sku":  "DJI-HUB-MINI4",
+                         "image":  "catalog/nexora/dji-hub-mini4.jpg",
+                         "source_key":  "charger158",
+                         "source_url":  "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://images.unsplash.com/photo-1583863788434-e58a36330cf0"
+                     },
+                     {
+                         "sku":  "DJI-MAVIC3PRO",
+                         "image":  "catalog/nexora/dji-mavic3pro.jpg",
+                         "source_key":  "drone173",
+                         "source_url":  "https://images.unsplash.com/photo-1739742465286-a48290c94375?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "DJI-MIC2",
+                         "image":  "catalog/nexora/dji-mic2.jpg",
+                         "source_key":  "wirelessmic177",
+                         "source_url":  "https://images.unsplash.com/photo-1779729324071-ed8287b41dae?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/dji-wireless-microphone-with-furry-wind-muff-and-memory-cards-kenkolPbxFY"
+                     },
+                     {
+                         "sku":  "DJI-MINI4PRO",
+                         "image":  "catalog/nexora/dji-mini4pro.jpg",
+                         "source_key":  "drone147",
+                         "source_url":  "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "DJI-MINI4PRO-FMC",
+                         "image":  "catalog/nexora/dji-mini4pro-fmc.jpg",
+                         "source_key":  "drone163",
+                         "source_url":  "https://images.unsplash.com/photo-1631052941794-2a6e26d4ac17?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "DJI-ND-MINI4",
+                         "image":  "catalog/nexora/dji-nd-mini4.jpg",
+                         "source_key":  "ndfilter167",
+                         "source_url":  "https://images.unsplash.com/photo-1676922998363-23c2ac85452d?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/a-close-up-of-a-camera-lens-on-a-table-Sy6PiQnPL-w"
+                     },
+                     {
+                         "sku":  "DJI-NEO",
+                         "image":  "catalog/nexora/dji-neo.jpg",
+                         "source_key":  "drone147",
+                         "source_url":  "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://images.unsplash.com/photo-1473968512647-3e447244af8f"
+                     },
+                     {
+                         "sku":  "DJI-NEO-FMC",
+                         "image":  "catalog/nexora/dji-neo-fmc.jpg",
+                         "source_key":  "drone163",
+                         "source_url":  "https://images.unsplash.com/photo-1631052941794-2a6e26d4ac17?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "DJI-PAD-75",
+                         "image":  "catalog/nexora/dji-pad-75.jpg",
+                         "source_key":  "landingpad170",
+                         "source_url":  "https://images.unsplash.com/photo-1701534979355-7c03953df1bd?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/a-sign-that-is-on-the-ground-in-the-snow-fxrLEkenMlk"
+                     },
+                     {
+                         "sku":  "DJI-POCKET3",
+                         "image":  "catalog/nexora/dji-pocket3.jpg",
+                         "source_key":  "pocket159",
+                         "source_url":  "https://images.unsplash.com/photo-1595594448346-37697edf83a9?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/black-and-gray-camera-on-red-background-cj3zOotO_P0"
+                     },
+                     {
+                         "sku":  "DJI-POCKET3-CC",
+                         "image":  "catalog/nexora/dji-pocket3-cc.jpg",
+                         "source_key":  "creatorcombo170",
+                         "source_url":  "https://images.unsplash.com/photo-1709042516059-495fe42ec82c?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/a-keyboard-mouse-and-other-electronics-on-a-table-U5FjD8UFyDA"
+                     },
+                     {
+                         "sku":  "DJI-PROP-MINI4",
+                         "image":  "catalog/nexora/dji-prop-mini4.jpg",
+                         "source_key":  "dronepropeller177455",
+                         "source_url":  "https://images.unsplash.com/photo-1774553988130-ccda57774818?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "source_page":  "https://unsplash.com/photos/close-up-of-a-drones-internal-electronics-and-propellers-3H5P_3FXCZs",
+                         "kind":  "Unsplash category photo — drone propeller close-up"
+                     },
+                     {
+                         "sku":  "DJI-RC2",
+                         "image":  "catalog/nexora/dji-rc2.jpg",
+                         "source_key":  "controller178",
+                         "source_url":  "https://images.unsplash.com/photo-1782840802983-3a9b7c49d30d?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/a-drone-remote-controller-with-a-screen-surrounded-by-smoke-vZrW_ycsaJY"
+                     },
+                     {
+                         "sku":  "DJI-RS4",
+                         "image":  "catalog/nexora/dji-rs4.jpg",
+                         "source_key":  "gimbal166",
+                         "source_url":  "https://images.unsplash.com/photo-1666332100970-1fd5c53c6497?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "DJI-RS4MINI",
+                         "image":  "catalog/nexora/dji-rs4mini.jpg",
+                         "source_key":  "gimbal166",
+                         "source_url":  "https://images.unsplash.com/photo-1666332100970-1fd5c53c6497?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "KIT-BATTLE-NEON",
+                         "image":  "catalog/nexora/kit-battle-neon.jpg",
+                         "source_key":  "gamingdesk160",
+                         "source_url":  "https://images.unsplash.com/photo-1603481546164-959efb269a4e?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://images.unsplash.com/photo-1603481546164-959efb269a4e"
+                     },
+                     {
+                         "sku":  "KIT-CREATOR-AIR",
+                         "image":  "catalog/nexora/kit-creator-air.jpg",
+                         "source_key":  "dji-creator176",
+                         "source_url":  "https://images.unsplash.com/photo-1764557206119-5659393c25f4?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/dji-wireless-microphones-and-camera-equipment-on-table-HYcAqisSFgY"
+                     },
+                     {
+                         "sku":  "KIT-FPV-NIGHT",
+                         "image":  "catalog/nexora/kit-fpv-night.jpg",
+                         "source_key":  "fpvflight165",
+                         "source_url":  "https://images.unsplash.com/photo-1654360415114-262143f0573e?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/a-red-and-black-remote-controlled-flying-device-_W47OLtxLYA"
+                     },
+                     {
+                         "sku":  "KIT-RENDER-START",
+                         "image":  "catalog/nexora/kit-render-start.jpg",
+                         "source_key":  "case173",
+                         "source_url":  "https://images.unsplash.com/photo-1738245494097-9b1e3971c3eb?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "NX-AIO-360",
+                         "image":  "catalog/nexora/nx-aio-360.jpg",
+                         "source_key":  "case164",
+                         "source_url":  "https://images.unsplash.com/photo-1640865993619-cb8f720bf908?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "NX-CASE-PRISM",
+                         "image":  "catalog/nexora/nx-case-prism.jpg",
+                         "source_key":  "case173",
+                         "source_url":  "https://images.unsplash.com/photo-1738245494097-9b1e3971c3eb?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "NX-HS-VOID",
+                         "image":  "catalog/nexora/nx-hs-void.jpg",
+                         "source_key":  "headset159",
+                         "source_url":  "https://images.unsplash.com/photo-1599669454699-248893623440?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "NX-KB-75",
+                         "image":  "catalog/nexora/nx-kb-75.jpg",
+                         "source_key":  "keyboard167",
+                         "source_url":  "https://images.unsplash.com/photo-1674621703172-ef68b33e52da?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "NX-KB-TKL",
+                         "image":  "catalog/nexora/nx-kb-tkl.jpg",
+                         "source_key":  "keyboard154",
+                         "source_url":  "https://images.unsplash.com/photo-1548347663-f4f0925846e0?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "NX-MON-27",
+                         "image":  "catalog/nexora/nx-mon-27.jpg",
+                         "source_key":  "gamingmonitor163",
+                         "source_url":  "https://images.unsplash.com/photo-1632603093711-0d93a0bcc6cc?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/two-computer-monitors-sitting-on-top-of-a-desk-xkG_QtMhTbo"
+                     },
+                     {
+                         "sku":  "NX-MS-8K",
+                         "image":  "catalog/nexora/nx-ms-8k.jpg",
+                         "source_key":  "mouse152",
+                         "source_url":  "https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "NX-MS-UL",
+                         "image":  "catalog/nexora/nx-ms-ul.jpg",
+                         "source_key":  "mouse161",
+                         "source_url":  "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "NX-PAD-XXL",
+                         "image":  "catalog/nexora/nx-pad-xxl.jpg",
+                         "source_key":  "mousepad161",
+                         "source_url":  "https://images.unsplash.com/photo-1616071359129-9b03697771a8?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/black-and-gray-cordless-computer-mouse-on-blue-mouse-pad-ULmnCnfJT5I"
+                     },
+                     {
+                         "sku":  "NX-PSU-850",
+                         "image":  "catalog/nexora/nx-psu-850.jpg",
+                         "source_key":  "psu175",
+                         "source_url":  "https://images.unsplash.com/photo-1756576170672-1123237f1d77?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/black-computer-power-supply-unit-with-cables-E2aPGg02QdI"
+                     },
+                     {
+                         "sku":  "NX-RAM-32",
+                         "image":  "catalog/nexora/nx-ram-32.jpg",
+                         "source_key":  "storage167",
+                         "source_url":  "https://images.unsplash.com/photo-1672923491001-3e58a608e418?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo"
+                     },
+                     {
+                         "sku":  "NX-SSD-2T",
+                         "image":  "catalog/nexora/nx-ssd-2t.jpg",
+                         "source_key":  "nvme158",
+                         "source_url":  "https://images.unsplash.com/photo-1588259341607-1dbd302efa21?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                         "format":  "JPEG",
+                         "dimensions":  "1000x1000",
+                         "kind":  "Unsplash category photo",
+                         "source_page":  "https://unsplash.com/photos/close-up-of-a-computer-motherboard-with-m2-ssd-aCIrk0LK6YQ"
+                     }
+                 ],
+    "gallery":  [
+                    {
+                        "product":  "DJI-AVATA2-FMC gallery",
+                        "image":  "catalog/nexora/dji-avata2-fmc-alt.jpg",
+                        "source_key":  "fpvflight165",
+                        "source_url":  "https://images.unsplash.com/photo-1654360415114-262143f0573e?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                        "format":  "JPEG",
+                        "dimensions":  "1000x1000",
+                        "source_page":  "https://unsplash.com/photos/a-red-and-black-remote-controlled-flying-device-_W47OLtxLYA"
+                    },
+                    {
+                        "product":  "NX-KB-75 gallery",
+                        "image":  "catalog/nexora/nx-kb-75-alt.jpg",
+                        "source_key":  "keyboard166",
+                        "source_url":  "https://images.unsplash.com/photo-1662253041831-0e6a46b272e5?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80",
+                        "format":  "JPEG",
+                        "dimensions":  "1000x1000"
+                    }
+                ],
+    "source_attempts":  [
+                            {
+                                "result":  "Downloaded, but image content was flowers; rejected for drone products.",
+                                "url":  "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80"
+                            },
+                            {
+                                "result":  "HTTP 404; Avata fallback used.",
+                                "url":  "https://images.unsplash.com/photo-1579829366248-204fe4522362?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80"
+                            },
+                            {
+                                "result":  "HTTP 404.",
+                                "url":  "https://images.unsplash.com/photo-1516035069371-29a1b824cc32?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80"
+                            },
+                            {
+                                "result":  "HTTP 404; DJI-MIC2 N1 used.",
+                                "url":  "https://images.unsplash.com/photo-1598653227480-6c3e8e8f8f8f?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80"
+                            },
+                            {
+                                "result":  "HTTP 404; replacement keyboard photo used.",
+                                "url":  "https://images.unsplash.com/photo-1511467687898-710379163560?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80"
+                            },
+                            {
+                                "result":  "Downloaded but shows an esports auditorium, not a keyboard; rejected.",
+                                "url":  "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80"
+                            },
+                            {
+                                "result":  "HTTP 404; replacement PC case photo used.",
+                                "url":  "https://images.unsplash.com/photo-1587202372775?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80"
+                            },
+                            {
+                                "result":  "HTTP 404; replacement RAM/SSD photo used.",
+                                "url":  "https://images.unsplash.com/photo-1597872200969?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80"
+                            },
+                            {
+                                "result":  "HTTP 400; DJI-MINI4PRO uses its successful Unsplash drone source.",
+                                "url":  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/2024_Dron_DJI_Mini_4_Pro_%2814%29.jpg/1000px-2024_Dron_DJI_Mini_4_Pro_%2814%29.jpg"
+                            },
+                            {
+                                "result":  "Nguồn Action cam ghi trong yêu cầu hiển thị máy ảnh Polaroid nên không phù hợp; đã thay bằng ảnh Unsplash được ghi chú DJI Action 5 Pro.",
+                                "url":  "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format\u0026fit=crop\u0026w=1000\u0026h=1000\u0026q=80"
+                            }
+                        ],
+    "cache":  {
+                  "directory":  "upload/image/cache/",
+                  "cleared_after_final_image_updates":  true,
+                  "index_html_preserved":  true,
+                  "regenerated_nexora_files":  115,
+                  "homepage_http_status":  200,
+                  "featured_product_cards":  16,
+                  "homepage_nexora_jpg_urls_tested":  16,
+                  "homepage_image_failures":  0,
+                  "files_removed_at_final_clear":  118
+              },
+    "verification":  {
+                         "active_products":  38,
+                         "active_product_image_path_failures":  0,
+                         "active_product_jpeg_failures":  0,
+                         "active_product_dimensions":  "1000x1000",
+                         "gallery_images":  2,
+                         "gallery_jpeg_failures":  0,
+                         "product_pages_tested":  38,
+                         "product_pages_http_200":  38,
+                         "product_pages_with_vietnamese_description":  38,
+                         "product_pages_with_specification":  38,
+                         "product_main_image_http_failures":  0,
+                         "homepage_http_status":  200,
+                         "homepage_featured_cards":  16,
+                         "homepage_nexora_images_tested":  16,
+                         "homepage_image_http_failures":  0,
+                         "homepage_placeholder_text":  false,
+                         "homepage_placeholder_svg":  false,
+                         "product_placeholder_text":  false,
+                         "active_product_paths_exact_sku":  38,
+                         "external_image_paths":  0,
+                         "incorrect_x_filenames":  0,
+                         "accessory_category_pages_http_200":  5,
+                         "accessory_parent_lists_children":  true
+                     },
+    "content_update":  {
+                           "language_id":  2,
+                           "language":  "vi-vn",
+                           "products_updated":  38,
+                           "meta_title":  38,
+                           "meta_description":  38,
+                           "html_description":  38,
+                           "products_with_specification":  38,
+                           "attribute_values_added":  241,
+                           "unique_specification_labels":  94,
+                           "related_rows_added":  30,
+                           "short_description_storage":  "Đoạn mở đầu trong product_description.description vì OpenCart chuẩn không có cột short description riêng.",
+                           "attribute_values_added_in_final_pass":  76,
+                           "disclaimer_added_to_pdp":  38,
+                           "attribute_group_names":  [
+                                                         "Tổng quan",
+                                                         "Bay",
+                                                         "Camera",
+                                                         "Ảnh \u0026 Video",
+                                                         "An toàn \u0026 Truyền",
+                                                         "Pin",
+                                                         "Tương thích",
+                                                         "Gaming \u0026 PC"
+                                                     ],
+                           "accessory_subcategories_added":  5,
+                           "accessory_category_product_counts":  [
+                                                                     2,
+                                                                     1,
+                                                                     1,
+                                                                     1,
+                                                                     2
+                                                                 ]
+                       },
+    "image_review":  {
+                         "visual_contact_sheet_reviewed":  true,
+                         "wrong_broad_category_remaining":  0,
+                         "notes":  [
+                                       "Một số ảnh đại diện là stock theo nhóm, không phải ảnh hãng chính xác: VR headset cho Goggles 3, remote drone generic cho RC 2, ảnh pin/charger máy ảnh cho pin Mini 4 Pro, ảnh helipad cho landing pad và charger generic cho hub.",
+                                       "DJI-ACTION5 được sửa từ ảnh bàn phím sang ảnh DJI Action 5 Pro; các ảnh gaming không còn lẫn drone và Pocket không dùng ảnh drone.",
+                                       "DJI-PROP-MINI4 được sửa từ ảnh flycam nguyên chiếc sang ảnh cận cảnh cánh quạt drone.",
+                                       "DJI-ACTION5: ảnh ghi trong yêu cầu ban đầu hiển thị máy ảnh Polaroid; thay bằng ảnh được ghi chú DJI Action 5 Pro.",
+                                       "DJI-PROP-MINI4: thay ảnh flycam nguyên chiếc bằng cận cảnh propeller drone.",
+                                       "Các ảnh Mini/Neo, Air/Mavic, Avata FPV, Pocket, gaming và linh kiện PC đã được rà soát bằng contact sheet 38 ảnh."
+                                   ]
+                     },
+    "audit_report":  "docs/nexora-product-audit-2026-10-16.csv"
+}

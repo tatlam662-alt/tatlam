@@ -1,0 +1,257 @@
+<footer class="pd-footer">
+  <div class="container pd-footer-inner">
+    <div class="row pd-footer-grid">
+      <section class="col-6 col-lg-3 pd-footer-column pd-footer-brand-column">
+        <a href="{{ home }}" class="pd-footer-brand">
+          <img class="pd-brand-mark pd-brand-mark-footer" src="image/catalog/pandashop-panda-logo.svg" alt="" width="40" height="40" />
+          <span>{{ store_name }}</span>
+        </a>
+        <p class="pd-footer-description">{{ text_footer_description }}</p>
+      </section>
+
+      <nav class="col-6 col-lg-3 pd-footer-column" aria-label="{{ text_footer_categories }}">
+        <h2 class="pd-footer-title">{{ text_footer_categories }}</h2>
+        <ul class="pd-footer-links">
+          {% for category in footer_categories %}
+            <li><a href="{{ category.href }}">{{ category.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+
+      <nav class="col-6 col-lg-3 pd-footer-column" aria-label="{{ text_footer_support }}">
+        <h2 class="pd-footer-title">{{ text_footer_support }}</h2>
+        <ul class="pd-footer-links">
+          {% for item in footer_support_links %}
+            <li><a href="{{ item.href }}">{{ item.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+
+      <section class="col-6 col-lg-3 pd-footer-column">
+        <h2 class="pd-footer-title">{{ text_footer_contact }}</h2>
+        <ul class="pd-footer-contact-list">
+          {% if telephone %}
+            <li><i class="fa-solid fa-phone" aria-hidden="true"></i><a href="tel:{{ telephone|replace({' ': '', '-': '', '(': '', ')': ''}) }}">{{ telephone }}</a></li>
+          {% endif %}
+          {% if email %}
+            <li><i class="fa-regular fa-envelope" aria-hidden="true"></i><a href="mailto:{{ email }}">{{ email }}</a></li>
+          {% endif %}
+          <li><i class="fa-regular fa-clock" aria-hidden="true"></i><span>{{ text_footer_hours }}: {{ text_footer_hours_value }}</span></li>
+          {% if zalo %}
+            <li><i class="fa-solid fa-comment-dots" aria-hidden="true"></i><a href="{{ zalo }}" target="_blank" rel="noopener noreferrer">{{ text_footer_chat }}</a></li>
+          {% endif %}
+          {% if address %}
+            <li><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span>{{ address }}</span></li>
+          {% endif %}
+        </ul>
+      </section>
+    </div>
+
+    <div class="pd-footer-bottom">
+      <span>{{ text_footer_bottom_tagline }}</span>
+      <span>{{ powered }}</span>
+    </div>
+  </div>
+</footer>
+<div id="panda-quick-dock" class="panda-quick-dock" data-open="false">
+  <div id="dock-menu-items" class="panda-dock-items" role="group" aria-label="{{ text_chat_channel|escape }}">
+    <div class="panda-dock-item">
+      <span class="panda-dock-tooltip" role="tooltip">PanDa Assistant</span>
+      <button type="button" class="panda-dock-icon panda-dock-ai" data-bs-toggle="modal" data-bs-target="#pandaAiModal" aria-label="{{ text_open_assistant|escape }}"><i class="fa-solid fa-robot" aria-hidden="true"></i><span class="panda-ai-pulse" aria-hidden="true"></span></button>
+    </div>
+    <div class="panda-dock-item"><span class="panda-dock-tooltip" role="tooltip">Zalo: 0359563209</span><a class="panda-dock-icon panda-dock-zalo btn-zalo" href="https://zalo.me/0359563209" target="_blank" rel="noopener noreferrer" aria-label="Zalo: 0359563209" title="Zalo"><svg width="28" height="28" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><circle cx="250" cy="250" r="250" fill="#0068FF"/><path opacity="0.95" d="M382 233.7c0-62.8-59.2-113.7-132-113.7S118 170.9 118 233.7c0 36.3 19.8 68.6 50.8 89.2-3.8 20.3-15.8 41.5-31.5 56.4-2.8 2.7-1.1 7.3 2.7 7.7 34.8 3.5 67.5-12.8 88.5-27.1 7.1.9 14.4 1.4 21.5 1.4 72.8 0 132-50.9 132-113.7z" fill="#FFFFFF"/><path d="M178 202h64v18h-40.5l40.5 39v17h-64v-18h40.5l-40.5-39v-17zm77 24.5c0-13.5 11-24.5 24.5-24.5s24.5 11 24.5 24.5v51.5h-18v-51.5c0-3.6-2.9-6.5-6.5-6.5s-6.5 2.9-6.5 6.5v51.5h-18v-51.5zm62 12c0-20.7 16.8-37.5 37.5-37.5S392 217.8 392 238.5 375.2 276 354.5 276 317 259.2 317 238.5zm57 0c0-10.8-8.7-19.5-19.5-19.5S335 227.7 335 238.5 343.7 258 354.5 258 374 249.3 374 238.5z" fill="#0068FF"/></svg></a></div>
+    <div class="panda-dock-item"><span class="panda-dock-tooltip" role="tooltip">Facebook PanDaShop</span><a class="panda-dock-icon panda-dock-facebook" href="https://www.facebook.com/share/1C45MTEci8/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook PanDaShop"><i class="fa-brands fa-facebook-messenger" aria-hidden="true"></i></a></div>
+    <div class="panda-dock-item"><span class="panda-dock-tooltip" role="tooltip">Telegram: @tatlam8686</span><a class="panda-dock-icon panda-dock-telegram" href="https://t.me/tatlam8686" onclick="window.open('https://web.telegram.org/a/#@tatlam8686','_blank','noopener,noreferrer'); return false;" target="_blank" rel="noopener noreferrer" aria-label="Telegram: @tatlam8686" title="Telegram @tatlam8686"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></a></div>
+    <div class="panda-dock-item"><span class="panda-dock-tooltip" role="tooltip">{{ text_send_support|escape }}</span><a class="panda-dock-icon panda-dock-contact" href="{{ contact|escape }}" aria-label="{{ text_send_support|escape }}"><i class="fa-solid fa-headset" aria-hidden="true"></i></a></div>
+  </div>
+  <div class="panda-dock-trigger-wrap">
+    <span class="panda-dock-trigger-tooltip" id="panda-dock-trigger-tooltip">{{ text_support_label }}</span>
+    <button type="button" id="btn-toggle-dock" class="panda-dock-trigger" aria-label="{{ text_open_support|escape }}" data-open-label="{{ text_open_support|e('html_attr') }}" data-close-label="{{ text_close_support|e('html_attr') }}" aria-describedby="panda-dock-trigger-tooltip" aria-controls="dock-menu-items" aria-expanded="false"><i class="fa-solid fa-comments" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<button type="button" id="pd-scroll-to-top" class="pd-scroll-to-top" aria-label="{{ text_back_to_top|escape }}" title="{{ text_back_to_top|escape }}">
+  <span>{{ text_back_to_top }}</span>
+  <i class="fa-solid fa-angles-up" aria-hidden="true"></i>
+</button>
+
+<div class="modal fade panda-ai-modal" id="pandaAiModal" tabindex="-1" aria-labelledby="pandaAiTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="panda-ai-avatar"><i class="fa-solid fa-robot" aria-hidden="true"></i><span aria-hidden="true"></span></div>
+        <div class="panda-ai-heading"><h2 id="pandaAiTitle">PanDa Assistant</h2><p>{{ text_assistant_description }}</p></div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="{{ text_ai_close_dialog|escape }}"></button>
+      </div>
+      <div class="modal-body" id="ai-chat-messages" aria-live="polite" aria-label="{{ text_ai_chat_label|escape }}">
+        <div class="panda-ai-message panda-ai-message--assistant">{{ text_assistant_greeting }}</div>
+      </div>
+      <div class="panda-ai-suggestions" aria-label="{{ text_ai_suggestions|escape }}">
+        <button type="button" class="btn-ai-chip" data-msg="{{ text_ai_flycam_prompt|e('html_attr') }}">{{ text_ai_flycam_label }}</button>
+        <button type="button" class="btn-ai-chip" data-msg="{{ text_ai_pc_prompt|e('html_attr') }}">PC Gaming</button>
+        <button type="button" class="btn-ai-chip" data-msg="{{ text_ai_order_prompt|e('html_attr') }}">{{ text_ai_order_prompt }}</button>
+        <button type="button" class="btn-ai-chip" data-msg="{{ text_ai_deals_prompt|e('html_attr') }}">{{ text_ai_deals_prompt }}</button>
+      </div>
+      <div class="modal-footer">
+        <form id="form-panda-ai-chat" class="panda-ai-form" action="{{ ai_chat_url }}" method="post" data-typing-message="{{ text_assistant_typing|e('html_attr') }}" data-send-error="{{ text_ai_send_error|e('html_attr') }}" data-connection-error="{{ text_ai_connection_error|e('html_attr') }}" data-no-reply="{{ text_ai_no_reply|e('html_attr') }}">
+          <label class="visually-hidden" for="ai-input-msg">{{ text_ai_message_label }}</label>
+          <input type="text" id="ai-input-msg" class="form-control" placeholder="{{ text_ai_placeholder|e('html_attr') }}" required autocomplete="off" maxlength="1000">
+          <button type="submit" aria-label="{{ text_ai_send_message|escape }}"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
+        </form>
+        <p class="panda-ai-note">{{ text_ai_note }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{{ cookie }}
+<script src="{{ bootstrap }}" type="text/javascript"></script>
+{% for script in scripts %}
+  <script src="{{ script.href }}" type="text/javascript"></script>
+{% endfor %}
+<script type="text/javascript">
+(() => {
+  const toggle = document.getElementById('btn-toggle-dock');
+  const items = document.getElementById('dock-menu-items');
+  const dock = document.getElementById('panda-quick-dock');
+  if (toggle && items && dock) {
+    toggle.addEventListener('click', () => {
+      const isOpen = dock.dataset.open === 'true';
+      dock.dataset.open = String(!isOpen);
+      toggle.setAttribute('aria-expanded', String(!isOpen || dock.matches(':hover') || dock.matches(':focus-within')));
+      toggle.setAttribute('aria-label', isOpen ? toggle.dataset.openLabel : toggle.dataset.closeLabel);
+      toggle.querySelector('i').classList.toggle('fa-comments', isOpen);
+      toggle.querySelector('i').classList.toggle('fa-xmark', !isOpen);
+    });
+    dock.addEventListener('pointerenter', (event) => {
+      if (event.pointerType === 'mouse' && dock.dataset.open !== 'true') toggle.setAttribute('aria-expanded', 'true');
+    });
+    dock.addEventListener('pointerleave', (event) => {
+      if (event.pointerType === 'mouse' && dock.dataset.open !== 'true') toggle.setAttribute('aria-expanded', String(dock.matches(':focus-within')));
+    });
+    dock.addEventListener('focusout', () => window.setTimeout(() => {
+      if (dock.dataset.open !== 'true' && !dock.matches(':hover') && !dock.matches(':focus-within')) toggle.setAttribute('aria-expanded', 'false');
+    }, 0));
+  }
+
+  const form = document.getElementById('form-panda-ai-chat');
+  const input = document.getElementById('ai-input-msg');
+  const messages = document.getElementById('ai-chat-messages');
+  if (form && input && messages) {
+    const sendAiMessage = async (userMsg) => {
+      const message = String(userMsg || '').trim();
+      if (!message || form.dataset.sending === 'true') return;
+
+      const userMessage = document.createElement('div');
+      userMessage.className = 'panda-ai-message panda-ai-message--user';
+      userMessage.textContent = message;
+      messages.appendChild(userMessage);
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
+      form.dataset.sending = 'true';
+      const submitButton = form.querySelector('button[type="submit"]');
+      if (submitButton) submitButton.disabled = true;
+      const typing = document.createElement('div');
+      typing.className = 'panda-ai-message panda-ai-message--assistant panda-ai-typing';
+      typing.setAttribute('role', 'status');
+      typing.textContent = form.dataset.typingMessage;
+      messages.appendChild(typing);
+      messages.scrollTop = messages.scrollHeight;
+
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 15000);
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          body: JSON.stringify({ message }),
+          signal: controller.signal
+        });
+        const data = await response.json().catch(() => null);
+        if (!data || !response.ok || !data.success) throw new Error(data && data.error ? data.error : form.dataset.sendError);
+
+        const reply = document.createElement('div');
+        reply.className = 'panda-ai-message panda-ai-message--assistant';
+        reply.textContent = data.reply || form.dataset.noReply;
+        messages.appendChild(reply);
+
+        (Array.isArray(data.products) ? data.products : []).forEach((product) => {
+          if (!product || !product.href || !product.name) return;
+          const card = document.createElement('a');
+          card.className = 'panda-ai-message panda-ai-product';
+          card.href = product.href;
+          card.rel = 'noopener';
+          const image = document.createElement('img');
+          image.src = product.image || '';
+          image.alt = product.name;
+          image.width = 56;
+          image.height = 56;
+          image.loading = 'lazy';
+          const details = document.createElement('span');
+          details.className = 'panda-ai-product-details';
+          const name = document.createElement('strong');
+          name.textContent = product.name;
+          details.append(name);
+          if (product.price) {
+            const price = document.createElement('span');
+            price.textContent = product.price;
+            details.append(price);
+          }
+          card.append(image, details);
+          messages.appendChild(card);
+        });
+      } catch (error) {
+        const reply = document.createElement('div');
+        reply.className = 'panda-ai-message panda-ai-message--assistant';
+        reply.textContent = error instanceof Error && error.name !== 'AbortError' ? error.message : form.dataset.connectionError;
+        messages.appendChild(reply);
+      } finally {
+        window.clearTimeout(timeoutId);
+        typing.remove();
+        form.dataset.sending = 'false';
+        if (submitButton) submitButton.disabled = false;
+        messages.scrollTop = messages.scrollHeight;
+        input.focus();
+      }
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      sendAiMessage(input.value);
+    });
+
+    const chatModal = messages.closest('.panda-ai-modal');
+    if (chatModal) chatModal.addEventListener('click', (event) => {
+      const chip = event.target.closest('.btn-ai-chip');
+      if (chip) sendAiMessage(chip.dataset.msg || chip.textContent);
+    });
+  }
+})();
+</script>
+<script type="text/javascript">
+(() => {
+  const button = document.getElementById('pd-scroll-to-top');
+  if (!button) return;
+
+  let updateScheduled = false;
+  const updateVisibility = () => {
+    button.classList.toggle('is-visible', window.scrollY > 320);
+    updateScheduled = false;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (updateScheduled) return;
+    updateScheduled = true;
+    window.requestAnimationFrame(updateVisibility);
+  }, { passive: true });
+
+  button.addEventListener('click', () => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+  });
+
+  updateVisibility();
+})();
+</script>
+</body></html>

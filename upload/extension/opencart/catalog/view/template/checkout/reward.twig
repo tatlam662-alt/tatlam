@@ -1,0 +1,90 @@
+{% if checkout %}
+  <section class="pd-checkout-reward" aria-labelledby="pd-checkout-reward-title">
+    <div class="d-flex align-items-start gap-2 mb-2">
+      <i class="fa-solid fa-coins text-info mt-1" aria-hidden="true"></i>
+      <div><h3 id="pd-checkout-reward-title" class="h6 mb-1">{{ heading_title }}</h3><p class="small text-muted mb-2">{{ text_reward_limit }}</p></div>
+    </div>
+    <form id="form-reward" data-pd-checkout="true" data-save="{{ save|escape('html_attr') }}" data-refresh="{{ refresh|escape('html_attr') }}" data-error="{{ text_reward_error|escape('html_attr') }}">
+      <label for="input-reward" class="form-label">{{ entry_reward }}</label>
+      <div class="input-group">
+        <input type="number" min="0" max="{{ maximum }}" step="1" inputmode="numeric" name="reward" value="{{ reward }}" placeholder="0" id="input-reward" class="form-control" aria-describedby="pd-reward-value"/>
+        <button type="button" class="btn btn-outline-info" data-pd-reward-max>{{ text_reward_clear }}</button>
+      </div>
+      <div id="pd-reward-value" class="form-text">{{ text_reward_value }}</div>
+      <div id="pd-reward-message" class="small mt-2" role="status" aria-live="polite" hidden></div>
+      <button type="submit" class="btn btn-info btn-sm mt-2">{{ text_reward_apply }}</button>
+      {% if applied %}<button type="button" class="btn btn-link btn-sm mt-2" data-pd-reward-remove>{{ text_reward_remove }}</button>{% endif %}
+    </form>
+  </section>
+  <script>
+  (function ($, document) {
+    'use strict';
+    $(document).off('click.pdRewardMax', '[data-pd-reward-max]').on('click.pdRewardMax', '[data-pd-reward-max]', function () {
+      var form = this.form;
+      form.elements.reward.value = form.elements.reward.max;
+    });
+    $(document).off('click.pdRewardRemove', '[data-pd-reward-remove]').on('click.pdRewardRemove', '[data-pd-reward-remove]', function () {
+      var form = this.form;
+      form.elements.reward.value = '0';
+      $(form).trigger('submit');
+    });
+    $(document).off('submit.pdReward', '#form-reward[data-pd-checkout="true"]').on('submit.pdReward', '#form-reward[data-pd-checkout="true"]', function (event) {
+      event.preventDefault();
+      var form = this;
+      var $form = $(form);
+      var $message = $('#pd-reward-message');
+      var $submit = $form.find('[type="submit"]');
+      $message.prop('hidden', true).removeClass('text-danger text-success').text('');
+      $submit.prop('disabled', true);
+      $.ajax({
+        url: form.dataset.save,
+        type: 'post',
+        data: $form.serialize(),
+        dataType: 'json'
+      }).done(function (json) {
+        if (json.error) {
+          $message.text(json.error).addClass('text-danger').prop('hidden', false);
+          return;
+        }
+        $message.text(json.success || '').addClass('text-success').prop('hidden', false);
+        $('#checkout-confirm').load(form.dataset.refresh);
+      }).fail(function () {
+        $message.text(form.dataset.error).addClass('text-danger').prop('hidden', false);
+      }).always(function () {
+        $submit.prop('disabled', false);
+      });
+    });
+  })(jQuery, document);
+  </script>
+{% else %}
+  <div class="accordion-item">
+    <h2 class="accordion-header"><button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapse-reward">{{ heading_title }}</button></h2>
+    <div id="collapse-reward" class="accordion-collapse collapse" data-bs-parent="#accordion">
+      <div class="accordion-body">
+        <p class="small text-muted">{{ text_reward_limit }} {{ text_reward_value }}</p>
+        <form id="form-reward" data-oc-toggle="ajax" data-oc-load="{{ list }}" data-oc-target="#shopping-cart">
+          <div class="row mb-3">
+            <label for="input-reward" class="col-md-4 col-form-label">{{ entry_reward }}</label>
+            <div class="col-md-8">
+              <div class="input-group">
+                <input type="number" min="0" max="{{ maximum }}" step="1" name="reward" value="{{ reward }}" placeholder="0" id="input-reward" class="form-control"/>
+                <button type="button" class="btn btn-outline-info" data-pd-reward-max>{{ text_reward_clear }}</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="text-end">
+          <button type="submit" form="form-reward" formaction="{{ save }}" class="btn btn-primary">{{ text_reward_apply }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+  (function ($, document) {
+    'use strict';
+    $(document).off('click.pdRewardMax', '[data-pd-reward-max]').on('click.pdRewardMax', '[data-pd-reward-max]', function () {
+      this.form.elements.reward.value = this.form.elements.reward.max;
+    });
+  })(jQuery, document);
+  </script>
+{% endif %}

@@ -1,0 +1,95 @@
+{{ header }}
+<main id="product-special" class="container pd-standard-page">
+  <nav aria-label="{{ text_page_navigation }}">
+    <ol class="breadcrumb">
+      {% for breadcrumb in breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+      {% endfor %}
+    </ol>
+  </nav>
+
+  <section class="pd-deals-hero">
+    <div class="pd-deals-hero__copy">
+      <span class="pd-deals-eyebrow"><i class="fa-solid fa-bolt" aria-hidden="true"></i> {{ text_deals_live }}</span>
+      <h1>{{ heading_title }}</h1>
+      <p>{{ text_deals_intro }}</p>
+      <div class="pd-deals-stats">
+        <span><i class="fa-solid fa-tags" aria-hidden="true"></i> <strong>{{ product_count }}</strong> {{ text_products_on_sale }}</span>
+        <span><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> {{ text_deal_prices_vary }}</span>
+      </div>
+    </div>
+    <aside class="pd-deals-countdown" aria-label="{{ text_next_deal_countdown }}">
+      <span class="pd-deals-countdown__label"><i class="fa-regular fa-clock" aria-hidden="true"></i> {{ text_next_deal_countdown }}</span>
+      <strong id="pd-deals-timer" data-seconds="{{ next_rotation_in }}" aria-live="off">--:--:--</strong>
+      <small>{{ text_deals_refresh }}</small>
+    </aside>
+    <span class="pd-deals-orbit pd-deals-orbit--one" aria-hidden="true"></span>
+    <span class="pd-deals-orbit pd-deals-orbit--two" aria-hidden="true"></span>
+  </section>
+
+  {% if products %}
+    <section class="pd-deals-toolbar" aria-label="{{ text_deal_list_options }}">
+      <div class="pd-deals-toolbar__intro">
+        <span class="pd-deals-section-kicker">{{ text_deal_list }}</span>
+        <strong>{{ product_count }} <span>{{ text_products }}</span></strong>
+      </div>
+      <div class="pd-deals-toolbar__controls">
+        <div class="ps-view-toggle" role="group" aria-label="{{ text_view_type }}">
+          <button type="button" id="button-grid" class="ps-view is-active" data-view="grid" title="{{ text_grid_view }}" aria-label="{{ text_grid_view }}" aria-pressed="true"><i class="fa-solid fa-table-cells" aria-hidden="true"></i></button>
+          <button type="button" id="button-list" class="ps-view" data-view="list" title="{{ text_list_view }}" aria-label="{{ text_list_view }}" aria-pressed="false"><i class="fa-solid fa-list" aria-hidden="true"></i></button>
+        </div>
+        <label class="pd-deals-select"><span>{{ text_sort }}</span>
+          <select id="input-sort" class="form-select" onchange="window.pdNavigateWithinShop(this.value);">
+            {% for sorts in sorts %}<option value="{{ sorts.href }}"{% if sorts.value == '%s-%s'|format(sort, order) %} selected{% endif %}>{{ sorts.text }}</option>{% endfor %}
+          </select>
+        </label>
+        <a href="{{ compare }}" id="compare-total" class="pd-deals-compare"><i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i><span>{{ text_compare }}</span></a>
+      </div>
+    </section>
+
+    <div id="product-list" class="pd-deals-grid ps-product-results ps-view-grid row row-cols-2 row-cols-md-3 row-cols-xl-4">
+      {% for product in products %}<div class="col">{{ product }}</div>{% endfor %}
+    </div>
+
+  {% else %}
+    <section class="pd-deals-empty">
+      <span><i class="fa-solid fa-tags" aria-hidden="true"></i></span>
+      <h2>{{ text_no_results }}</h2>
+      <p>{{ text_deals_empty_description }}</p>
+      <a href="{{ continue }}" class="pd-deals-empty__button"><i class="fa-solid fa-store" aria-hidden="true"></i> {{ text_explore_store }}</a>
+    </section>
+  {% endif %}
+
+  {{ content_bottom }}
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const timer = document.getElementById('pd-deals-timer');
+  if (!timer) return;
+
+  let remaining = Math.max(0, Number(timer.dataset.seconds) || 0);
+  let refreshing = false;
+
+  function renderCountdown() {
+    const hours = String(Math.floor(remaining / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
+    const seconds = String(remaining % 60).padStart(2, '0');
+    timer.textContent = hours + ':' + minutes + ':' + seconds;
+
+    if (remaining <= 0) {
+      if (!refreshing) {
+        refreshing = true;
+        window.pdReloadWithinShop();
+      }
+      return;
+    }
+
+    remaining -= 1;
+    window.setTimeout(renderCountdown, 1000);
+  }
+
+  renderCountdown();
+});
+</script>
+{{ footer }}

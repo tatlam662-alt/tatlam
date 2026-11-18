@@ -1,0 +1,21 @@
+{% if addresses %}
+  <div class="account-address-grid">
+    {% for address in addresses %}
+      <article class="account-address-card{% if address.default %} is-default{% endif %}">
+        <div class="account-address-card__top">
+          <div class="account-address-recipient"><span class="account-address-recipient-icon" aria-hidden="true"><i class="fa-regular fa-user"></i></span><div><strong>{{ address.name|escape }}</strong>{% if address.telephone %}<span><i class="fa-solid fa-phone me-1" aria-hidden="true"></i>{{ address.telephone|escape }}</span>{% endif %}</div></div>
+          {% if address.default %}<span class="account-default-badge"><i class="fa-solid fa-check me-1" aria-hidden="true"></i>{{ text_default }}</span>{% else %}<span class="account-address-kind"><i class="fa-solid fa-location-dot me-1" aria-hidden="true"></i>Địa chỉ nhận hàng</span>{% endif %}
+        </div>
+        <div class="account-address-copy"><i class="fa-solid fa-location-dot text-cyan me-1" aria-hidden="true"></i>{{ address.address }}</div>
+        <div class="account-address-actions">
+          <a href="{{ address.edit }}" class="account-address-action"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i><span>{{ button_edit }}</span></a>
+          {% if address.can_delete %}
+            <a href="{{ address.delete }}" title="{{ button_delete }}" class="account-address-action is-danger account-icon-action"><i class="fa-solid fa-trash-can" aria-hidden="true"></i><span>{{ button_delete }}</span></a>
+          {% endif %}
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="account-empty-state">{{ text_no_results }}</div>
+{% endif %}

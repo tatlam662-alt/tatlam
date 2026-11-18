@@ -1,0 +1,61 @@
+{% if categories %}
+  <div class="pd-navbar-container d-none d-lg-block">
+    <div class="container">
+      <nav id="menu" class="pd-navbar" aria-label="{{ text_service_links }}">
+        <ul class="pd-nav-list">
+          {% for link in service_links %}
+            <li class="pd-nav-item">
+              <a href="{{ link.href }}" class="pd-nav-link pd-service-nav-link">
+                <i class="{{ link.icon }}" aria-hidden="true"></i>
+                <span>{{ link.name }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <!-- Script đồng bộ danh mục vào Mobile Drawer -->
+  <script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    var mobileCatContainer = document.getElementById('pd-mobile-categories');
+    var html = '<div class="accordion accordion-flush" id="pd-mobile-cat-accordion">';
+    {% for idx, category in categories %}
+      {% if category.children %}
+        html += '<div class="accordion-item border-bottom">' +
+                '<h2 class="accordion-header" id="heading-cat-{{ idx }}">' +
+                '<button class="accordion-button collapsed py-2 px-0 fw-semibold text-dark shadow-none bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-cat-{{ idx }}">' +
+                '{{ category.name|escape('html')|escape('js') }}' +
+                '</button>' +
+                '</h2>' +
+                '<div id="collapse-cat-{{ idx }}" class="accordion-collapse collapse" data-bs-parent="#pd-mobile-cat-accordion">' +
+                '<div class="accordion-body p-2 bg-light rounded-3 mb-2">' +
+                '<ul class="list-unstyled mb-0">' +
+                {% for child in category.children %}
+                  '<li class="py-1"><a href="{{ child.href|escape('html_attr')|escape('js') }}" class="pd-mobile-category-child d-block">{{ child.name|escape('html')|escape('js') }}</a></li>' +
+                {% endfor %}
+                '<li class="pt-2 border-top mt-1"><a href="{{ category.href|escape('html_attr')|escape('js') }}" class="fw-bold text-success">{{ text_all|escape('html')|escape('js') }} {{ category.name|escape('html')|escape('js') }} &rarr;</a></li>' +
+                '</ul>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+      {% else %}
+        html += '<div class="py-2 border-bottom">' +
+                '<a href="{{ category.href|escape('html_attr')|escape('js') }}" class="fw-semibold text-dark d-block">{{ category.name|escape('html')|escape('js') }}</a>' +
+                '</div>';
+      {% endif %}
+    {% endfor %}
+    html += '</div>';
+    if (mobileCatContainer) mobileCatContainer.innerHTML = html;
+
+    var mobileServiceContainer = document.getElementById('pd-mobile-service-links');
+    if (mobileServiceContainer) {
+      var serviceHtml = '';
+      {% for link in service_links %}
+        serviceHtml += '<li class="py-2 border-bottom"><a href="{{ link.href|escape('html_attr')|escape('js') }}" class="pd-mobile-utility-link"><i class="{{ link.icon|escape('html_attr')|escape('js') }}" aria-hidden="true"></i><span>{{ link.name|escape('html')|escape('js') }}</span></a></li>';
+      {% endfor %}
+      mobileServiceContainer.innerHTML = serviceHtml;
+    }
+  });
+  </script>
+{% endif %}

@@ -1,0 +1,171 @@
+<fieldset class="pd-checkout-method-fieldset">
+  <legend>{{ heading_title|escape }}</legend>
+  <input type="hidden" value="{{ code|escape }}" id="input-payment-code"/>
+  <div id="pd-payment-options" class="pd-checkout-options" role="radiogroup" aria-label="Phương thức thanh toán">
+    <p class="pd-checkout-method-status">Chọn phương thức giao hàng để xem cách thanh toán.</p>
+  </div>
+  <div id="pd-payment-error" class="invalid-feedback" role="alert"></div>
+</fieldset>
+<div class="pd-checkout-comment">
+  <label for="input-comment" class="form-label"><strong>{{ text_comments|escape }}</strong></label>
+  <textarea name="comment" rows="3" id="input-comment" class="form-control">{{ comment|e }}</textarea>
+</div>
+{% if text_agree %}
+  <div class="form-check pd-checkout-agree mt-3">
+    <input type="checkbox" name="agree" value="1" id="input-checkout-agree" class="form-check-input"{% if agree %} checked{% endif %}/>
+    <label for="input-checkout-agree" class="form-check-label">{{ text_agree }}</label>
+  </div>
+{% endif %}
+<script>
+(function ($, window) {
+  'use strict';
+  var methodsUrl = 'index.php?route=checkout/payment_method.getMethods&language={{ language|escape('js') }}';
+  var saveUrl = 'index.php?route=checkout/payment_method.save&language={{ language|escape('js') }}';
+  var confirmUrl = 'index.php?route=checkout/confirm.confirm&language={{ language|escape('js') }}';
+  var commentSaveError = {{ error_comment_save|json_encode|raw }};
+  var loading = false;
+  var commentTimer = null;
+  var paymentSaveSequence = 0;
+
+  function showError(message) {
+    $('#pd-payment-error').text(message || '').toggleClass('d-block', !!message);
+  }
+
+  function showTransferInstructions(code) {
+    $('#pd-bank-transfer-placeholder').remove();
+    if (String(code || '').indexOf('bank_transfer') === -1) return;
+    $('<div>', { id: 'pd-bank-transfer-placeholder', class: 'alert alert-info mt-3' })
+      .text('Bạn đã chọn chuyển khoản ngân hàng. Thông tin tài khoản nhận tiền sẽ được hiển thị ở bước xác nhận thanh toán.')
+      .insertAfter('#pd-payment-options');
+  }
+
+  function savePayment(code) {
+    var sequence = ++paymentSaveSequence;
+
+    showError('');
+    $('#pd-payment-options').addClass('is-loading');
+    $('#pd-payment-options input[name="pd_payment_method"]').prop('disabled', true);
+    // Wait for OpenCart to persist the selection before allowing confirmation.
+    $('#input-payment-code').val('');
+    $('#button-confirm').prop('disabled', true).attr('aria-disabled', 'true');
+
+    $.ajax({ url: saveUrl, type: 'post', dataType: 'json', data: { payment_method: code } })
+      .done(function (json) {
+        if (sequence !== paymentSaveSequence) return;
+        if (json.redirect) { window.pdNavigateWithinShop(json.redirect); return; }
+        if (json.error) {
+          showError(json.error);
+          $('#pd-checkout-guidance').text(json.error);
+          return;
+        }
+        $('#input-payment-code').val(code);
+        showTransferInstructions(code);
+        $('#checkout-confirm').load(confirmUrl);
+      })
+      .fail(function (xhr, status) {
+        if (status === 'abort' || sequence !== paymentSaveSequence) return;
+        $('#input-payment-code').val('');
+        $('#button-confirm').prop('disabled', true).attr('aria-disabled', 'true');
+        showError('Không lưu được phương thức thanh toán. Vui lòng chọn lại.');
+      })
+      .always(function () {
+        if (sequence !== paymentSaveSequence) return;
+        $('#pd-payment-options input[name="pd_payment_method"]').prop('disabled', false);
+        $('#pd-payment-options').removeClass('is-loading');
+      });
+  }
+
+  function loadPayment() {
+    if (loading || !$('#pd-payment-options').length) return;
+    loading = true;
+    showError('');
+    $('#pd-payment-options').html('<p class="pd-checkout-method-status">Đang tải phương thức thanh toán…</p>');
+    $.getJSON(methodsUrl).done(function (json) {
+      if (json.redirect) { window.pdNavigateWithinShop(json.redirect); return; }
+      if (json.error) {
+        $('#pd-payment-options').empty();
+        showError('Chưa tải được phương thức thanh toán: ' + String(json.error) + ' Vui lòng chọn lại phương thức giao hàng rồi thử lại.');
+        return;
+      }
+
+      var $list = $('<div>', { class: 'pd-checkout-option-list' });
+      var currentCode = $('#input-payment-code').val();
+      var count = 0;
+      $.each(json.payment_methods || {}, function (groupKey, group) {
+        if (group.error) return;
+        $.each(group.option || {}, function (optionKey, option) {
+          var groupCode = group.code || groupKey;
+          var code = option.code || (groupCode + '.' + optionKey);
+          var id = 'pd-payment-' + count++;
+          var $input = $('<input>', { type: 'radio', name: 'pd_payment_method', id: id, value: code, class: 'form-check-input' });
+          var $label = $('<label>', { class: 'pd-checkout-option payment-card-option', for: id });
+          var optionName = String(option.name || group.name || 'Thanh toán').trim();
+          var groupName = String(group.name || '').trim();
+          var $copy = $('<span>', { class: 'pd-checkout-option-copy' }).append($('<strong>').text(optionName));
+          if (groupName && groupName.toLocaleLowerCase() !== optionName.toLocaleLowerCase()) {
+            $copy.append($('<small>').text(groupName));
+          }
+          $label.append($input, $copy);
+          $list.append($label);
+          if (code === currentCode) {
+            $input.prop('checked', true);
+            $label.addClass('active-payment-card');
+          }
+        });
+      });
+
+      if (!count) { $('#pd-payment-options').html('<p class="pd-checkout-method-status">Chưa có phương thức thanh toán khả dụng.</p>'); return; }
+      $('#pd-payment-options').empty().append($list);
+      var selectedCode = $list.find('input:checked').val();
+      if (selectedCode) {
+        // This selection is already stored in the OpenCart session (the hidden
+        // field is populated by the controller). Do not POST it again while
+        // rendering options; doing so briefly clears the selected state and
+        // races the confirm fragment refresh.
+        $('#input-payment-code').val(selectedCode);
+        showTransferInstructions(selectedCode);
+      } else {
+        $('#pd-checkout-guidance').text('Vui lòng chọn phương thức thanh toán trước khi đặt đơn.');
+      }
+    }).fail(function () {
+      $('#pd-payment-options').empty();
+      showError('Không kết nối được dịch vụ thanh toán. Vui lòng thử lại.');
+    }).always(function () { loading = false; });
+  }
+
+  function saveComment() {
+    $.post('index.php?route=checkout/payment_method.comment&language={{ language|escape('js') }}', { comment: $('#input-comment').val() })
+      .done(function (json) {
+        if (json && json.error) showError(json.error);
+      })
+      .fail(function () { showError(commentSaveError); });
+  }
+
+  $(document).off('change.pdPayment', 'input[name="pd_payment_method"]').on('change.pdPayment', 'input[name="pd_payment_method"]', function () {
+    $('#pd-payment-options .payment-card-option').removeClass('active-payment-card');
+    $(this).closest('.payment-card-option').addClass('active-payment-card');
+    showTransferInstructions(this.value);
+    savePayment(this.value);
+  });
+  $(document).off('click.pdPaymentCard', '#pd-payment-options .payment-card-option').on('click.pdPaymentCard', '#pd-payment-options .payment-card-option', function (event) {
+    if ($(event.target).is('input[name="pd_payment_method"]')) return;
+    var input = this.querySelector('input[name="pd_payment_method"]');
+    if (!input || input.disabled) return;
+    event.preventDefault();
+    if (!input.checked || !$('#input-payment-code').val()) {
+      input.checked = true;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  });
+  $(document).off('change.pdPaymentAgree', '#input-checkout-agree').on('change.pdPaymentAgree', '#input-checkout-agree', function () {
+    $.post('index.php?route=checkout/payment_method.agree&language={{ language|escape('js') }}', { agree: this.checked ? 1 : 0 })
+      .always(function () { $('#checkout-confirm').load(confirmUrl); });
+  });
+  $(document).off('blur.pdPaymentComment', '#input-comment').on('blur.pdPaymentComment', '#input-comment', saveComment);
+  $(document).off('input.pdPaymentComment', '#input-comment').on('input.pdPaymentComment', '#input-comment', function () {
+    window.clearTimeout(commentTimer);
+    commentTimer = window.setTimeout(saveComment, 700);
+  });
+  window.pdLoadPaymentOptions = loadPayment;
+})(jQuery, window);
+</script>

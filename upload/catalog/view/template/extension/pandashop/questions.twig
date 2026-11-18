@@ -1,0 +1,92 @@
+<section class="pd-product-qna mt-4 pt-4 border-top" aria-labelledby="pd-product-qna-title">
+  <h3 id="pd-product-qna-title">{{ text_heading }}</h3>
+  <p class="text-muted mb-3">{{ text_intro }}</p>
+  {% if questions %}
+    <div class="pd-qna-list mb-4">
+      {% for item in questions %}
+        <article class="border rounded-3 p-3 mb-2">
+          <p class="mb-1"><strong>Q:</strong> {{ item.question|e }}</p>
+          <small class="text-muted">{{ item.author|e }}</small>
+          {% if item.answer %}<p class="mt-2 mb-0"><strong>{{ text_answered }}:</strong> {{ item.answer|e }}</p>{% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">{{ text_empty }}</p>
+  {% endif %}
+  <p class="text-muted mb-3">{{ text_chat_intro }}</p>
+  {% if logged %}<p><a href="{{ inbox_url }}">{{ text_open_inbox }}</a></p>{% endif %}
+  {% if logged %}
+    <form class="pd-qna-form" action="{{ submit_url }}" method="post">
+      <div class="mb-2">
+        <label class="form-label" for="pd-qna-author">{{ text_name }}</label>
+        <input class="form-control" id="pd-qna-author" name="author" value="{{ customer_firstname }}" maxlength="64" required>
+      </div>
+      <div class="mb-2">
+        <label class="form-label" for="pd-qna-question">{{ text_question }}</label>
+        <textarea class="form-control" id="pd-qna-question" name="question" rows="3" minlength="10" maxlength="2000" required></textarea>
+      </div>
+      <button class="btn pd-btn-outline-neon" type="submit">{{ text_submit }}</button>
+      <span class="pd-qna-message ms-2" role="status" aria-live="polite"></span>
+    </form>
+  {% else %}
+    <p><a href="{{ login_url }}">{{ text_login_required }}</a></p>
+    <form class="pd-qna-form" action="{{ submit_url }}" method="post">
+    <div class="mb-2">
+      <label class="form-label" for="pd-qna-author">{{ text_name }}</label>
+      <input class="form-control" id="pd-qna-author" name="author" maxlength="64" required>
+    </div>
+    <div class="mb-2">
+      <label class="form-label" for="pd-qna-email">{{ text_email }}</label>
+      <input class="form-control" type="email" id="pd-qna-email" name="email" maxlength="96" required>
+    </div>
+    <div class="mb-2">
+      <label class="form-label" for="pd-qna-question">{{ text_question }}</label>
+      <textarea class="form-control" id="pd-qna-question" name="question" rows="3" minlength="10" maxlength="2000" required></textarea>
+    </div>
+    <button class="btn pd-btn-outline-neon" type="submit">{{ text_submit }}</button>
+    <span class="pd-qna-message ms-2" role="status" aria-live="polite"></span>
+    </form>
+  {% endif %}
+</section>
+<script>
+document.querySelectorAll('.pd-qna-form').forEach(function (form) {
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    var message = form.querySelector('.pd-qna-message');
+    var button = form.querySelector('button[type="submit"]');
+    button.disabled = true;
+
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        message.textContent = data.success || data.error || {{ error_network|json_encode|raw }};
+        message.className = 'pd-qna-message ms-2 ' + (data.success ? 'text-success' : 'text-danger');
+        if (data.success) {
+          form.reset();
+          if (data.conversation_url) {
+            var link = document.createElement('a');
+            link.href = data.conversation_url;
+            link.textContent = {{ text_open_conversation|json_encode|raw }};
+            link.className = 'd-block mt-2';
+            message.appendChild(link);
+          }
+          if (!data.email_sent) {
+            message.classList.add('text-warning');
+            message.append(' {{ error_email_delivery }}');
+          }
+        }
+      })
+      .catch(function () {
+        message.textContent = {{ error_network|json_encode|raw }};
+        message.className = 'pd-qna-message ms-2 text-danger';
+      })
+      .finally(function () { button.disabled = false; });
+  });
+});
+</script>

@@ -1,0 +1,1373 @@
+{{ header }}
+<div id="checkout-checkout" class="container-fluid px-3 px-lg-5 py-4 pd-checkout-page">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      {% for breadcrumb in breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{ breadcrumb.href|escape }}">{{ breadcrumb.text|escape }}</a></li>
+      {% endfor %}
+    </ol>
+  </nav>
+
+  <div class="row">
+    {{ column_left }}
+    <main id="content" class="col">
+      {{ content_top }}
+      <header class="pd-checkout-heading checkout-header-banner checkout-header-hero">
+        <div class="pd-checkout-heading-copy">
+          <a class="pd-checkout-back-cart" href="{{ cart_url|escape }}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Quay lại giỏ hàng</a>
+          <span class="pd-flash-kicker">PanDaShop · THANH TOÁN</span>
+          <h1 class="pd-section-title"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Thanh toán an toàn PanDaShop</h1>
+          <p>Kiểm tra địa chỉ nhận hàng, phương thức vận chuyển và thanh toán trước khi đặt hàng.</p>
+        </div>
+        <div class="pd-checkout-assurances" aria-label="Thông tin hỗ trợ thanh toán">
+          <span><i class="fa-solid fa-lock" aria-hidden="true"></i> Thanh toán bảo mật</span>
+          <span><i class="fa-solid fa-headset" aria-hidden="true"></i> Hỗ trợ khách hàng</span>
+          <span><i class="fa-solid fa-truck-fast" aria-hidden="true"></i> Giao hàng theo địa chỉ đã chọn</span>
+        </div>
+      </header>
+
+      <div class="row g-4 pd-checkout-layout">
+        <section class="col-12 col-lg-8 pd-checkout-customer" aria-label="Thông tin nhận hàng, vận chuyển và thanh toán">
+          <ol class="pd-checkout-progress checkout-stepper-container" aria-label="Tiến trình thanh toán">
+            <li class="is-current" data-step-indicator="1"><span>1</span><b>Người nhận</b></li>
+            <li data-step-indicator="2"><span>2</span><b>Địa chỉ</b></li>
+            <li data-step-indicator="3"><span>3</span><b>Giao hàng &amp; thanh toán</b></li>
+          </ol>
+          {% if register %}<div id="checkout-register">{{ register }}</div>{% endif %}
+          {% if not register %}<section id="pd-checkout-step-1" class="pd-checkout-step pd-checkout-recipient-card checkout-card-form" data-step="1">
+            <h2 class="pd-checkout-section-title">Thông tin người nhận</h2>
+            <div class="row row-cols-1 row-cols-md-2 g-3">
+              <div class="col"><label class="form-label" for="pd-recipient-firstname">Tên *</label><div class="input-group checkout-input-group"><span class="input-group-text"><i class="fa-regular fa-user" aria-hidden="true"></i></span><input class="form-control" id="pd-recipient-firstname" type="text" maxlength="32" autocomplete="given-name" value="{{ checkout_customer.firstname|escape }}" required></div><div id="error-pd-recipient-firstname" class="invalid-feedback"></div></div>
+              <div class="col"><label class="form-label" for="pd-recipient-lastname">Họ *</label><div class="input-group checkout-input-group"><span class="input-group-text"><i class="fa-regular fa-user" aria-hidden="true"></i></span><input class="form-control" id="pd-recipient-lastname" type="text" maxlength="32" autocomplete="family-name" value="{{ checkout_customer.lastname|escape }}" required></div><div id="error-pd-recipient-lastname" class="invalid-feedback"></div></div>
+              <div class="col"><label class="form-label" for="pd-recipient-telephone">Số điện thoại *</label><div class="input-group checkout-input-group"><span class="input-group-text"><i class="fa-solid fa-phone" aria-hidden="true"></i></span><input class="form-control" id="pd-recipient-telephone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" value="{{ checkout_customer.telephone|escape }}" required></div><div id="error-pd-recipient-telephone" class="invalid-feedback"></div></div>
+              <div class="col"><label class="form-label" for="pd-recipient-email">Email (không bắt buộc)</label><div class="input-group checkout-input-group"><span class="input-group-text"><i class="fa-regular fa-envelope" aria-hidden="true"></i></span><input class="form-control" id="pd-recipient-email" type="email" autocomplete="email" value="{{ checkout_customer.email|escape }}"></div><div id="error-pd-recipient-email" class="invalid-feedback"></div></div>
+            </div>
+            <div id="pd-recipient-save-error" class="pd-checkout-recipient-error" role="alert" aria-live="assertive" hidden></div>
+            <div class="pd-checkout-step-actions"><span></span><button type="button" class="btn btn-cyan" data-step-next="1">Tiếp tục đến địa chỉ</button></div>
+          </section>{% endif %}
+          <section id="pd-checkout-step-2" class="pd-checkout-step" data-step="2" hidden>
+            {% if payment_address %}<div id="checkout-payment-address">{{ payment_address }}</div>{% endif %}
+            {% if shipping_address %}<div id="checkout-shipping-address">{{ shipping_address }}</div>{% endif %}
+            {% if not register %}<div class="pd-checkout-step-actions"><button type="button" class="btn btn-outline-secondary" data-step-back="1">Quay lại</button><button type="button" id="pd-save-logged-address" class="btn btn-cyan">Tiếp tục</button></div>{% endif %}
+          </section>
+          <section id="pd-checkout-step-3" class="pd-checkout-step" data-step="3" hidden>
+            {% if shipping_method %}<section id="checkout-shipping-method" class="pd-checkout-method-card"><h2 class="pd-checkout-section-title"><span class="pd-checkout-number">2</span> Chọn cách giao hàng</h2>{{ shipping_method }}</section>{% endif %}
+            <section id="checkout-payment-method" class="pd-checkout-method-card"><h2 class="pd-checkout-section-title"><span class="pd-checkout-number">3</span> Thanh toán &amp; xác nhận</h2>{{ payment_method }}</section>
+            <div class="pd-checkout-step-actions"><button type="button" class="btn btn-outline-secondary" data-step-back="2">Quay lại</button></div>
+          </section>
+        </section>
+
+        <aside class="col-12 col-lg-4 pd-checkout-aside" aria-label="Tóm tắt đơn hàng">
+          <section class="pd-checkout-summary summary-sidebox-card summary-side-card" id="pd-order-summary">
+            <details id="pd-checkout-summary-details" open>
+              <summary class="pd-checkout-section-title summary-title-bar"><span class="summary-title-group"><i class="fa-solid fa-basket-shopping summary-basket-icon" aria-hidden="true"></i><span class="pd-summary-desktop-title">Tóm tắt đơn hàng</span><span class="pd-summary-mobile-title">Xem đơn ({{ checkout_product_count }} SP)</span></span><span class="summary-product-count">{{ checkout_product_count }} SP</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
+              <div class="pd-checkout-summary-body">
+                <div id="pd-checkout-cart-remove-status" class="visually-hidden" aria-live="polite"></div>
+                <div id="checkout-confirm">{{ confirm }}</div>
+              </div>
+            </details>
+          </section>
+          <p id="pd-checkout-guidance" class="pd-checkout-guidance" aria-live="polite">Nhập thông tin người nhận để tiếp tục.</p>
+        </aside>
+      </div>
+      {{ content_bottom }}
+    </main>
+    {{ column_right }}
+  </div>
+  <div id="pd-checkout-location-consent" class="pd-location-consent" hidden>
+    <button type="button" class="pd-location-consent__backdrop" data-location-dismiss aria-label="Đóng hộp thoại"></button>
+    <section class="pd-location-consent__dialog" role="dialog" aria-modal="true" aria-labelledby="pd-checkout-location-title" aria-describedby="pd-checkout-location-description" tabindex="-1">
+      <button type="button" class="pd-location-consent__close" data-location-dismiss aria-label="Đóng">&times;</button>
+      <span class="pd-location-consent__icon" aria-hidden="true"><i class="fa-solid fa-location-crosshairs"></i></span>
+      <p class="pd-location-consent__eyebrow">ĐỊA CHỈ GIAO HÀNG</p>
+      <h2 id="pd-checkout-location-title">Dùng vị trí hiện tại?</h2>
+      <p id="pd-checkout-location-description">PanDaShop sẽ xin quyền vị trí từ trình duyệt. Nếu đồng ý, tọa độ sẽ được dùng để tìm tỉnh/thành, phường/xã và địa chỉ gần bạn. Bạn có thể kiểm tra, chỉnh sửa kết quả trước khi tiếp tục.</p>
+      <div class="pd-location-consent__actions"><button type="button" data-location-dismiss>Để sau</button><button type="button" class="pd-location-consent__continue" id="pd-checkout-location-continue"><i class="fa-solid fa-location-crosshairs me-2" aria-hidden="true"></i>Tiếp tục</button></div>
+    </section>
+  </div>
+</div>
+
+<script>
+(function ($, document) {
+  'use strict';
+
+  function fields(type) {
+    return {
+      zone: $('#input-' + type + '-zone'),
+      ward: $('#input-' + type + '-ward'),
+      address: $('#input-' + type + '-address-2'),
+      city: $('#input-' + type + '-city')
+    };
+  }
+
+  function addWardField(type) {
+    var zone = document.getElementById('input-' + type + '-zone');
+    if (!zone || document.getElementById('input-' + type + '-ward')) return;
+    var row = zone.closest('.col.mb-3');
+    if (!row) return;
+    var form = zone.closest('form');
+    var name = form && form.id === 'form-register' ? type + '_ward_code' : 'ward_code';
+    var field = document.createElement('div');
+    field.className = 'col mb-3 required';
+    field.innerHTML = '<label class="form-label" for="input-' + type + '-ward">Phường / Xã *</label>' +
+      '<select id="input-' + type + '-ward" name="' + name + '" class="form-select" required disabled>' +
+      '<option value="">Chọn tỉnh/thành phố trước</option></select>';
+    row.after(field);
+  }
+
+  function saveSelection(type) {
+    var current = fields(type);
+    var zoneId = current.zone.val();
+    var wardCode = current.ward.val();
+    if (!zoneId || !wardCode) return;
+    var selectedOption = current.ward.find('option:selected');
+    if (!selectedOption.length || selectedOption.val() !== String(wardCode)) return;
+
+    // Options are loaded from the server for the selected province. Keep the UI
+    // update local; the address save endpoint validates the ward/province pair
+    // again before it persists the address.
+    current.address.val('Phường/Xã: ' + selectedOption.text());
+    current.city.val(current.zone.find(':selected').text());
+    $('#pd-checkout-guidance').text('Đã chọn tỉnh/thành phố và phường/xã.');
+    if (type === 'payment' && $('#input-address-match').is(':checked')) {
+      fields('shipping').address.val(current.address.val());
+      fields('shipping').city.val(current.city.val());
+    }
+  }
+
+  function clean() {
+    $('#input-company,#input-postcode,#input-fax,#input-shipping-company,#input-shipping-postcode,#input-shipping-fax,#input-payment-company,#input-payment-postcode,#input-payment-fax').each(function () {
+      $(this).closest('.col.mb-3').remove();
+    });
+    $('#input-shipping-address-2,#input-payment-address-2').each(function () {
+      $(this).closest('.col.mb-3').hide();
+    });
+    $('#input-shipping-address-1,#input-payment-address-1').each(function () {
+      var $field = $(this).closest('.col.mb-3');
+      if (this.tagName.toLowerCase() !== 'textarea') {
+        var original = this;
+        var textarea = document.createElement('textarea');
+        ['id', 'name', 'class', 'maxlength', 'autocomplete'].forEach(function (attribute) {
+          if (original.hasAttribute(attribute)) textarea.setAttribute(attribute, original.getAttribute(attribute));
+        });
+        textarea.rows = 3;
+        textarea.maxLength = 128;
+        textarea.placeholder = 'Số nhà, tên đường, ngõ/hẻm...';
+        textarea.required = true;
+        textarea.value = original.value.toLowerCase() === 'admin' ? '' : original.value;
+        original.parentNode.replaceChild(textarea, original);
+      }
+      this.required = true;
+      $field.find('input,textarea').prop('required', true);
+      $field.addClass('required').find('label').text('Địa chỉ cụ thể *');
+    });
+    $('#input-payment-country,#input-shipping-country').val('230').closest('.col.mb-3').hide();
+    $('#input-payment-zone,#input-shipping-zone').each(function () {
+      $(this).prop('required', true).closest('.col.mb-3').find('label').text('Tỉnh / Thành phố *');
+    });
+    $('#input-payment-city,#input-shipping-city').closest('.col.mb-3').hide();
+    $('#input-telephone').prop('required', true);
+    addWardField('payment');
+    addWardField('shipping');
+  }
+
+  function validate(event) {
+    if (['form-register', 'form-payment-address', 'form-shipping-address'].indexOf(event.target.id) < 0) return;
+    var types = event.target.id === 'form-payment-address' ? ['payment'] :
+      event.target.id === 'form-shipping-address' ? ['shipping'] :
+      (event.target.id === 'form-register' && $('#input-shipping-zone').length && !$('#input-address-match').is(':checked')
+        ? ['payment', 'shipping'] : ($('#input-payment-zone').length ? ['payment'] : ['shipping']));
+    var message = '';
+    types.some(function (type) {
+      var current = fields(type);
+      if (!current.zone.val()) message = 'Vui lòng chọn tỉnh/thành phố.';
+      else if (!current.ward.val()) message = 'Vui lòng chọn phường/xã.';
+      return !!message;
+    });
+    var telephoneInput = document.getElementById('input-telephone') || document.getElementById('pd-recipient-telephone');
+    if (!message && telephoneInput && !telephoneInput.value.trim()) message = 'Vui lòng nhập số điện thoại.';
+    if (message) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      $('#pd-checkout-guidance').text(message);
+    }
+  }
+
+  $(function () {
+    clean();
+    $(document).on('change', '#input-payment-ward,#input-shipping-ward', function () {
+      saveSelection(this.id.indexOf('payment') >= 0 ? 'payment' : 'shipping');
+    });
+    $(document).on('change', '#input-payment-zone,#input-shipping-zone', function () {
+      var type = this.id.indexOf('payment') >= 0 ? 'payment' : 'shipping';
+      $('#pd-checkout-guidance').text('Tỉnh/thành phố đã đổi. Vui lòng chọn lại phường/xã.');
+    });
+    document.addEventListener('submit', validate, true);
+  });
+})(jQuery, document);
+</script>
+<script>
+(function ($, document) {
+  'use strict';
+  var endpoint = {{ hamlets_url|json_encode|raw }};
+
+  function setup(type) {
+    var ward = document.getElementById('input-' + type + '-ward');
+    var address = document.getElementById('input-' + type + '-address-1');
+    if (!ward || !address) return;
+    var input = document.getElementById('input-' + type + '-hamlet');
+    var field = input && input.closest('.panda-hamlet-field');
+    var form = ward.closest('form');
+    var registerForm = form && form.id === 'form-register';
+    if (!input) {
+      field = document.createElement('div');
+      field.className = 'col mb-3 panda-hamlet-field';
+      field.innerHTML = '<label class="form-label" for="input-' + type + '-hamlet">Tổ dân phố / Khu phố / Thôn (không bắt buộc)</label>' +
+        '<div class="position-relative"><input type="text" id="input-' + type + '-hamlet" name="' + (registerForm ? type + '_hamlet_name' : 'hamlet_name') + '" class="form-control panda-hamlet-input" maxlength="128" autocomplete="off" placeholder="Nhập Tổ dân phố, Khu phố hoặc Thôn...">' +
+        '<div class="panda-hamlet-options panda-dropdown-menu" hidden><ul class="panda-scrollable-list"></ul></div></div>';
+      var row = address.closest('.row');
+      var addressCell = address.closest('.col.mb-3');
+      if (row && addressCell) row.insertBefore(field, addressCell);
+      input = field.querySelector('input');
+    }
+    field.classList.remove('required');
+    input.required = false;
+    var hamletLabel = field.querySelector('label');
+    if (hamletLabel) hamletLabel.textContent = 'Tổ dân phố / Khu phố / Thôn (không bắt buộc)';
+    input.placeholder = 'Nhập Tổ dân phố, Khu phố hoặc Thôn...';
+    var subhamlet = document.getElementById('input-' + type + '-subhamlet-name');
+    if (!subhamlet && field) {
+      var subField = document.createElement('div');
+      subField.className = 'col mb-3';
+      subField.innerHTML = '<label class="form-label" for="input-' + type + '-subhamlet-name">Xóm / Ấp (nếu có)</label>' +
+        '<div class="position-relative"><input type="text" id="input-' + type + '-subhamlet-name" name="' + (registerForm ? type + '_subhamlet_name' : 'subhamlet_name') + '" class="form-control panda-subhamlet-input" maxlength="128" autocomplete="off" placeholder="Tìm hoặc nhập địa danh cấp dưới nếu địa chỉ có">' +
+        '<div class="panda-hamlet-options panda-dropdown-menu" hidden><ul class="panda-scrollable-list"></ul></div></div>';
+      field.after(subField);
+      subhamlet = subField.querySelector('input');
+    }
+    var subField = subhamlet && subhamlet.closest('.col.mb-3');
+    var isUrbanWard = false;
+    function updateLocalityLabels() {
+      var selectedWard = ward.options[ward.selectedIndex];
+      var wardText = selectedWard ? selectedWard.textContent.trim() : '';
+      isUrbanWard = /^phường(?:\s|$)/i.test(wardText);
+      var mainLabel = 'Tổ dân phố / Khu phố / Thôn (không bắt buộc)';
+      var mainPlaceholder = 'Nhập Tổ dân phố, Khu phố hoặc Thôn...';
+      var childLabel = isUrbanWard ? 'Khu dân cư / Cụm dân cư (nếu có)' : 'Xóm / Ấp (nếu có)';
+      var childPlaceholder = isUrbanWard ? 'Nhập Khu dân cư / Cụm dân cư nếu địa chỉ có...' : 'Nhập Xóm / Ấp nếu địa chỉ có...';
+      var mainLabelElement = field.querySelector('label');
+      var childLabelElement = subField && subField.querySelector('label');
+      if (mainLabelElement) mainLabelElement.textContent = mainLabel;
+      input.placeholder = mainPlaceholder;
+      if (childLabelElement) childLabelElement.textContent = childLabel;
+      if (subhamlet) subhamlet.placeholder = childPlaceholder;
+    }
+    if (subhamlet && !subhamlet.parentElement.querySelector('.panda-hamlet-options')) {
+      var subWrapper = document.createElement('div');
+      subWrapper.className = 'position-relative';
+      subhamlet.parentNode.insertBefore(subWrapper, subhamlet);
+      subWrapper.appendChild(subhamlet);
+      var subMenu = document.createElement('div');
+      subMenu.className = 'panda-hamlet-options panda-dropdown-menu';
+      subMenu.hidden = true;
+      subMenu.innerHTML = '<ul class="panda-scrollable-list"></ul>';
+      subWrapper.appendChild(subMenu);
+      subhamlet.classList.add('panda-subhamlet-input');
+    }
+    // Keep the setup marker separate from the per-input listener marker below.
+    // Reusing pandaHamletBound here caused bindAutocomplete() to think that the
+    // hamlet input already had listeners and skip binding it entirely.
+    if (!field || field.dataset.pandaHamletSetupBound === '1') return;
+    field.dataset.pandaHamletSetupBound = '1';
+    var options = field.querySelector('.panda-hamlet-options');
+    if (!options) return;
+    var list = options.querySelector('.panda-scrollable-list');
+    function bindAutocomplete(target, category) {
+      var menu = target.parentElement.querySelector('.panda-hamlet-options');
+      if (!menu || target.dataset.pandaHamletBound === '1') return;
+      target.dataset.pandaHamletBound = '1';
+      var targetList = menu.querySelector('.panda-scrollable-list');
+      var requestId = 0;
+      target.addEventListener('input', function () {
+      var wardCode = ward.value;
+      var query = target.value.trim();
+      var request = ++requestId;
+      targetList.replaceChildren();
+      menu.hidden = true;
+      if (!wardCode) return;
+      var url = endpoint + (endpoint.indexOf('?') < 0 ? '?' : '&') +
+        'ward_code=' + encodeURIComponent(wardCode) + '&category=' + category + '&q=' + encodeURIComponent(query);
+      fetch(url, { credentials: 'same-origin', headers: { Accept: 'application/json' } })
+        .then(function (response) { if (!response.ok) throw new Error('Lookup failed'); return response.json(); })
+        .then(function (items) {
+          if (request !== requestId || wardCode !== ward.value) return;
+          (items || []).forEach(function (item) {
+            if (!item || !item.name) return;
+            var option = document.createElement('li');
+            option.className = 'dropdown-item-custom panda-hamlet-option';
+            var optionName = document.createElement('span');
+            optionName.textContent = item.name;
+            option.appendChild(optionName);
+            option.addEventListener('click', function () {
+              target.value = item.name;
+              menu.hidden = true;
+              target.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+            targetList.appendChild(option);
+          });
+          var hasOsmSuggestions = (items || []).some(function (item) { return item && item.source_name && item.source_name.indexOf('OpenStreetMap') === 0; });
+          var hasCustomerSuggestions = (items || []).some(function (item) { return item && item.source_name && item.source_name.indexOf('Khách hàng PanDaShop') === 0; });
+          var officialSources = [];
+          (items || []).forEach(function (item) {
+            if (item && Number(item.is_verified) === 1 && item.source_name && item.source_name.indexOf('OpenStreetMap') !== 0 && item.source_name.indexOf('Khách hàng PanDaShop') !== 0 && officialSources.indexOf(item.source_name) === -1) officialSources.push(item.source_name);
+          });
+          if (targetList.childElementCount && (hasOsmSuggestions || hasCustomerSuggestions || officialSources.length)) {
+            var attribution = document.createElement('li');
+            attribution.className = 'panda-hamlet-note';
+            var attributionParts = [];
+            if (hasOsmSuggestions) {
+              var attributionLink = document.createElement('a');
+              attributionLink.href = 'https://www.openstreetmap.org/copyright';
+              attributionLink.target = '_blank';
+              attributionLink.rel = 'noopener noreferrer';
+              attributionLink.textContent = 'OSM · gợi ý bản đồ, chưa xác minh';
+              attributionLink.addEventListener('click', function (event) { event.stopPropagation(); });
+              attributionParts.push(attributionLink);
+            }
+            if (hasCustomerSuggestions) attributionParts.push(document.createTextNode('Khách hàng đóng góp · chưa xác minh'));
+            officialSources.slice(0, 1).forEach(function (sourceName) {
+              var official = document.createElement('span');
+              official.textContent = 'Nguồn hành chính: ' + sourceName;
+              attributionParts.push(official);
+            });
+            attributionParts.forEach(function (part, index) {
+              if (index) attribution.appendChild(document.createTextNode(' · '));
+              attribution.appendChild(part);
+            });
+            targetList.insertBefore(attribution, targetList.firstChild);
+          }
+          if (!targetList.childElementCount) {
+            var empty = document.createElement('li');
+            empty.className = 'p-2 text-slate-400 fs-12';
+            empty.textContent = category === 'xom_ap'
+              ? (isUrbanWard ? 'Chưa có gợi ý Khu dân cư / Cụm dân cư tại phường này. Bạn có thể nhập trực tiếp hoặc bỏ trống.' : 'Chưa có gợi ý Xóm / Ấp tại xã này. Bạn có thể nhập trực tiếp hoặc bỏ trống.')
+              : 'Chưa có gợi ý Tổ dân phố / Khu phố / Thôn tại phường/xã này. Bạn có thể nhập trực tiếp.';
+            targetList.appendChild(empty);
+          }
+          menu.hidden = false;
+        }).catch(function (error) {
+          if (request !== requestId || wardCode !== ward.value) return;
+          var failed = document.createElement('li');
+          failed.className = 'p-2 text-slate-400 fs-12';
+          failed.textContent = 'Không tải được gợi ý địa danh. Vui lòng thử lại hoặc nhập trực tiếp.';
+          targetList.replaceChildren(failed);
+          menu.hidden = false;
+          console.error('[PanDaShop] Không tải được gợi ý địa danh:', error);
+        });
+      });
+
+      target.addEventListener('focus', function () { target.dispatchEvent(new Event('input', { bubbles: true })); });
+      document.addEventListener('click', function (event) { if (!target.parentElement.contains(event.target)) menu.hidden = true; });
+    }
+    bindAutocomplete(input, 'to_dan_pho_thon');
+    if (subhamlet) bindAutocomplete(subhamlet, 'xom_ap');
+    ward.addEventListener('change', function () {
+      input.value = '';
+      if (subhamlet) subhamlet.value = '';
+      updateLocalityLabels();
+      field.querySelectorAll('.panda-hamlet-options').forEach(function (menu) { menu.hidden = true; });
+      if (ward.value) {
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        if (subhamlet) subhamlet.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    });
+    updateLocalityLabels();
+  }
+
+  function setupAddressAutocomplete() {
+    ['payment', 'shipping'].forEach(setup);
+  }
+
+  function containsAddressControl(node) {
+    if (!node || node.nodeType !== 1) return false;
+    var selectors = [
+      '#input-payment-ward', '#input-shipping-ward',
+      '#input-payment-address-1', '#input-shipping-address-1'
+    ].join(',');
+    return node.matches(selectors) || !!node.querySelector(selectors);
+  }
+
+  // OpenCart inserts payment/shipping address forms through AJAX after the
+  // checkout page is ready. Observe only insertion of those form controls;
+  // observing all mutations also sees label/placeholder updates and loops.
+  $(function () {
+    setupAddressAutocomplete();
+    if (window.MutationObserver && document.body) {
+      var addressFormObserver = new MutationObserver(function (mutations) {
+        var shouldInitialize = mutations.some(function (mutation) {
+          return Array.prototype.some.call(mutation.addedNodes, containsAddressControl);
+        });
+        if (shouldInitialize) setupAddressAutocomplete();
+      });
+      addressFormObserver.observe(document.body, { childList: true, subtree: true });
+    }
+  });
+})(jQuery, document);
+</script>
+<script>
+(function (document) {
+  'use strict';
+  function syncShippingHamlet() {
+    var same = document.getElementById('input-address-match');
+    var field = document.querySelector('#input-shipping-hamlet');
+    if (!same) return;
+    ['zone', 'ward', 'address-1', 'hamlet', 'subhamlet-name'].forEach(function (part) {
+      var control = document.getElementById('input-shipping-' + part);
+      if (!control) return;
+      if (part === 'ward' && !same.checked && control.options.length < 2) {
+        control.disabled = true;
+      } else {
+        control.disabled = same.checked;
+      }
+    });
+    if (field) {
+      field.required = false;
+      field.closest('.panda-hamlet-field').classList.remove('required');
+    }
+    if (same.checked && field) {
+      var menu = field.parentElement.querySelector('.panda-hamlet-options');
+      if (menu) menu.hidden = true;
+    }
+  }
+  document.addEventListener('change', function (event) {
+    if (event.target.id === 'input-address-match') syncShippingHamlet();
+  });
+  
+  document.addEventListener('DOMContentLoaded', function () {
+    window.setTimeout(syncShippingHamlet, 0);
+    var observer = new MutationObserver(syncShippingHamlet);
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+  syncShippingHamlet();
+})(document);
+</script>
+<script>
+(function ($, window, document) {
+  'use strict';
+  // register.twig saves the guest address first; then refresh OpenCart's shipping quote.
+  // The shipping module chains payment-method loading after a shipping method is selected.
+  window.pdRefreshCheckoutMethods = function () {
+    window.setTimeout(function () {
+      if (typeof window.pdLoadShippingMethods === 'function') {
+        window.pdLoadShippingMethods();
+      } else if (typeof window.pdLoadPaymentOptions === 'function') {
+        window.pdLoadPaymentOptions();
+      }
+    }, 400);
+  };
+
+  function resetCheckoutMethods() {
+    $('#input-shipping-code, #input-payment-code').val('');
+    $('#pd-bank-transfer-placeholder').remove();
+    $('#button-confirm').prop('disabled', true).attr('aria-disabled', 'true');
+  }
+
+  function setupWizard() {
+    var form = document.getElementById('form-register');
+    var root = document.getElementById('checkout-checkout');
+    var step2 = document.getElementById('pd-checkout-step-2');
+    var step3 = document.getElementById('pd-checkout-step-3');
+    var addressEditUrl = {{ address_edit_url|json_encode|raw }};
+    var addressDeleteUrl = {{ address_delete_url|json_encode|raw }};
+    if (!root || !step2 || !step3 || (form && form.dataset.pdWizardReady === '1')) return;
+    var guest = !!form;
+    var addressDirty = false;
+    var lastCreatedAddress = null;
+    var step1 = guest ? document.createElement('section') : document.getElementById('pd-checkout-step-1');
+    var guestStep2 = null;
+    var originalContinue = guest ? document.getElementById('button-register') : null;
+
+    if (guest) {
+      form.dataset.pdWizardReady = '1';
+      step1.className = 'pd-checkout-step is-active';
+      step1.dataset.step = '1';
+      guestStep2 = document.createElement('section');
+      guestStep2.className = 'pd-checkout-step';
+      guestStep2.dataset.step = '2';
+      var nodes = Array.prototype.slice.call(form.children);
+      form.insertBefore(step1, form.firstChild);
+      form.insertBefore(guestStep2, step1.nextSibling);
+      nodes.forEach(function (node) {
+        var address = node.id === 'payment-address' || node.id === 'shipping-address';
+        if (address) guestStep2.appendChild(node); else step1.appendChild(node);
+      });
+      var continueWrap = originalContinue && originalContinue.parentNode;
+      if (continueWrap) continueWrap.removeChild(originalContinue);
+      var step1Actions = document.createElement('div');
+      step1Actions.className = 'pd-checkout-step-actions';
+      step1Actions.innerHTML = '<span></span><button type="button" class="btn btn-cyan" data-step-next="1">Tiếp tục đến địa chỉ</button>';
+      step1.appendChild(step1Actions);
+      var step2Actions = document.createElement('div');
+      step2Actions.className = 'pd-checkout-step-actions';
+      step2Actions.innerHTML = '<button type="button" class="btn btn-outline-secondary" data-step-back="1">Quay lại</button>';
+      if (originalContinue) {
+        originalContinue.classList.remove('btn-primary', 'mt-2');
+        originalContinue.classList.add('btn-cyan');
+        originalContinue.textContent = 'Lưu địa chỉ và tiếp tục';
+        step2Actions.appendChild(originalContinue);
+      }
+      guestStep2.appendChild(step2Actions);
+    }
+
+    function activate(number) {
+      number = Math.max(1, Math.min(3, number));
+      root.dataset.currentStep = String(number);
+      if (form) form.dataset.currentStep = String(number);
+      step1.hidden = number !== 1;
+      if (guestStep2) guestStep2.hidden = number !== 2;
+      step2.hidden = guest ? true : number !== 2;
+      step3.hidden = number !== 3;
+      document.querySelectorAll('[data-step-indicator]').forEach(function (item) {
+        var itemStep = Number(item.dataset.stepIndicator);
+        item.classList.toggle('is-current', itemStep === number);
+        item.classList.toggle('is-complete', itemStep < number);
+        item.setAttribute('aria-current', itemStep === number ? 'step' : 'false');
+      });
+      document.getElementById('pd-checkout-guidance').textContent = number === 1 ? 'Kiểm tra thông tin người nhận để tiếp tục.' : number === 2 ? 'Chọn địa chỉ giao hàng rồi lưu để tải phương thức vận chuyển.' : 'Chọn cách giao hàng và thanh toán để hoàn tất đơn hàng.';
+      updateConfirm();
+    }
+
+    function showInvalid(input, message) {
+      input.classList.add('is-invalid');
+      var errorId = 'error-' + input.id.replace(/^input-/, '');
+      var error = document.getElementById(errorId);
+      if (!error) {
+        error = document.createElement('div');
+        error.id = errorId;
+        error.className = 'invalid-feedback';
+        input.closest('.col.mb-3').appendChild(error);
+      }
+      error.textContent = message;
+      error.classList.add('d-block');
+      var searchInput = document.getElementById(input.id + '-search');
+      (searchInput || input).focus();
+    }
+
+    function validateRecipient() {
+      var loggedRecipient = !!document.getElementById('pd-recipient-firstname');
+      var ids = loggedRecipient ? ['pd-recipient-firstname', 'pd-recipient-lastname', 'pd-recipient-telephone', 'pd-recipient-email'] : ['input-firstname', 'input-lastname', 'input-telephone', 'input-email'];
+      var inputs = ids.map(function (id) { return document.getElementById(id); });
+      var first = inputs[0], last = inputs[1], phone = inputs[2], email = inputs[3];
+      [phone, email].forEach(function (input) {
+        if (!input) return;
+        input.classList.remove('is-invalid');
+        var error = document.getElementById('error-' + input.id.replace(/^input-/, ''));
+        if (error) { error.textContent = ''; error.classList.remove('d-block'); }
+      });
+      [[first, 'Vui lòng nhập tên.'], [last, 'Vui lòng nhập họ.']].forEach(function (item) {
+        if (!item[0]) return;
+        item[0].classList.remove('is-invalid');
+        var error = document.getElementById('error-' + item[0].id.replace(/^input-/, ''));
+        if (error) { error.textContent = ''; error.classList.remove('d-block'); }
+        if (!item[0].value.trim()) showInvalid(item[0], item[1]);
+      });
+      if ((first && !first.value.trim()) || (last && !last.value.trim())) return false;
+      if (phone) {
+        var digits = phone.value.replace(/[^0-9]/g, '');
+        if (digits.length === 11 && digits.indexOf('84') === 0) digits = '0' + digits.slice(2);
+        phone.value = digits;
+        phone.classList.remove('is-invalid');
+        if (!/^0[35789][0-9]{8}$/.test(digits)) { showInvalid(phone, 'Số điện thoại phải là số di động Việt Nam hợp lệ (10 chữ số).'); return false; }
+      }
+      if (email) {
+        email.classList.remove('is-invalid');
+        if (email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { showInvalid(email, 'Email chưa đúng định dạng.'); return false; }
+      }
+      return true;
+    }
+
+    function saveRecipient(button) {
+      var first = document.getElementById('pd-recipient-firstname');
+      if (!first) { activate(2); return; }
+      var telephoneInput = document.getElementById('pd-recipient-telephone');
+      var telephone = telephoneInput.value.replace(/[^0-9]/g, '');
+      if (telephone.length === 11 && telephone.indexOf('84') === 0) telephone = '0' + telephone.slice(2);
+      telephoneInput.value = telephone;
+      var fields = {
+        firstname: first.value.trim(),
+        lastname: document.getElementById('pd-recipient-lastname').value.trim(),
+        telephone: telephone,
+        email: document.getElementById('pd-recipient-email').value.trim()
+      };
+      var oldLabel = button.textContent;
+      var errorBox = document.getElementById('pd-recipient-save-error');
+      if (errorBox) { errorBox.hidden = true; errorBox.textContent = ''; }
+      button.disabled = true;
+      button.textContent = 'Đang lưu thông tin…';
+      $.ajax({ url: {{ save_recipient_url|json_encode|raw }}, type: 'POST', method: 'POST', dataType: 'json', data: fields })
+        .done(function (json) {
+          if (json.redirect) { window.pdNavigateWithinShop(json.redirect); return; }
+          if (json.error) {
+            if (errorBox) { errorBox.textContent = typeof json.error === 'string' ? json.error : 'Vui lòng kiểm tra các thông tin người nhận.'; errorBox.hidden = false; }
+            if (typeof json.error === 'object') {
+              Object.keys(json.error).forEach(function (key) {
+                var input = document.getElementById('pd-recipient-' + key);
+                if (input) showInvalid(input, json.error[key]);
+              });
+            }
+            document.getElementById('pd-checkout-guidance').textContent = 'Vui lòng sửa thông tin người nhận được đánh dấu.';
+            return;
+          }
+          activate(2);
+        })
+        .fail(function (xhr) {
+          var payload = xhr.responseJSON;
+          if (!payload && xhr.responseText) { try { payload = JSON.parse(xhr.responseText); } catch (ignore) {} }
+          var message = payload && payload.error;
+          if (message && typeof message === 'object') {
+            Object.keys(message).forEach(function (key) { var input = document.getElementById('pd-recipient-' + key); if (input) showInvalid(input, message[key]); });
+          }
+          var visibleMessage = typeof message === 'string' ? message : (message && typeof message === 'object' ? 'Vui lòng kiểm tra thông tin được đánh dấu.' : (payload && payload.redirect ? 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.' : 'Không lưu được thông tin người nhận (HTTP ' + xhr.status + ').'));
+          if (errorBox) { errorBox.textContent = visibleMessage; errorBox.hidden = !!(message && typeof message === 'object'); }
+          document.getElementById('pd-checkout-guidance').textContent = visibleMessage;
+        })
+        .always(function () { button.disabled = false; button.textContent = oldLabel; });
+    }
+
+    function validateAddress(type) {
+      var zone = document.getElementById('input-' + type + '-zone');
+      var ward = document.getElementById('input-' + type + '-ward');
+      var detail = document.getElementById('input-' + type + '-address-1');
+      if (!zone || !ward || !detail) return true;
+      if (!zone.value) { showInvalid(zone, 'Vui lòng chọn Tỉnh/Thành phố.'); return false; }
+      if (!ward.value) { showInvalid(ward, 'Vui lòng chọn Phường/Xã.'); return false; }
+      if (detail.value.trim().length < 3) { showInvalid(detail, 'Vui lòng nhập địa chỉ cụ thể (ít nhất 3 ký tự).'); return false; }
+      return true;
+    }
+
+    function addressSnapshot(type) {
+      var value = function (suffix) { return String($('#input-' + type + '-' + suffix).val() || '').trim(); };
+      return { firstname: value('firstname'), lastname: value('lastname'), zone: value('zone'), ward: value('ward'), detail: value('address-1'), hamlet: value('hamlet'), subhamlet: value('subhamlet-name') };
+    }
+
+    function sameAddress(left, right) {
+      return !!left && !!right && Object.keys(left).every(function (key) { return left[key] === right[key]; });
+    }
+
+    function useSavedAddress(type, addressId) {
+      var select = document.getElementById('input-' + type + '-address');
+      if (select) select.value = String(addressId);
+      var existing = document.getElementById('input-' + type + '-existing');
+      if (existing) existing.checked = true;
+      $('#'+ type + '-existing').show();
+      $('#'+ type + '-new').hide();
+    }
+
+    function refreshAddressBook(json, activeType) {
+      var addresses = Array.isArray(json.addresses) ? json.addresses : (json.addresses && typeof json.addresses === 'object' ? Object.keys(json.addresses).map(function (key) { return json.addresses[key]; }) : []);
+      if (!addresses.length || !json.address_id) return;
+      ['payment', 'shipping'].forEach(function (type) {
+        var select = document.getElementById('input-' + type + '-address');
+        if (!select) return;
+        var oldValue = select.value;
+        var targetValue = type === activeType ? String(json.address_id) : oldValue;
+        var firstOption = select.options.length ? select.options[0].cloneNode(true) : new Option('-- Chọn địa chỉ --', '');
+        select.replaceChildren(firstOption);
+        addresses.forEach(function (address) {
+          var label = [address.firstname, address.lastname, address.address_1, address.address_2, address.city, address.zone, address.country].filter(Boolean).join(', ');
+          var option = new Option(label, address.address_id);
+          option.dataset.default = String(address.default || 0);
+          select.add(option);
+        });
+        if (Array.from(select.options).some(function (option) { return option.value === targetValue; })) select.value = targetValue;
+        if (type === activeType) useSavedAddress(type, json.address_id);
+      });
+    }
+
+    function saveLoggedAddress(type) {
+      var formId = '#form-' + type + '-address';
+      if (!$(formId).length) return $.Deferred().resolve().promise();
+      var isNew = $('#input-' + type + '-new').is(':checked');
+      var addressId = $('#input-' + type + '-address').val();
+      if (isNew) {
+        if (!validateAddress(type)) return $.Deferred().reject('Vui lòng kiểm tra địa chỉ.').promise();
+        var recipientFirst = $('#pd-recipient-firstname').val();
+        var recipientLast = $('#pd-recipient-lastname').val();
+        if (recipientFirst) $('#input-' + type + '-firstname').val(recipientFirst);
+        if (recipientLast) $('#input-' + type + '-lastname').val(recipientLast);
+        var snapshot = addressSnapshot(type);
+        if (lastCreatedAddress && sameAddress(snapshot, lastCreatedAddress.snapshot)) {
+          return $.getJSON('index.php?route=checkout/' + type + '_address.address&language=' + encodeURIComponent('{{ language|escape('js') }}') + '&address_id=' + encodeURIComponent(lastCreatedAddress.id))
+            .then(function (json) {
+              if (json.redirect) { window.pdNavigateWithinShop(json.redirect); return $.Deferred().reject().promise(); }
+              if (json.error) return $.Deferred().reject(json.error);
+              useSavedAddress(type, lastCreatedAddress.id);
+              if (json.methods_changed) resetCheckoutMethods();
+              return json;
+            });
+        }
+        return $.ajax({
+          url: 'index.php?route=checkout/' + type + '_address.save&language=' + encodeURIComponent('{{ language|escape('js') }}'),
+          type: 'post', dataType: 'json', data: $(formId).serialize()
+        }).then(function (json) {
+          if (json.redirect) { window.pdNavigateWithinShop(json.redirect); return $.Deferred().reject().promise(); }
+          if (json.error) return $.Deferred().reject(json.error.warning || 'Không lưu được địa chỉ. Vui lòng kiểm tra các trường bắt buộc.');
+          if (json.address_id && json.addresses) {
+            lastCreatedAddress = { id: json.address_id, snapshot: snapshot };
+            refreshAddressBook(json, type);
+          }
+          if (json.methods_changed) resetCheckoutMethods();
+          return json;
+        });
+      }
+      if (!addressId) return $.Deferred().reject('Vui lòng chọn địa chỉ đã lưu hoặc nhập địa chỉ mới.').promise();
+      return $.getJSON('index.php?route=checkout/' + type + '_address.address&language=' + encodeURIComponent('{{ language|escape('js') }}') + '&address_id=' + encodeURIComponent(addressId))
+        .then(function (json) {
+          if (json.redirect) { window.pdNavigateWithinShop(json.redirect); return $.Deferred().reject().promise(); }
+          if (json.error) return $.Deferred().reject(json.error);
+          if (json.methods_changed) resetCheckoutMethods();
+          return json;
+        });
+    }
+
+    function saveLoggedAddresses() {
+      var button = document.getElementById('pd-save-logged-address');
+      if (button) { button.disabled = true; button.dataset.oldLabel = button.textContent; button.textContent = 'Đang lưu địa chỉ…'; }
+      if (addressDirty) resetCheckoutMethods();
+      var chain = $.Deferred().resolve().promise();
+      if ($('#form-payment-address').length) chain = chain.then(function () { return saveLoggedAddress('payment'); });
+      if ($('#form-shipping-address').length) chain = chain.then(function () { return saveLoggedAddress('shipping'); });
+      chain.done(function () { addressDirty = false; activate(3); window.pdRefreshCheckoutMethods(); })
+        .fail(function (message) { if (message) document.getElementById('pd-checkout-guidance').textContent = message; })
+        .always(function () { if (button) { button.disabled = false; button.textContent = button.dataset.oldLabel || 'Tiếp tục'; } });
+    }
+
+    function syncSavedAddressActions(type) {
+      var select = document.getElementById('input-' + type + '-address');
+      var edit = document.querySelector('[data-pd-address-edit="' + type + '"]');
+      var remove = document.querySelector('[data-pd-address-delete="' + type + '"]');
+      var option = select && select.selectedOptions ? select.selectedOptions[0] : null;
+      if (edit) edit.disabled = !select || !select.value;
+      if (remove) {
+        var isDefault = option && option.dataset.default === '1';
+        remove.disabled = !select || !select.value || isDefault;
+        remove.title = isDefault ? 'Không thể xóa địa chỉ mặc định của tài khoản.' : '';
+      }
+    }
+
+    $(document).on('change', '#input-payment-address, #input-shipping-address', function () {
+      syncSavedAddressActions(this.id.indexOf('payment') !== -1 ? 'payment' : 'shipping');
+    }).on('click', '[data-pd-address-edit]', function () {
+      var type = this.dataset.pdAddressEdit;
+      var select = document.getElementById('input-' + type + '-address');
+      if (!select || !select.value) return;
+      window.pdNavigateWithinShop(addressEditUrl + '&address_id=' + encodeURIComponent(select.value));
+    }).on('click', '[data-pd-address-delete]', function () {
+      var button = this;
+      var type = button.dataset.pdAddressDelete;
+      var select = document.getElementById('input-' + type + '-address');
+      if (!select || !select.value) return;
+      window.pdConfirm('Bạn có chắc muốn xóa địa chỉ đã chọn?', { title: 'Xóa địa chỉ', confirmText: 'Xóa địa chỉ', danger: true }).then(function (confirmed) {
+        if (!confirmed) return;
+        button.disabled = true;
+        $.getJSON(addressDeleteUrl + '&address_id=' + encodeURIComponent(select.value))
+          .done(function (json) {
+            if (json.redirect) { window.pdNavigateWithinShop(json.redirect); return; }
+            if (json.error) {
+              window.pdAlert(json.error, { title: 'Không thể xóa địa chỉ', variant: 'error' });
+              return;
+            }
+            if (json.success) {
+              var deletedId = String(select.value);
+              var remaining = 0;
+              ['payment', 'shipping'].forEach(function (addressType) {
+                var addressSelect = document.getElementById('input-' + addressType + '-address');
+                if (!addressSelect) return;
+                Array.prototype.forEach.call(addressSelect.options, function (option) {
+                  if (String(option.value) === deletedId) option.remove();
+                });
+                var available = Array.prototype.filter.call(addressSelect.options, function (option) { return !!option.value; });
+                remaining = Math.max(remaining, available.length);
+                if (addressSelect === select) {
+                  var preferred = available.find(function (option) { return option.dataset.default === '1'; }) || available[0];
+                  addressSelect.value = preferred ? preferred.value : '';
+                  addressSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                  var search = document.getElementById(addressSelect.id + '-search');
+                  if (search) search.value = preferred ? preferred.textContent : '';
+                } else if (String(addressSelect.value) === deletedId) {
+                  addressSelect.value = '';
+                  addressSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+              });
+              if (!remaining) {
+                var newRadio = document.getElementById('input-' + type + '-new');
+                if (newRadio) newRadio.click();
+              }
+              resetCheckoutMethods();
+              window.pdAlert('Đã xóa địa chỉ. Bạn vẫn đang ở bước địa chỉ.', { title: 'Đã xóa địa chỉ', variant: 'success' });
+            }
+            else window.pdAlert('Không xóa được địa chỉ. Vui lòng thử lại.', { title: 'Không thể xóa địa chỉ', variant: 'error' });
+          })
+          .fail(function () { window.pdAlert('Không kết nối được máy chủ để xóa địa chỉ. Vui lòng thử lại.', { title: 'Không thể xóa địa chỉ', variant: 'error' }); })
+          .always(function () { button.disabled = false; });
+      });
+    });
+
+    ['payment', 'shipping'].forEach(syncSavedAddressActions);
+
+    function updateConfirm() {
+      var confirm = document.getElementById('button-confirm');
+      if (!confirm) return;
+      var shippingReady = !$('#pd-shipping-options').length || ($('#input-shipping-code').val() && $('#pd-shipping-options input[name="pd_shipping_method"]:checked').length);
+      var paymentReady = $('#input-payment-code').val() && $('#pd-payment-options input[name="pd_payment_method"]:checked').length;
+      var ready = root.dataset.currentStep === '3' && shippingReady && paymentReady;
+      confirm.disabled = !ready;
+      confirm.setAttribute('aria-disabled', ready ? 'false' : 'true');
+    }
+
+    $(document).on('click', '[data-step-next="1"]', function () {
+      if (!validateRecipient()) return;
+      if (guest) activate(2); else saveRecipient(this);
+    }).on('click', '#button-register', function (event) {
+      if (!validateAddress($('#input-payment-zone').length ? 'payment' : 'shipping')) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    }).on('click', '#pd-save-logged-address', function () {
+      saveLoggedAddresses();
+    }).on('input change', '#input-payment-address, #input-shipping-address, #input-payment-existing, #input-shipping-existing, #input-payment-new, #input-shipping-new, #input-payment-zone, #input-shipping-zone, #input-payment-ward, #input-shipping-ward, #input-payment-address-1, #input-shipping-address-1, #input-payment-hamlet, #input-shipping-hamlet, #input-payment-subhamlet-name, #input-shipping-subhamlet-name', function () {
+      addressDirty = true;
+    }).on('click', '[data-step-back]', function () {
+      activate(Number(this.dataset.stepBack));
+    }).on('click', '.pd-checkout-progress [data-step-indicator]', function () {
+      var destination = Number(this.dataset.stepIndicator);
+      var current = Number(root.dataset.currentStep || 1);
+      if (destination < current) activate(destination);
+    }).on('change', 'input[name="pd_shipping_method"], input[name="pd_payment_method"]', updateConfirm);
+    $(document).on('input change', '.pd-checkout-recipient-card .form-control, #form-register .form-control, #form-register .form-select, #form-payment-address .form-control, #form-payment-address .form-select, #form-shipping-address .form-control, #form-shipping-address .form-select', function () {
+      this.classList.remove('is-invalid');
+      var error = document.getElementById('error-' + this.id.replace(/^input-/, ''));
+      if (error) { error.textContent = ''; error.classList.remove('d-block'); }
+      var recipientError = document.getElementById('pd-recipient-save-error');
+      if (recipientError) { recipientError.hidden = true; recipientError.textContent = ''; }
+    });
+
+    $(document).on('pd:register-saved', function () {
+      resetCheckoutMethods();
+      activate(3);
+      window.pdRefreshCheckoutMethods();
+    });
+    var confirmContainer = document.getElementById('checkout-confirm');
+    if (window.MutationObserver && confirmContainer) new MutationObserver(updateConfirm).observe(confirmContainer, { childList: true, subtree: true });
+    $(document).on('click', '#pd-checkout-step-3 [data-step-back="2"]', function () { activate(2); });
+    if (!guest) activate(1);
+    else activate(1);
+  }
+
+  function setConfirmLabel() {
+    var button = document.getElementById('button-confirm');
+    if (button && button.dataset.pdConfirmLabel !== '1') {
+      button.textContent = 'Đặt hàng';
+      button.dataset.pdConfirmLabel = '1';
+    }
+  }
+
+  function layoutAddressFields(type) {
+    var firstname = document.getElementById('input-' + type + '-firstname');
+    var lastname = document.getElementById('input-' + type + '-lastname');
+    var zone = document.getElementById('input-' + type + '-zone');
+    var ward = document.getElementById('input-' + type + '-ward');
+    var address = document.getElementById('input-' + type + '-address-1');
+    if (!zone || !ward || !address) return;
+
+    var row = zone.closest('.row');
+    if (!row) return;
+    var ids = [
+      'input-' + type + '-firstname',
+      'input-' + type + '-lastname',
+      'input-' + type + '-zone',
+      'input-' + type + '-ward',
+      'input-' + type + '-hamlet',
+      'input-' + type + '-subhamlet-name',
+      'input-' + type + '-address-1'
+    ];
+    var cells = ids.map(function (id) {
+      var field = document.getElementById(id);
+      return field && field.closest('.mb-3');
+    }).filter(function (cell, index, all) {
+      return cell && all.indexOf(cell) === index;
+    });
+    var current = Array.prototype.filter.call(row.children, function (cell) {
+      return cells.indexOf(cell) !== -1;
+    });
+    var isOrdered = current.length === cells.length && current.every(function (cell, index) {
+      return cell === cells[index];
+    });
+
+    if (!isOrdered) {
+      var anchor = Array.prototype.find.call(row.children, function (cell) {
+        return cells.indexOf(cell) === -1;
+      });
+      cells.forEach(function (cell) { row.insertBefore(cell, anchor || null); });
+    }
+
+    var addressCell = address.closest('.mb-3');
+    if (addressCell) {
+      addressCell.classList.remove('col');
+      addressCell.classList.add('col-12', 'col-md-12');
+    }
+    ['hamlet', 'subhamlet-name'].forEach(function (fieldName) {
+      var localityField = document.getElementById('input-' + type + '-' + fieldName);
+      var localityCell = localityField && localityField.closest('.mb-3');
+      if (localityCell) localityCell.classList.add('pd-checkout-locality-field');
+    });
+    if (firstname) {
+      var firstLabel = $(firstname).closest('.mb-3').find('label').first();
+      if (firstLabel.text() !== 'Tên người nhận *') firstLabel.text('Tên người nhận *');
+      if (firstname.getAttribute('placeholder') !== 'Tên người nhận') firstname.setAttribute('placeholder', 'Tên người nhận');
+    }
+    if (lastname) {
+      var lastLabel = $(lastname).closest('.mb-3').find('label').first();
+      if (lastLabel.text() !== 'Họ & Tên đệm *') lastLabel.text('Họ & Tên đệm *');
+      if (lastname.getAttribute('placeholder') !== 'Họ & Tên đệm') lastname.setAttribute('placeholder', 'Họ & Tên đệm');
+    }
+  }
+
+  function polishCheckout() {
+    setupWizard();
+    setConfirmLabel();
+    var $register = $('#form-register');
+    if ($register.length) {
+      $register.find('fieldset').first().children('legend').text('Người nhận');
+      var $sameAddress = $('#input-address-match');
+      if ($sameAddress.length) {
+        $sameAddress.prop('checked', true).trigger('change');
+        $sameAddress.closest('.col.mb-3').hide();
+      }
+      var $legend = $('#payment-address legend').first();
+      if ($legend.length) {
+        $legend.text('Địa chỉ giao hàng');
+        if (!$legend.next('.pd-checkout-address-subtitle').length) {
+          $('<p class="pd-checkout-address-subtitle">Giao đến địa chỉ này</p>').insertAfter($legend);
+        }
+      }
+    }
+    $('#input-payment-address-1,#input-shipping-address-1').each(function () {
+      $(this).attr({ maxlength: 128 }).prop('required', true);
+    });
+    var telephoneField = document.getElementById('input-telephone');
+    if (telephoneField) {
+      $(telephoneField).attr({ type: 'tel', placeholder: '09xx xxx xxx', inputmode: 'tel', autocomplete: 'tel', maxlength: 16, required: true });
+      if (telephoneField.value.trim().toLowerCase() === 'admin') telephoneField.value = '';
+    }
+
+    ['payment', 'shipping'].forEach(function (type) {
+      var firstname = document.getElementById('input-' + type + '-firstname');
+      var lastname = document.getElementById('input-' + type + '-lastname');
+      var zone = document.getElementById('input-' + type + '-zone');
+      var address = document.getElementById('input-' + type + '-address-1');
+      var ward = document.getElementById('input-' + type + '-ward');
+      if (!zone || !address || !ward) return;
+      layoutAddressFields(type);
+      if (firstname) {
+        $(firstname).closest('.mb-3').find('label').text('Tên người nhận *');
+        $(firstname).attr('placeholder', 'Tên người nhận');
+      }
+      if (lastname) {
+        $(lastname).closest('.mb-3').find('label').text('Họ & Tên đệm *');
+        $(lastname).attr('placeholder', 'Họ & Tên đệm');
+      }
+      $(address).closest('.mb-3').addClass('required').find('label').text('Địa chỉ cụ thể *');
+      $(zone).closest('.col.mb-3').find('label').text('Tỉnh / Thành phố *');
+      $(ward).closest('.col.mb-3').find('label').text('Phường / Xã *');
+    });
+
+  }
+
+  document.addEventListener('submit', function (event) {
+    if (event.target.id !== 'form-register') return;
+    var phone = document.getElementById('input-telephone');
+    if (!phone) return;
+    var digits = phone.value.replace(/[^0-9]/g, '');
+    if (digits.length === 11 && digits.indexOf('84') === 0) digits = '0' + digits.slice(2);
+    phone.value = digits;
+    if (!/^0[35789][0-9]{8}$/.test(digits)) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      phone.classList.add('is-invalid');
+      var error = document.getElementById('error-telephone');
+      if (error) { error.textContent = 'Vui lòng nhập số điện thoại Việt Nam gồm 10 chữ số.'; error.classList.add('d-block'); }
+      phone.focus();
+    }
+  }, true);
+
+  $(polishCheckout);
+  function setupSummaryAccordion() {
+    var details = document.getElementById('pd-checkout-summary-details');
+    if (!details) return;
+    var mobile = window.matchMedia('(max-width: 767.98px)').matches;
+    details.open = !mobile;
+    function updateCount() {
+      var rows = 0;
+      document.querySelectorAll('#checkout-confirm [data-pd-quantity]').forEach(function () { rows += 1; });
+      var label = document.querySelector('.pd-summary-mobile-title');
+      if (label) label.textContent = 'Xem đơn (' + rows + ' SP)';
+      var count = document.querySelector('.summary-product-count');
+      if (count) count.textContent = rows + ' SP';
+    }
+    updateCount();
+    if (window.MutationObserver) new MutationObserver(updateCount).observe(document.getElementById('checkout-confirm'), { childList: true, subtree: true });
+    window.addEventListener('resize', function () { details.open = !window.matchMedia('(max-width: 767.98px)').matches; });
+  }
+  setupSummaryAccordion();
+  if (window.MutationObserver) {
+    new MutationObserver(function () {
+      setConfirmLabel();
+      ['payment', 'shipping'].forEach(layoutAddressFields);
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+})(jQuery, window, document);
+</script>
+<script>
+(function (document, window) {
+  'use strict';
+  var endpoint = {{ ward_url|json_encode|raw }};
+  var saved = { payment: {{ payment_ward_code|default('')|json_encode|raw }}, shipping: {{ shipping_ward_code|default('')|json_encode|raw }} };
+  var requests = { payment: 0, shipping: 0 };
+
+  function load(type, preserve) {
+    var zone = document.getElementById('input-' + type + '-zone');
+    var ward = document.getElementById('input-' + type + '-ward');
+    if (!zone || !ward) return;
+
+    var zoneId = zone.value;
+    var request = ++requests[type];
+    ward.innerHTML = '<option value="">' + (zoneId ? 'Đang tải phường/xã...' : 'Chọn tỉnh/thành phố trước') + '</option>';
+    ward.disabled = true;
+    if (!zoneId) return;
+
+    var url = endpoint + (endpoint.indexOf('?') === -1 ? '?' : '&') + 'zone_id=' + encodeURIComponent(zoneId);
+    fetch(url, { credentials: 'same-origin', headers: { Accept: 'application/json' } })
+      .then(function (response) {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.json();
+      })
+      .then(function (rows) {
+        if (requests[type] !== request || zone.value !== zoneId) return;
+        ward.innerHTML = '<option value="">-- Chọn phường / xã --</option>';
+        (Array.isArray(rows) ? rows : []).forEach(function (item) {
+          if (!item || !item.code) return;
+          var selected = preserve && String(item.code) === String(saved[type] || '');
+          ward.add(new Option(item.full_name || item.name || item.code, item.code, false, selected));
+        });
+        ward.disabled = ward.options.length < 2;
+        if (ward.value) ward.dispatchEvent(new Event('change', { bubbles: true }));
+        if (ward.disabled) ward.options[0].textContent = 'Chưa có phường/xã cho tỉnh này';
+      })
+      .catch(function (error) {
+        if (requests[type] !== request) return;
+        ward.innerHTML = '<option value="">Không tải được phường/xã. Thử chọn lại tỉnh.</option>';
+        ward.disabled = true;
+        console.error('[PanDaShop] Không tải được phường/xã:', error);
+      });
+  }
+
+  function bind(type) {
+    var zone = document.getElementById('input-' + type + '-zone');
+    if (!zone || zone.dataset.pandaWardBound === '1') return;
+    zone.dataset.pandaWardBound = '1';
+    document.addEventListener('change', function (event) {
+      if (event.target === zone) load(type, false);
+    }, true);
+    zone.addEventListener('focusout', function () { if (zone.value) load(type, false); });
+    if (zone.value) load(type, true);
+  }
+
+  function addAddressSearch(select) {
+    if (!select || select.dataset.pandaSearchReady === '1') return;
+    select.dataset.pandaSearchReady = '1';
+    var wrapper = document.createElement('div');
+    wrapper.className = 'pd-address-combobox';
+    var input = document.createElement('input');
+    input.type = 'search';
+    input.id = select.id + '-search';
+    input.className = 'form-control pd-address-combobox-input';
+    input.autocomplete = 'off';
+    input.setAttribute('role', 'combobox');
+    input.setAttribute('aria-autocomplete', 'list');
+    input.setAttribute('aria-expanded', 'false');
+    var isSavedAddressPicker = /-(payment|shipping)-address$/.test(select.id);
+    input.placeholder = isSavedAddressPicker ? 'Chọn địa chỉ giao hàng đã lưu...' : (select.id.indexOf('-zone') !== -1 ? 'Chọn hoặc gõ tỉnh/thành phố...' : 'Chọn hoặc gõ phường/xã...');
+    var menu = document.createElement('div');
+    menu.className = 'pd-address-combobox-menu';
+    menu.id = select.id + '-options';
+    menu.setAttribute('role', 'listbox');
+    menu.hidden = true;
+    input.setAttribute('aria-controls', menu.id);
+    var parent = select.parentNode;
+    parent.insertBefore(wrapper, select);
+    wrapper.appendChild(input);
+    wrapper.appendChild(menu);
+    wrapper.appendChild(select);
+    select.classList.add('pd-address-native-select');
+    select.required = false;
+    select.tabIndex = -1;
+    select.setAttribute('aria-hidden', 'true');
+    var label = parent.querySelector('label[for="' + select.id + '"]');
+    if (label) label.htmlFor = input.id;
+
+    function normalize(value) {
+      return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    }
+    function close() {
+      menu.hidden = true;
+      input.setAttribute('aria-expanded', 'false');
+    }
+    function render(query) {
+      var needle = normalize(query);
+      menu.replaceChildren();
+      Array.prototype.forEach.call(select.options, function (option, index) {
+        if (index === 0 || option.disabled) return;
+        if (needle && normalize(option.textContent).indexOf(needle) === -1) return;
+        if (isSavedAddressPicker) {
+          var row = document.createElement('div');
+          row.className = 'pd-saved-address-option';
+          var choose = document.createElement('button');
+          choose.type = 'button';
+          choose.className = 'pd-saved-address-option__choose';
+          choose.textContent = option.textContent;
+          choose.setAttribute('aria-selected', option.selected ? 'true' : 'false');
+          choose.addEventListener('click', function () {
+            select.value = option.value;
+            input.value = option.textContent;
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+            close();
+          });
+          var remove = document.createElement('button');
+          remove.type = 'button';
+          remove.className = 'pd-saved-address-option__remove';
+          remove.textContent = '×';
+          remove.setAttribute('aria-label', 'Xóa địa chỉ này');
+          var isDefault = option.dataset.default === '1';
+          remove.disabled = isDefault;
+          if (isDefault) remove.title = 'Không thể xóa địa chỉ mặc định.';
+          remove.addEventListener('click', function () {
+            if (isDefault) return;
+            select.value = option.value;
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+            close();
+            var deleteButton = document.querySelector('[data-pd-address-delete="' + (select.id.indexOf('payment') !== -1 ? 'payment' : 'shipping') + '"]');
+            if (deleteButton) deleteButton.click();
+          });
+          row.appendChild(choose);
+          row.appendChild(remove);
+          menu.appendChild(row);
+          return;
+        }
+        var item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'pd-address-combobox-option';
+        item.setAttribute('role', 'option');
+        item.textContent = option.textContent;
+        item.setAttribute('aria-selected', option.selected ? 'true' : 'false');
+        item.addEventListener('click', function () {
+          select.value = option.value;
+          input.value = option.textContent;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          close();
+        });
+        menu.appendChild(item);
+      });
+      if (!menu.children.length) {
+        var empty = document.createElement('div');
+        empty.className = 'pd-address-combobox-empty';
+        empty.textContent = select.disabled ? 'Vui lòng chọn tỉnh/thành phố trước.' : 'Không tìm thấy địa danh phù hợp.';
+        menu.appendChild(empty);
+      }
+      menu.hidden = false;
+      input.setAttribute('aria-expanded', 'true');
+    }
+    function sync() {
+      var option = select.options[select.selectedIndex];
+      input.value = option && option.value ? option.textContent : '';
+      input.disabled = select.disabled;
+      if (!menu.hidden) render(input.value);
+    }
+    input.addEventListener('focus', function () { render(''); });
+    input.addEventListener('click', function () { if (menu.hidden) render(''); });
+    input.addEventListener('input', function () { render(input.value); });
+    input.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') { close(); return; }
+      if (event.key === 'Enter') {
+        var first = menu.querySelector(isSavedAddressPicker ? '.pd-saved-address-option__choose' : '.pd-address-combobox-option');
+        if (first && !menu.hidden) { event.preventDefault(); first.click(); }
+      }
+      if (event.key === 'ArrowDown' && menu.hidden) { event.preventDefault(); render(''); }
+    });
+    select.addEventListener('change', sync);
+    if (window.MutationObserver) new MutationObserver(sync).observe(select, { childList: true });
+    document.addEventListener('click', function (event) { if (!wrapper.contains(event.target)) close(); });
+    sync();
+  }
+  function init() {
+    bind('payment'); bind('shipping');
+    ['payment', 'shipping'].forEach(function (type) {
+      addAddressSearch(document.getElementById('input-' + type + '-address'));
+      addAddressSearch(document.getElementById('input-' + type + '-zone'));
+      addAddressSearch(document.getElementById('input-' + type + '-ward'));
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})(document, window);
+</script>
+<script>
+(function (document, window) {
+  'use strict';
+  var geocodeEndpoint = {{ geocode_url|default('')|json_encode|raw }};
+  var consent = document.getElementById('pd-checkout-location-consent');
+  var consentDialog = consent && consent.querySelector('.pd-location-consent__dialog');
+  var activeType = 'payment';
+  var opener = null;
+
+  function normalize(value) {
+    return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd')
+      .toLowerCase().replace(/^(tinh|thanh pho|tp\.?|phuong|xa|thi tran|province of|city of)\s+/, '').replace(/\s+/g, ' ').trim();
+  }
+  function status(type, message, state) {
+    var card = document.querySelector('[data-pd-location="' + type + '"]');
+    var element = card && card.querySelector('[data-location-status]');
+    if (!element) return;
+    element.textContent = message;
+    element.classList.toggle('is-error', state === 'error');
+    element.classList.toggle('is-success', state === 'success');
+  }
+  function waitForWards(ward, timeout) {
+    return new Promise(function (resolve, reject) {
+      var started = Date.now();
+      var timer = window.setInterval(function () {
+        if (!ward.disabled && ward.options.length > 1) { window.clearInterval(timer); resolve(); }
+        else if (Date.now() - started > timeout) { window.clearInterval(timer); reject(new Error('Chưa tải được danh sách phường/xã.')); }
+      }, 120);
+    });
+  }
+  function getGeocode(position) {
+    var lat = position.coords.latitude;
+    var lon = position.coords.longitude;
+    var controller = window.AbortController ? new AbortController() : null;
+    var timeout = window.setTimeout(function () { if (controller) controller.abort(); }, 8000);
+    var bigData = fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + encodeURIComponent(lat) + '&longitude=' + encodeURIComponent(lon) + '&localityLanguage=vi', controller ? { signal: controller.signal } : {})
+      .then(function (response) { if (!response.ok) throw new Error('BigDataCloud'); return response.json(); }).catch(function () { return null; })
+      .finally(function () { window.clearTimeout(timeout); });
+    var osm = geocodeEndpoint ? fetch(geocodeEndpoint, {
+      method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', Accept: 'application/json' },
+      body: new URLSearchParams({ lat: String(lat), lon: String(lon) })
+    }).then(function (response) { if (!response.ok) throw new Error('OpenStreetMap'); return response.json(); }).catch(function () { return null; }) : Promise.resolve(null);
+    return Promise.all([bigData, osm]).then(function (results) {
+      var b = results[0], o = results[1];
+      var fallback = b && {
+        address: { state: b.principalSubdivision || '', province: b.principalSubdivision || '', city: b.city || b.locality || '', suburb: b.locality || '', neighbourhood: b.locality || '', village: b.locality || '' },
+        display_name: [b.locality, b.city, b.principalSubdivision, b.countryName].filter(Boolean).join(', ')
+      };
+      return o && o.address ? { place: o, source: 'OpenStreetMap' } : fallback ? { place: fallback, source: 'BigDataCloud' } : null;
+    });
+  }
+  function applyPlace(type, position, result) {
+    var parts = result.place.address || {};
+    var zone = document.getElementById('input-' + type + '-zone');
+    var ward = document.getElementById('input-' + type + '-ward');
+    if (!zone || !ward) throw new Error('Không tìm thấy trường tỉnh/thành hoặc phường/xã.');
+    var provinceName = parts.state || parts.province || parts.region || parts.city || '';
+    var zoneOption = Array.prototype.find.call(zone.options, function (option) {
+      return option.value && normalize(option.textContent) === normalize(provinceName);
+    });
+    if (!zoneOption) throw new Error('Chưa khớp được tỉnh/thành từ GPS. Vui lòng chọn thủ công.');
+    zone.value = zoneOption.value;
+    zone.dispatchEvent(new Event('change', { bubbles: true }));
+    status(type, 'Đã nhận diện tỉnh/thành; đang tải phường/xã…');
+    return waitForWards(ward, 10000).then(function () {
+      var wardNames = [parts.suburb, parts.city_district, parts.quarter, parts.neighbourhood, parts.village, parts.town, parts.municipality, parts.hamlet].filter(Boolean);
+      var wardOption = Array.prototype.find.call(ward.options, function (option) {
+        return option.value && wardNames.some(function (name) {
+          var wanted = normalize(name), actual = normalize(option.textContent);
+          return wanted === actual || (wanted.length > 3 && actual.indexOf(wanted) !== -1) || (actual.length > 3 && wanted.indexOf(actual) !== -1);
+        });
+      });
+      if (wardOption) {
+        ward.value = wardOption.value;
+        ward.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      var detail = document.getElementById('input-' + type + '-address-1');
+      var hamlet = document.getElementById('input-' + type + '-hamlet');
+      var street = [parts.house_number, parts.road || parts.pedestrian || parts.residential].filter(Boolean).join(' ');
+      if (detail && !detail.value && street) detail.value = street;
+      if (hamlet) {
+        var locality = parts.neighbourhood || parts.quarter || parts.hamlet || '';
+        var localityMatchesWard = wardOption && normalize(locality) === normalize(wardOption.textContent);
+        var localityMatchesProvince = normalize(locality) === normalize(zoneOption.textContent);
+        if (localityMatchesWard || localityMatchesProvince) locality = '';
+        if (!hamlet.value && locality) {
+          hamlet.value = locality;
+          hamlet.dataset.pdGpsFilled = '1';
+        } else if ((localityMatchesWard || localityMatchesProvince) && (
+          hamlet.dataset.pdGpsFilled === '1' ||
+          (wardOption && normalize(hamlet.value) === normalize(wardOption.textContent)) ||
+          normalize(hamlet.value) === normalize(zoneOption.textContent)
+        )) {
+          hamlet.value = '';
+          delete hamlet.dataset.pdGpsFilled;
+        }
+      }
+      var card = document.querySelector('[data-pd-location="' + type + '"]');
+      if (card) {
+        card.querySelector('[data-location-title]').textContent = street || (wardOption ? wardOption.textContent : zoneOption.textContent);
+        card.querySelector('[data-location-description]').textContent = result.place.display_name || [wardOption && wardOption.textContent, zoneOption.textContent].filter(Boolean).join(', ');
+      }
+      status(type, wardOption ? 'Đã nhận diện địa chỉ gần vị trí (sai số khoảng ' + Math.round(position.coords.accuracy) + ' m, nguồn ' + result.source + '). Hãy kiểm tra lại.' : 'Đã nhận diện tỉnh/thành; vui lòng chọn phường/xã thủ công.', wardOption ? 'success' : 'error');
+      if (type === 'payment' && document.getElementById('input-address-match') && document.getElementById('input-address-match').checked) {
+        var shippingZone = document.getElementById('input-shipping-zone');
+        if (shippingZone) { shippingZone.value = zone.value; shippingZone.dispatchEvent(new Event('change', { bubbles: true })); }
+      }
+    });
+  }
+  function locate(type) {
+    var button = document.querySelector('[data-location-start="' + type + '"]');
+    if (!navigator.geolocation) { status(type, 'Trình duyệt không hỗ trợ định vị. Bạn có thể chọn địa chỉ thủ công.', 'error'); return; }
+    button.disabled = true;
+    button.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2" aria-hidden="true"></i>Đang lấy vị trí…';
+    status(type, 'Đang xin quyền vị trí…');
+    navigator.geolocation.getCurrentPosition(function (position) {
+      status(type, 'Đang nhận diện khu vực GPS…');
+      getGeocode(position).then(function (result) {
+        if (!result) throw new Error('Không lấy được địa chỉ bản đồ. Vui lòng chọn địa chỉ thủ công.');
+        return applyPlace(type, position, result);
+      }).catch(function (error) { status(type, error.message || 'Không lấy được địa chỉ GPS. Vui lòng chọn thủ công.', 'error'); })
+        .finally(function () { button.disabled = false; button.innerHTML = '<i class="fa-solid fa-location-arrow me-2" aria-hidden="true"></i>Sử dụng vị trí hiện tại'; });
+    }, function (error) {
+      status(type, error.code === 1 ? 'Bạn chưa cấp quyền vị trí. Hãy cho phép định vị hoặc chọn địa chỉ thủ công.' : 'Không lấy được vị trí hiện tại. Hãy thử lại hoặc chọn địa chỉ thủ công.', 'error');
+      button.disabled = false;
+      button.innerHTML = '<i class="fa-solid fa-location-arrow me-2" aria-hidden="true"></i>Sử dụng vị trí hiện tại';
+    }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
+  }
+  document.querySelectorAll('[data-location-start]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      activeType = button.getAttribute('data-location-start');
+      opener = button;
+      consent.hidden = false;
+      consentDialog.focus();
+    });
+  });
+  consent.querySelectorAll('[data-location-dismiss]').forEach(function (button) {
+    button.addEventListener('click', function () { consent.hidden = true; if (opener) opener.focus(); });
+  });
+  document.getElementById('pd-checkout-location-continue').addEventListener('click', function () {
+    consent.hidden = true;
+    if (opener) opener.focus();
+    locate(activeType);
+  });
+  document.addEventListener('keydown', function (event) {
+    if (!consent.hidden && event.key === 'Escape') { consent.hidden = true; if (opener) opener.focus(); }
+  });
+})(document, window);
+</script>
+{{ footer }}

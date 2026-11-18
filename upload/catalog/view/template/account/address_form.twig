@@ -1,0 +1,921 @@
+{{ header }}
+<div id="account-address" class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    <div id="content" class="col">{{ content_top }}
+      <div class="pd-address-page-heading pd-address-form-heading">
+        <span class="pd-address-page-icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+        <div><span class="pd-address-eyebrow">SỔ ĐỊA CHỈ PANDASHOP</span><h1>{{ text_address }}</h1><p>Nhập chính xác thông tin để đơn hàng được giao đến đúng nơi.</p></div>
+      </div>
+      <form id="form-address" action="{{ save }}" method="post">
+        <fieldset class="pd-address-form-card">
+          <legend class="pd-address-form-legend">Thông tin người nhận và địa chỉ</legend>
+          <div class="row mb-3 required">
+            <label for="input-firstname" class="col-sm-2 col-form-label">{{ entry_firstname }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="form-control"/>
+              <div id="error-firstname" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-lastname" class="col-sm-2 col-form-label">{{ entry_lastname }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ entry_lastname }}" id="input-lastname" class="form-control"/>
+              <div id="error-lastname" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-telephone" class="col-sm-2 col-form-label">Điện thoại *</label>
+            <div class="col-sm-10">
+              <input type="tel" name="telephone" value="{{ telephone }}" placeholder="09xx xxx xxx" id="input-telephone" class="form-control" inputmode="tel" autocomplete="tel" required/>
+              <div id="error-telephone" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3 required">
+            <label for="input-address-1" class="col-sm-2 col-form-label">{{ entry_address_1 }}</label>
+            <div class="col-sm-10">
+              <textarea name="address_1" rows="3" maxlength="128" placeholder="Số nhà, tên đường, ngõ/hẻm..." id="input-address-1" class="form-control" required>{{ address_1 }}</textarea>
+              <div id="error-address-1" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <input type="hidden" name="address_2" value="{{ address_2 }}" id="input-address-2"/>
+          <input type="hidden" name="city" value="{{ city }}" id="input-city"/>
+          <input type="hidden" name="province_name" value="" id="input-province-name"/>
+          <input type="hidden" name="ward_name" value="" id="input-ward-name"/>
+          <input type="hidden" name="postcode" value="" id="input-postcode"/>
+          <input type="hidden" name="country_id" value="{{ country_id }}" id="input-country"/>
+          <div class="row mb-3 required">
+            <label for="input-zone" class="col-sm-2 col-form-label">{{ entry_zone }}</label>
+            <div class="col-sm-10">
+              <select name="zone_id" id="input-zone" class="form-select" required>
+                <option value="">{{ text_select }}</option>
+                {% for zone in zones %}
+                  <option value="{{ zone.zone_id }}"{% if zone.zone_id == zone_id %} selected{% endif %}>{{ zone.name }}</option>
+                {% endfor %}
+              </select>
+              <div id="error-zone" class="invalid-feedback"></div>
+              <div class="pd-address-gps-card">
+                <div class="pd-address-gps-card__eyebrow"><i class="fa-solid fa-crosshairs" aria-hidden="true"></i> VỊ TRÍ HIỆN TẠI</div>
+                <div class="pd-address-gps-card__preview">
+                  <span class="pd-address-gps-card__icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+                  <div class="pd-address-gps-card__copy">
+                    <strong id="gps-preview-title">Chưa quét vị trí GPS</strong>
+                    <span id="gps-preview-desc">Dùng GPS để tìm tỉnh/thành và địa chỉ gần bạn.</span>
+                  </div>
+                </div>
+                <button type="button" id="pd-address-locate" class="btn pd-address-locate-button"><i class="fa-solid fa-location-arrow me-2" aria-hidden="true"></i>Sử dụng vị trí hiện tại</button>
+                <span id="pd-address-locate-status" role="status" aria-live="polite"></span>
+              </div>
+              <small class="pd-address-location-note">Khi tiếp tục, tọa độ hiện tại được gửi trực tiếp đến <a href="https://www.bigdatacloud.com/geocoding-apis/free-reverse-geocode-to-city-api" target="_blank" rel="noopener noreferrer">BigDataCloud</a>, sau đó gửi qua PanDaShop đến <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> để bổ sung tên đường. Hãy kiểm tra kết quả trước khi lưu.</small>
+              <div id="pd-location-consent" class="pd-location-consent" hidden>
+                <button type="button" class="pd-location-consent__backdrop" data-location-dismiss aria-label="Đóng hộp thoại"></button>
+                <section class="pd-location-consent__dialog" role="dialog" aria-modal="true" aria-labelledby="pd-location-consent-title" aria-describedby="pd-location-consent-description" tabindex="-1">
+                  <button type="button" class="pd-location-consent__close" data-location-dismiss aria-label="Đóng">&times;</button>
+                  <span class="pd-location-consent__icon" aria-hidden="true"><i class="fa-solid fa-location-crosshairs"></i></span>
+                  <p class="pd-location-consent__eyebrow">ĐỊA CHỈ GIAO HÀNG</p>
+                  <h2 id="pd-location-consent-title">Dùng vị trí hiện tại?</h2>
+                  <p id="pd-location-consent-description">PanDaShop sẽ xin quyền vị trí từ trình duyệt. Nếu bạn đồng ý, tọa độ hiện tại sẽ được gửi trực tiếp đến BigDataCloud để nhận diện khu vực, sau đó gửi qua máy chủ PanDaShop đến OpenStreetMap để bổ sung tên đường và số nhà. Bạn có thể kiểm tra, chỉnh sửa kết quả trước khi lưu.</p>
+                  <div class="pd-location-consent__actions">
+                    <button type="button" class="pd-location-consent__cancel" data-location-dismiss>Để sau</button>
+                    <button type="button" id="pd-location-consent-continue" class="pd-location-consent__continue"><i class="fa-solid fa-location-crosshairs me-2" aria-hidden="true"></i>Tiếp tục</button>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="vn-address-fields"{% if country_id != 230 %} hidden{% endif %}>
+            <div class="row mb-3 required">
+              <label for="input-ward" class="col-sm-2 col-form-label">Phường / Xã *</label>
+              <div class="col-sm-10">
+              <select name="ward_code" id="input-ward" class="form-select" required>
+                  <option value="">Chọn hoặc gõ tìm phường/xã...</option>
+                </select>
+                <div id="error-vn-ward" class="invalid-feedback">Vui lòng chọn Phường/Xã</div>
+              </div>
+            </div>
+            <div class="row mb-3 panda-hamlet-field">
+              <label for="input-hamlet" class="col-sm-2 col-form-label">Tổ dân phố / Khu phố / Thôn (không bắt buộc)</label>
+              <div class="col-sm-10 position-relative">
+                <input type="text" name="hamlet_name" value="{{ hamlet_name }}" id="input-hamlet" class="form-control panda-hamlet-input" maxlength="128" autocomplete="off" placeholder="Nhập Tổ dân phố / Khu phố / Thôn nếu có (hệ thống sẽ gợi ý địa danh)..."/>
+                <div id="panda-hamlet-options" class="panda-hamlet-options panda-dropdown-menu" hidden><ul class="panda-scrollable-list"></ul></div>
+                <div id="error-hamlet_name" class="invalid-feedback"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="input-subhamlet-name" class="col-sm-2 col-form-label">Khu dân cư / Cụm dân cư / Xóm / Ấp (nếu có)</label>
+            <div class="col-sm-10 position-relative">
+              <input type="text" name="subhamlet_name" value="{{ subhamlet_name }}" id="input-subhamlet-name" class="form-control panda-hamlet-input" maxlength="128" autocomplete="off" placeholder="Tìm hoặc nhập địa danh cấp dưới nếu địa chỉ có"/>
+              <div id="panda-subhamlet-options" class="panda-hamlet-options panda-dropdown-menu" hidden><ul class="panda-scrollable-list"></ul></div>
+              <div id="error-subhamlet_name" class="invalid-feedback"></div>
+            </div>
+          </div>
+
+          {% for custom_field in custom_fields %}
+
+            {% if custom_field.type == 'select' %}
+              <div class="row mb-3{% if custom_field.required %} required{% endif %}">
+                <label for="input-custom-field-{{ custom_field.custom_field_id }}" class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <select name="custom_field[{{ custom_field.custom_field_id }}]" id="input-custom-field-{{ custom_field.custom_field_id }}" class="form-select">
+                    <option value="">{{ text_select }}</option>
+                    {% for custom_field_value in custom_field.custom_field_value %}
+                      <option value="{{ custom_field_value.custom_field_value_id }}"{% if address_custom_field[custom_field.custom_field_id] and custom_field_value.custom_field_value_id == address_custom_field[custom_field.custom_field_id] %} selected{% endif %}>{{ custom_field_value.name }}</option>
+                    {% endfor %}
+                  </select>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'radio' %}
+              <div class="row mb-3{% if custom_field.required %} required{% endif %}">
+                <label class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <div id="input-custom-field-{{ custom_field.custom_field_id }}">
+                    {% for custom_field_value in custom_field.custom_field_value %}
+                      <div class="form-check">
+                        <input type="radio" name="custom_field[{{ custom_field.custom_field_id }}]" value="{{ custom_field_value.custom_field_value_id }}" id="input-custom-value-{{ custom_field_value.custom_field_value_id }}" class="form-check-input"{% if address_custom_field[custom_field.custom_field_id] and custom_field_value.custom_field_value_id == address_custom_field[custom_field.custom_field_id] %} checked{% endif %}/> <label for="input-custom-value-{{ custom_field_value.custom_field_value_id }}" class="form-check-label">{{ custom_field_value.name }}</label>
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'checkbox' %}
+              <div class="row mb-3{% if custom_field.required %} required{% endif %}">
+                <label class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <div id="input-custom-field-{{ custom_field.custom_field_id }}">
+                    {% for custom_field_value in custom_field.custom_field_value %}
+                      <div class="form-check">
+                        <input type="checkbox" name="custom_field[{{ custom_field.custom_field_id }}][]" value="{{ custom_field_value.custom_field_value_id }}" id="input-custom-value-{{ custom_field_value.custom_field_value_id }}" class="form-check-input"{% if address_custom_field[custom_field.custom_field_id] and custom_field_value.custom_field_value_id in address_custom_field[custom_field.custom_field_id] %} checked{% endif %}/> <label for="input-custom-value-{{ custom_field_value.custom_field_value_id }}" class="form-check-label">{{ custom_field_value.name }}</label>
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'text' %}
+              <div class="row mb-3{% if custom_field.required %} required{% endif %}">
+                <label for="input-custom-field-{{ custom_field.custom_field_id }}" class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="custom_field[{{ custom_field.custom_field_id }}]" value="{% if address_custom_field[custom_field.custom_field_id] %}{{ address_custom_field[custom_field.custom_field_id] }}{% else %}{{ custom_field.value }}{% endif %}" placeholder="{{ custom_field.name }}" id="input-custom-field-{{ custom_field.custom_field_id }}" class="form-control"/>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'textarea' %}
+              <div class="row mb-3{% if custom_field.required %} required{% endif %}">
+                <label for="input-custom-field-{{ custom_field.custom_field_id }}" class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <textarea name="custom_field[{{ custom_field.custom_field_id }}]" rows="5" placeholder="{{ custom_field.name }}" id="input-custom-field-{{ custom_field.custom_field_id }}" class="form-control">{% if address_custom_field[custom_field.custom_field_id] %}{{ address_custom_field[custom_field.custom_field_id] }}{% else %}{{ custom_field.value }}{% endif %}</textarea>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'file' %}
+              <div class="row mb-3{% if custom_field.required %} required{% endif %}">
+                <label class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <div>
+                    <button type="button" data-oc-toggle="upload" data-oc-url="{{ upload }}" data-oc-size-max="{{ config_file_max_size }}" data-oc-size-error="{{ error_upload_size }}" data-oc-target="#input-custom-field-{{ custom_field.custom_field_id }}" class="btn btn-light"><i class="fa-solid fa-upload"></i> {{ button_upload }}</button>
+                    <input type="hidden" name="custom_field[{{ custom_field.custom_field_id }}]" value="{% if address_custom_field[custom_field.custom_field_id] %}{{ address_custom_field[custom_field.custom_field_id] }}{% endif %}" id="input-custom-field-{{ custom_field.custom_field_id }}"/>
+                  </div>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'date' %}
+              <div class="row mb-3{% if custom_field.required %} required{% endif %}">
+                <label for="input-custom-field-{{ custom_field.custom_field_id }}" class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <input type="date" name="custom_field[{{ custom_field.custom_field_id }}]" value="{% if address_custom_field[custom_field.custom_field_id] %}{{ address_custom_field[custom_field.custom_field_id] }}{% else %}{{ custom_field.value }}{% endif %}" placeholder="{{ custom_field.name }}" id="input-custom-field-{{ custom_field.custom_field_id }}" class="form-control"/>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'time' %}
+              <div class="row mb-3{% if custom_field.required %} required{% endif %}">
+                <label for="input-custom-field-{{ custom_field.custom_field_id }}" class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <input type="time" name="custom_field[{{ custom_field.custom_field_id }}]" value="{% if address_custom_field[custom_field.custom_field_id] %}{{ address_custom_field[custom_field.custom_field_id] }}{% else %}{{ custom_field.value }}{% endif %}" placeholder="{{ custom_field.name }}" id="input-custom-field-{{ custom_field.custom_field_id }}" class="form-control"/>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if custom_field.type == 'datetime' %}
+              <div class="row mb-3{% if custom_field.required %} required{% endif %}">
+                <label for="input-custom-field-{{ custom_field.custom_field_id }}" class="col-sm-2 col-form-label">{{ custom_field.name }}</label>
+                <div class="col-sm-10">
+                  <input type="datetime-local" name="custom_field[{{ custom_field.custom_field_id }}]" value="{% if address_custom_field[custom_field.custom_field_id] %}{{ address_custom_field[custom_field.custom_field_id] }}{% else %}{{ custom_field.value }}{% endif %}" placeholder="{{ custom_field.name }}" id="input-custom-field-{{ custom_field.custom_field_id }}" class="form-control"/>
+                  <div id="error-custom-field-{{ custom_field.custom_field_id }}" class="invalid-feedback"></div>
+                </div>
+              </div>
+            {% endif %}
+
+          {% endfor %}
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">{{ entry_default }}</label>
+            <div class="col-sm-10">
+              <div class="form-check-inline">
+                <input type="radio" name="default" value="1" id="input-default-yes" class="form-check-input"{% if default %} checked{% endif %}/>
+                <label for="input-default-yes" class="form-check-label">{{ text_yes }}</label>
+              </div>
+              <div class="form-check-inline">
+                <input type="radio" name="default" value="0" id="input-default-no" class="form-check-input"{% if not default %} checked{% endif %}/>
+                <label for="input-default-no" class="form-check-label">{{ text_no }}</label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <div class="row">
+          <div class="col">
+            <a href="{{ back }}" class="btn btn-light">{{ button_back }}</a>
+          </div>
+          <div class="col text-end">
+            <button type="submit" class="btn btn-primary">{{ button_continue }}</button>
+          </div>
+        </div>
+      </form>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var province = document.getElementById('input-zone');
+  var ward = document.getElementById('input-ward');
+  var address2 = document.getElementById('input-address-2');
+  var endpoint = {{ vn_wards_url|json_encode|raw }};
+  var geocodeEndpoint = {{ geocode_url|json_encode|raw }};
+  var savedWard = {{ vn_ward_code|default('')|json_encode|raw }};
+  var requestNumber = 0;
+
+  function announceWardsLoaded() {
+    document.dispatchEvent(new CustomEvent('pd-address-wards-loaded', { detail: { zoneId: province.value } }));
+  }
+
+  function loadWards(restoreSavedWard) {
+    var zoneId = province.value;
+    var request = ++requestNumber;
+    ward.replaceChildren(new Option('-- Chọn Phường/Xã --', ''));
+    ward.value = '';
+    ward.disabled = false;
+    if (!zoneId) { announceWardsLoaded(); return; }
+
+    var separator = endpoint.indexOf('?') === -1 ? '?' : '&';
+    fetch(endpoint + separator + 'zone_id=' + encodeURIComponent(zoneId), {
+      credentials: 'same-origin',
+      headers: { 'Accept': 'application/json' }
+    }).then(function (response) {
+      if (!response.ok) throw new Error('Không tải được danh sách phường/xã.');
+      return response.json();
+    }).then(function (rows) {
+      if (request !== requestNumber) return;
+      (rows || []).forEach(function (item) {
+        if (!item || !item.code) return;
+        ward.add(new Option(item.full_name || item.name, item.code, false, restoreSavedWard && String(item.code) === String(savedWard)));
+      });
+      if (restoreSavedWard && savedWard) ward.value = savedWard;
+      announceWardsLoaded();
+    }).catch(function () {
+      if (request === requestNumber) {
+        ward.replaceChildren(new Option('Không tải được danh sách phường/xã', ''));
+        announceWardsLoaded();
+      }
+    });
+  }
+
+  province.addEventListener('change', function () {
+    savedWard = '';
+    loadWards(false);
+  });
+  ward.addEventListener('change', function () {
+    var option = ward.options[ward.selectedIndex];
+    if (address2 && option && ward.value) address2.value = 'Phường/Xã: ' + option.text;
+  });
+
+  var locateButton = document.getElementById('pd-address-locate');
+  var locateButtonLabel = locateButton ? locateButton.innerHTML : '';
+  var locateStatus = document.getElementById('pd-address-locate-status');
+  var locationConsent = document.getElementById('pd-location-consent');
+  var locationConsentDialog = locationConsent && locationConsent.querySelector('.pd-location-consent__dialog');
+  var locationConsentContinue = document.getElementById('pd-location-consent-continue');
+  var city = document.getElementById('input-city');
+  var provinceNameInput = document.getElementById('input-province-name');
+  var wardNameInput = document.getElementById('input-ward-name');
+  var detailInput = document.getElementById('input-address-1');
+  var hamletInput = document.getElementById('input-hamlet');
+  var waitingForWardOptions = false;
+  var locationWardTimer = null;
+  var nominatimCompletedAt = 0;
+
+  function normalizePlace(value) {
+    return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').toLowerCase()
+      .replace(/^(tinh|thanh pho|tp\.?|province of|city of)\s+/, '').replace(/\s+/g, ' ').trim();
+  }
+
+  function setLocateStatus(message, state) {
+    if (!locateStatus) return;
+    locateStatus.textContent = message;
+    locateStatus.classList.toggle('is-error', state === 'error');
+    locateStatus.classList.toggle('is-success', state === 'success');
+  }
+
+  function setLocateButtonBusy(busy) {
+    if (!locateButton) return;
+    locateButton.innerHTML = busy
+      ? '<i class="fa-solid fa-spinner fa-spin me-2" aria-hidden="true"></i>Đang lấy vị trí…'
+      : locateButtonLabel;
+  }
+
+  function applyGeocodeResult(place, position, source) {
+    if (!place || !place.address) return false;
+    var parts = place.address;
+    var provinceLabel = parts.state || parts.province || parts.region || parts.city || '';
+    var zoneOption = Array.from(province.options).find(function (option) {
+      return option.value && normalizePlace(option.textContent) === normalizePlace(provinceLabel);
+    });
+    if (!zoneOption) return false;
+
+    function applyLocatedWard(event) {
+      if (event.detail.zoneId !== zoneOption.value) return;
+      document.removeEventListener('pd-address-wards-loaded', applyLocatedWard);
+      waitingForWardOptions = false;
+      window.clearTimeout(locationWardTimer);
+      var wardNames = [parts.suburb, parts.city_district, parts.quarter, parts.neighbourhood, parts.village, parts.town, parts.municipality, parts.hamlet].filter(Boolean);
+      var wardOption = Array.from(ward.options).find(function (option) {
+        return option.value && wardNames.some(function (name) { return normalizePlace(option.textContent) === normalizePlace(name); });
+      });
+      if (wardOption) {
+        ward.value = wardOption.value;
+        ward.dispatchEvent(new Event('change', { bubbles: true }));
+        if (wardNameInput) wardNameInput.value = wardOption.textContent;
+      }
+      window.setTimeout(function () {
+        locateButton.disabled = false;
+      }, Math.max(0, 1000 - (Date.now() - nominatimCompletedAt)));
+      if (city) city.value = zoneOption.textContent;
+      if (provinceNameInput) provinceNameInput.value = zoneOption.textContent;
+      if (hamletInput && !hamletInput.value) hamletInput.value = parts.neighbourhood || parts.quarter || parts.hamlet || '';
+      var street = [parts.house_number, parts.road || parts.pedestrian || parts.residential].filter(Boolean).join(' ');
+      if (detailInput && !detailInput.value && street) detailInput.value = street;
+      var previewTitle = document.getElementById('gps-preview-title');
+      var previewDescription = document.getElementById('gps-preview-desc');
+      if (previewTitle) previewTitle.textContent = street || (wardOption ? wardOption.textContent : zoneOption.textContent);
+      if (previewDescription) previewDescription.textContent = place.display_name || (wardOption ? wardOption.textContent + ', ' + zoneOption.textContent : zoneOption.textContent);
+      setLocateStatus(wardOption ? 'Đã nhận diện địa chỉ gần vị trí (sai số GPS khoảng ' + Math.round(position.coords.accuracy) + ' m, nguồn ' + source + '). Hãy kiểm tra lại.' : 'Đã nhận diện tỉnh/thành; hãy chọn phường/xã thủ công để hoàn tất.', wardOption ? 'success' : 'error');
+    }
+
+    waitingForWardOptions = true;
+    locationWardTimer = window.setTimeout(function () {
+      document.removeEventListener('pd-address-wards-loaded', applyLocatedWard);
+      waitingForWardOptions = false;
+      setLocateStatus('Danh sách phường/xã chưa tải xong. Hãy chọn phường/xã thủ công.', 'error');
+      locateButton.disabled = false;
+      setLocateButtonBusy(false);
+    }, 10000);
+    document.addEventListener('pd-address-wards-loaded', applyLocatedWard);
+    province.value = zoneOption.value;
+    province.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+  }
+
+  function makeBigDataCloudPlace(data) {
+    if (!data || (!data.principalSubdivision && !data.city && !data.locality)) return null;
+    var locality = data.locality || data.city || '';
+    var provinceName = data.principalSubdivision || '';
+    var displayName = [locality, data.city, provinceName, data.countryName].filter(Boolean).filter(function (value, index, values) {
+      return values.indexOf(value) === index;
+    }).join(', ');
+    return {
+      address: {
+        state: provinceName,
+        province: provinceName,
+        city: data.city || locality,
+        suburb: locality,
+        neighbourhood: locality,
+        village: locality
+      },
+      display_name: displayName
+    };
+  }
+
+  function requestOsmGeocode(position, bigDataCloudPlace) {
+    var nominatimStartedAt = Date.now();
+    $.ajax({
+      url: geocodeEndpoint,
+      type: 'POST',
+      dataType: 'json',
+      data: { lat: String(position.coords.latitude), lon: String(position.coords.longitude) },
+      success: function (place) {
+        if (applyGeocodeResult(place, position, 'OpenStreetMap')) return;
+        if (bigDataCloudPlace && applyGeocodeResult(bigDataCloudPlace, position, 'BigDataCloud')) return;
+        setLocateStatus((place && place.error) || 'Không khớp được tỉnh/thành từ kết quả định vị. Hãy chọn địa chỉ thủ công.', 'error');
+      },
+      error: function (xhr) {
+        if (bigDataCloudPlace && applyGeocodeResult(bigDataCloudPlace, position, 'BigDataCloud')) return;
+        var response = xhr.responseJSON || {};
+        setLocateStatus(response.error || 'Không gọi được dịch vụ định vị. Hãy chọn địa chỉ thủ công.', 'error');
+      },
+      complete: function () {
+        nominatimCompletedAt = Date.now();
+        setLocateButtonBusy(false);
+        if (!waitingForWardOptions) {
+          // Respect Nominatim's public-service limit of one request per second.
+          window.setTimeout(function () { locateButton.disabled = false; }, Math.max(0, 1000 - (Date.now() - nominatimStartedAt)));
+        }
+      }
+    });
+  }
+
+  function requestCurrentLocation() {
+    if (!navigator.geolocation) {
+      setLocateStatus('Trình duyệt này không hỗ trợ định vị. Bạn có thể chọn địa chỉ thủ công.', 'error');
+      return;
+    }
+    locateButton.disabled = true;
+    setLocateButtonBusy(true);
+    setLocateStatus('Đang xin quyền vị trí…');
+    navigator.geolocation.getCurrentPosition(function (position) {
+      var latitude = Number(position.coords.latitude);
+      var longitude = Number(position.coords.longitude);
+      if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+        setLocateStatus('Thiết bị không trả về tọa độ hợp lệ. Bạn có thể chọn địa chỉ thủ công.', 'error');
+        locateButton.disabled = false;
+        setLocateButtonBusy(false);
+        return;
+      }
+
+      setLocateStatus('Đang nhận diện khu vực GPS…');
+      // BigDataCloud's free endpoint must be called directly by this client with its current GPS coordinates.
+      $.ajax({
+        url: 'https://api.bigdatacloud.net/data/reverse-geocode-client',
+        type: 'GET',
+        dataType: 'json',
+        timeout: 8000,
+        data: { latitude: String(latitude), longitude: String(longitude), localityLanguage: 'vi' },
+        success: function (result) {
+          var bigDataCloudPlace = makeBigDataCloudPlace(result);
+          if (!bigDataCloudPlace) {
+            requestOsmGeocode(position, null);
+            return;
+          }
+          setLocateStatus('Đã nhận diện khu vực; đang dò tên đường và phường/xã…');
+          // OSM runs only after the direct client-side BigDataCloud request has completed.
+          requestOsmGeocode(position, bigDataCloudPlace);
+        },
+        error: function () {
+          requestOsmGeocode(position, null);
+        }
+      });
+    }, function (error) {
+      var message = error.code === 1 ? 'Bạn chưa cấp quyền vị trí. Hãy cho phép định vị hoặc chọn địa chỉ thủ công.' : 'Không lấy được vị trí hiện tại. Hãy thử lại hoặc chọn địa chỉ thủ công.';
+      setLocateStatus(message, 'error');
+      locateButton.disabled = false;
+      setLocateButtonBusy(false);
+    }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
+  }
+
+  function closeLocationConsent() {
+    if (!locationConsent) return;
+    locationConsent.hidden = true;
+    if (locateButton) locateButton.focus();
+  }
+
+  if (locateButton && locationConsent) {
+    locateButton.addEventListener('click', function () {
+      locationConsent.hidden = false;
+      if (locationConsentDialog) locationConsentDialog.focus();
+    });
+    locationConsent.querySelectorAll('[data-location-dismiss]').forEach(function (button) {
+      button.addEventListener('click', closeLocationConsent);
+    });
+    if (locationConsentContinue) locationConsentContinue.addEventListener('click', function () {
+      closeLocationConsent();
+      requestCurrentLocation();
+    });
+    document.addEventListener('keydown', function (event) {
+      if (locationConsent.hidden) return;
+      if (event.key === 'Escape') {
+        closeLocationConsent();
+      } else if (event.key === 'Tab' && locationConsentDialog) {
+        var focusable = Array.from(locationConsentDialog.querySelectorAll('button:not(:disabled)'));
+        if (!focusable.length) return;
+        var first = focusable[0];
+        var last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+  } else if (locateButton) {
+    locateButton.addEventListener('click', requestCurrentLocation);
+  }
+
+  if (province.value) loadWards(true);
+})();
+</script><script>
+(function ($, document) {
+  'use strict';
+  var endpoint = {{ vn_hamlets_url|json_encode|raw }};
+  var ward = document.getElementById('input-ward');
+  if (!ward) return;
+  var subhamlet = document.getElementById('input-subhamlet-name');
+  var subhamletLabel = document.querySelector('label[for="input-subhamlet-name"]');
+  function updateSubhamletLabel() {
+    var selectedWard = ward.options[ward.selectedIndex];
+    var urban = selectedWard && /^phường(?:\s|$)/i.test(selectedWard.textContent.trim());
+    var label = urban ? 'Khu dân cư / Cụm dân cư (nếu có)' : 'Xóm / Ấp (nếu có)';
+    if (subhamletLabel) subhamletLabel.textContent = label;
+    if (subhamlet) subhamlet.placeholder = urban
+      ? 'Nhập Khu dân cư / Cụm dân cư nếu địa chỉ có...'
+      : 'Nhập Xóm / Ấp nếu địa chỉ có...';
+  }
+  function bind(inputId, optionsId, category) {
+    var input = document.getElementById(inputId);
+    var options = document.getElementById(optionsId);
+    if (!input || !options) return;
+    var list = options.querySelector('.panda-scrollable-list');
+    var requestId = 0;
+    input.addEventListener('input', function () {
+      var wardCode = ward.value;
+      var query = input.value.trim();
+      var request = ++requestId;
+      list.replaceChildren();
+      options.hidden = true;
+      if (!wardCode) return;
+      var url = endpoint + (endpoint.indexOf('?') < 0 ? '?' : '&') +
+        'ward_code=' + encodeURIComponent(wardCode) + '&category=' + category + '&q=' + encodeURIComponent(query);
+      fetch(url, { credentials: 'same-origin', headers: { Accept: 'application/json' } })
+        .then(function (response) { if (!response.ok) throw new Error('Lookup failed'); return response.json(); })
+        .then(function (items) {
+          if (request !== requestId || wardCode !== ward.value) return;
+          (items || []).forEach(function (item) {
+            if (!item || !item.name) return;
+            var option = document.createElement('li');
+            option.className = 'dropdown-item-custom panda-hamlet-option';
+            option.textContent = item.name;
+            option.addEventListener('click', function () { input.value = item.name; options.hidden = true; });
+            list.appendChild(option);
+          });
+          if (!list.childElementCount) {
+            var empty = document.createElement('li');
+            empty.className = 'p-2 text-slate-400 fs-12';
+            empty.textContent = 'Chưa có dữ liệu địa danh cho cấp này. Bạn có thể nhập trực tiếp.';
+            list.appendChild(empty);
+          }
+          options.hidden = false;
+        }).catch(function (error) { options.hidden = true; });
+    });
+    input.addEventListener('focus', function () { input.dispatchEvent(new Event('input', { bubbles: true })); });
+    document.addEventListener('click', function (event) { if (!input.parentElement.contains(event.target)) options.hidden = true; });
+  }
+  bind('input-hamlet', 'panda-hamlet-options', 'to_dan_pho_thon');
+  bind('input-subhamlet-name', 'panda-subhamlet-options', 'xom_ap');
+  ward.addEventListener('change', function () {
+    updateSubhamletLabel();
+    var input = document.getElementById('input-hamlet');
+    if (input) input.value = '';
+    var subhamlet = document.getElementById('input-subhamlet-name');
+    if (subhamlet) subhamlet.value = '';
+    ['panda-hamlet-options', 'panda-subhamlet-options'].forEach(function (id) {
+      var menu = document.getElementById(id);
+      if (menu) menu.hidden = true;
+    });
+  });
+  new MutationObserver(updateSubhamletLabel).observe(ward, { childList: true });
+  updateSubhamletLabel();
+})(jQuery, document);
+</script>
+<style>
+  #account-address h1 { margin: 8px 0 18px; color: #f8fafc; font-size: clamp(1.55rem, 2.2vw, 2rem); font-weight: 800; letter-spacing: -.02em; }
+  #account-address .pd-address-layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 24px;
+    padding: 24px;
+    border: 1px solid #263449;
+    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(15, 23, 42, .72), rgba(9, 13, 22, .92));
+  }
+  #account-address .pd-address-layout > legend { grid-column: 1 / -1; }
+  #account-address .pd-address-layout .pd-address-grid-item {
+    display: block;
+    margin: 0;
+    min-width: 0;
+    width: 100%;
+    padding: 0;
+  }
+  #account-address .pd-address-layout .pd-address-grid-item > label,
+  #account-address .pd-address-layout .pd-address-grid-item > div {
+    display: block;
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+  }
+  #account-address .pd-address-layout .pd-address-grid-item > label {
+    margin: 0 0 8px;
+    color: #dbe7f5;
+    font-weight: 600;
+    line-height: 1.45;
+    text-align: left;
+  }
+  #account-address .pd-address-layout .pd-address-grid-item > div { min-width: 0; }
+  #account-address #form-address .form-control,
+  #account-address #form-address .form-select {
+    min-height: 48px;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    background-color: #111827;
+    color: #f1f5f9;
+    transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+  }
+  #account-address #form-address textarea.form-control { min-height: 116px; resize: vertical; }
+  #account-address #form-address .form-control:focus,
+  #account-address #form-address .form-select:focus {
+    border-color: #00e5ff;
+    background-color: #0f172a;
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, .14);
+    color: #fff;
+  }
+  #account-address #form-address .ts-wrapper { width: 100%; }
+  #account-address #form-address .ts-wrapper .ts-control {
+    min-height: 48px;
+    padding: 11px 14px;
+    border: 1px solid #334155 !important;
+    border-radius: 10px !important;
+    background: #111827 !important;
+    color: #f1f5f9 !important;
+    box-shadow: none !important;
+  }
+  #account-address #form-address .ts-wrapper .ts-control > input,
+  #account-address #form-address .ts-wrapper .ts-control > input:focus {
+    min-height: 24px;
+    margin: 0;
+    padding: 0 !important;
+    border: 0 !important;
+    outline: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #f1f5f9 !important;
+  }
+  #account-address #form-address .ts-wrapper.focus .ts-control {
+    border-color: #00e5ff !important;
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, .14) !important;
+  }
+  #account-address #form-address .ts-dropdown {
+    z-index: 1080;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    background: #111827;
+    color: #f1f5f9;
+  }
+  #account-address .pd-address-default-options > div { display: flex !important; align-items: center; gap: 10px; flex-wrap: wrap; }
+  #account-address .pd-address-default-options .form-check-inline { margin: 0; }
+  #account-address .pd-address-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 20px; }
+  #account-address .pd-address-actions .btn { min-height: 46px; padding-inline: 20px; border-radius: 10px; font-weight: 700; }
+  #account-address .pd-address-actions .btn-light { border: 1px solid #334155; background: #111827; color: #dbe7f5; }
+  #account-address .pd-address-actions .btn-light:hover { border-color: #00e5ff; color: #67e8f9; }
+  #account-address .pd-address-grid-item.pd-address-wide { grid-column: 1 / -1; }
+  #account-address #vn-address-fields:not([hidden]) { display: contents; }
+  @media (max-width: 767.98px) {
+    #account-address .pd-address-layout { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 16px; }
+    #account-address .pd-address-grid-item.pd-address-wide { grid-column: auto; }
+    #account-address .pd-address-actions { margin-top: 16px; }
+    #account-address .pd-address-actions .btn { flex: 1; }
+  }
+</style>
+<script>
+  jQuery(function ($) {
+    var $grid = $('#form-address fieldset').first().addClass('pd-address-layout');
+    var layout = [
+      ['#input-firstname', 1],
+      ['#input-lastname', 2],
+      ['#input-zone', 3],
+      ['#input-ward', 4],
+      ['#input-hamlet', 5],
+      ['#input-subhamlet-name', 6],
+      ['#input-address-1', 7, true],
+      ['#input-telephone', 8, true],
+      ['input[name="default"]', 9, true]
+    ];
+    $grid.find('.row.mb-3').addClass('pd-address-grid-item').css('order', 50);
+    layout.forEach(function (field) {
+      var $row = $(field[0]).closest('.row.mb-3');
+      if (!$row.length) return;
+      $row.addClass('pd-address-grid-item').css('order', field[1]);
+      if (field[2]) $row.addClass('pd-address-wide');
+    });
+    $grid.children('legend').css('order', 0);
+    $grid.find('.pd-address-grid-item').filter(function () { return $(this).find('input[name="default"]').length > 0; }).addClass('pd-address-default-options');
+    $('#form-address > .row').last().addClass('pd-address-actions');
+  });
+</script>
+<script>
+(function () {
+  'use strict';
+  var form = document.getElementById('form-address');
+  if (!form) return;
+
+  // Clear stale server feedback as soon as the customer corrects a field.
+  form.addEventListener('input', clearFieldError);
+  form.addEventListener('change', clearFieldError);
+
+  function clearFieldError(event) {
+    var field = event.target;
+    if (!field || !field.id) return;
+    field.classList.remove('is-invalid');
+    var feedback = document.getElementById('error-' + field.id.replace(/^input-/, ''));
+    if (feedback) {
+      feedback.textContent = '';
+      feedback.classList.remove('d-block');
+    }
+    var alertBox = document.getElementById('panda-address-save-alert');
+    if (alertBox && !form.querySelector('.invalid-feedback.d-block')) {
+      alertBox.classList.add('d-none');
+    }
+  }
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    // Prepare the same normalized address values as the legacy submit handler
+    // before serializing; this handler intentionally owns the AJAX submission.
+    var country = document.getElementById('input-country');
+    var province = document.getElementById('input-zone');
+    var ward = document.getElementById('input-ward');
+    var city = document.getElementById('input-city');
+    var provinceName = document.getElementById('input-province-name');
+    var wardName = document.getElementById('input-ward-name');
+    var postcode = document.getElementById('input-postcode');
+    var wardValue = ward ? ward.value : '';
+    var provinceValue = province ? province.value : '';
+    if (country) country.value = '230';
+    if (province) {
+      province.name = 'zone_id';
+      province.disabled = false;
+      if (provinceValue) province.value = provinceValue;
+    }
+    if (ward) {
+      ward.name = 'ward_code';
+      ward.disabled = false;
+      if (wardValue) ward.value = wardValue;
+    }
+    var provinceLabel = province && province.selectedIndex >= 0 ? province.options[province.selectedIndex].text : '';
+    if (city && provinceLabel) city.value = provinceLabel;
+    if (provinceName) provinceName.value = provinceLabel;
+    var wardLabel = ward && ward.selectedIndex >= 0 ? ward.options[ward.selectedIndex].text : '';
+    if (wardName) wardName.value = wardLabel;
+    if (postcode) postcode.value = '';
+    var phone = document.getElementById('input-telephone');
+    if (phone) phone.value = phone.value.replace(/\D/g, '');
+    var address2 = document.getElementById('input-address-2');
+    if (address2 && ward && ward.selectedIndex >= 0 && ward.value) {
+      var addressParts = ['Phường/Xã: ' + ward.options[ward.selectedIndex].text];
+      var hamlet = document.getElementById('input-hamlet');
+      var subhamlet = document.getElementById('input-subhamlet-name');
+      if (hamlet && hamlet.value.trim()) addressParts.push('Tổ dân phố/Khu phố/Thôn: ' + hamlet.value.trim());
+      if (subhamlet && subhamlet.value.trim()) addressParts.push('Xóm/Ấp: ' + subhamlet.value.trim());
+      address2.value = addressParts.join(' | ');
+    }
+
+    var button = form.querySelector('button[type="submit"]');
+    var originalButton = button ? button.innerHTML : '';
+    var alertBox = document.getElementById('panda-address-save-alert');
+
+    if (!alertBox) {
+      alertBox = document.createElement('div');
+      alertBox.id = 'panda-address-save-alert';
+      alertBox.className = 'alert d-none';
+      form.insertBefore(alertBox, form.firstChild);
+    }
+    alertBox.className = 'alert d-none';
+    alertBox.textContent = '';
+    form.querySelectorAll('.is-invalid').forEach(function (element) { element.classList.remove('is-invalid'); });
+    form.querySelectorAll('.invalid-feedback.d-block').forEach(function (element) { element.classList.remove('d-block'); });
+
+    if (button) {
+      button.disabled = true;
+      button.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Đang lưu địa chỉ...';
+    }
+
+    var payload = new URLSearchParams();
+    new FormData(form).forEach(function (value, key) { payload.append(key, value); });
+    // Read critical values from the original native form controls;
+    // keep them in the AJAX payload.
+    ['firstname', 'lastname', 'telephone', 'address_1', 'hamlet_name', 'subhamlet_name', 'default'].forEach(function (name) {
+      var control = name === 'default'
+        ? form.querySelector('[name="default"]:checked')
+        : form.querySelector('[name="' + name + '"]');
+      if (control && !control.disabled) payload.set(name, control.value);
+    });
+    // Always submit both keys. Disabled selects are omitted by FormData, so
+    // force their authoritative values into the request (empty means missing).
+    payload.set('zone_id', provinceValue);
+    payload.set('ward_code', wardValue);
+    payload.set('country_id', '230');
+    if (city) payload.set('city', city.value);
+    if (provinceName) payload.set('province_name', provinceName.value);
+    if (wardName) payload.set('ward_name', wardName.value);
+    if (address2) payload.set('address_2', address2.value);
+    if (postcode) payload.set('postcode', '');
+
+    fetch(form.action, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: payload.toString()
+    }).then(function (response) {
+      return response.text().then(function (body) {
+        try {
+          return JSON.parse(body);
+        } catch (error) {
+          if (response.redirected) throw new Error('Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại rồi lưu địa chỉ.');
+          throw new Error('Máy chủ không trả JSON (HTTP ' + response.status + '). Kiểm tra lại đường dẫn lưu địa chỉ.');
+        }
+      });
+    }).then(function (json) {
+      if (json.redirect) {
+        window.pdNavigateWithinShop(json.redirect);
+        return;
+      }
+
+      if (json.error) {
+        var messages = [];
+        var fieldErrors = 0;
+        if (typeof json.error === 'string') messages.push(json.error);
+        else Object.keys(json.error).forEach(function (key) {
+          var message = json.error[key];
+          if (key === 'warning') {
+            messages.push(message);
+            return;
+          }
+          var fieldId = 'input-' + key.replace(/_/g, '-');
+          var field = document.getElementById(fieldId);
+          var feedback = document.getElementById('error-' + key.replace(/_/g, '-'));
+          if (field) field.classList.add('is-invalid');
+          if (feedback) {
+            feedback.textContent = message;
+            feedback.classList.add('d-block');
+            fieldErrors++;
+          } else {
+            messages.push(message);
+          }
+        });
+        if (json._debug) {
+          messages.push('Thông tin kiểm tra (không gồm dữ liệu cá nhân): ' + JSON.stringify(json._debug));
+        }
+        if (messages.length || fieldErrors) {
+          alertBox.textContent = messages.join(' ') || 'Vui lòng kiểm tra lại các trường được đánh dấu.';
+          alertBox.className = 'alert alert-danger';
+        }
+        return;
+      }
+
+      alertBox.textContent = json.success || 'Đã lưu địa chỉ thành công.';
+      alertBox.className = 'alert alert-success';
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Đã lưu địa chỉ';
+      }
+      if (json.success && window.location.search.indexOf('return=checkout') !== -1) {
+        window.setTimeout(function () { window.pdNavigateWithinShop('{{ checkout|escape('js') }}'); }, 700);
+      }
+    }).catch(function (error) {
+      alertBox.textContent = error && error.message ? error.message : 'Network request failed';
+      alertBox.className = 'alert alert-danger';
+    }).finally(function () {
+      if (button && alertBox.classList.contains('alert-danger')) {
+        button.disabled = false;
+        button.innerHTML = originalButton;
+      }
+    });
+  }, true);
+})();
+</script>{{ footer }}

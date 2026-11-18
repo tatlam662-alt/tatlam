@@ -1,0 +1,16 @@
+<section class="vietnam-ecommerce-vietqr" aria-live="polite">
+  {% if not order_id %}
+    <p>{{ text_checkout_hint }}</p>
+  {% elseif qr_url %}
+    <p>{{ text_transfer_note }}</p>
+    <dl>
+      {% if bank_name %}<dt>{{ text_bank }}</dt><dd>{{ bank_name|escape }}</dd>{% endif %}
+      {% if account_name %}<dt>{{ text_account_name }}</dt><dd>{{ account_name|escape }}</dd>{% endif %}
+      <dt>{{ text_account_no }}</dt><dd>{{ account_no|escape }}</dd>
+      <dt>{{ text_order_reference }}</dt><dd>PANDA{{ order_id }}</dd>
+    </dl>
+    <img src="{{ qr_url|escape }}" alt="{{ text_qr_alt }}" width="240" height="240" loading="lazy">
+  {% else %}
+    <p>{{ text_qr_unavailable }}</p>
+  {% endif %}
+</section>

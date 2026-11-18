@@ -1,0 +1,61 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header"><div class="container-fluid"><h1>{{ heading_title }}</h1></div></div>
+  <div class="container-fluid">
+    {% if success %}<div class="alert{% if conversation_link %} alert-warning{% else %} alert-success{% endif %} alert-dismissible"><i class="fa-solid {% if conversation_link %}fa-triangle-exclamation{% else %}fa-circle-check{% endif %}"></i> {{ success|e }}{% if conversation_link %}<div class="mt-2">{{ text_conversation_link|e }} <a href="{{ conversation_link|e('html_attr') }}" rel="noreferrer">{{ conversation_link|e }}</a></div>{% endif %}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>{% endif %}
+    {% if error_warning %}<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> {{ error_warning }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>{% endif %}
+    <form method="get" action="index.php" class="row g-2 align-items-end mb-3">
+      <input type="hidden" name="route" value="catalog/product_question"/>
+      <input type="hidden" name="user_token" value="{{ user_token }}"/>
+      <div class="col-md-6"><label class="form-label" for="input-conversation-search">{{ text_search|e }}</label><input id="input-conversation-search" class="form-control" type="search" name="search" value="{{ search|e }}" placeholder="{{ text_search_placeholder|e }}"></div>
+      <div class="col-auto"><button class="btn btn-primary" type="submit">{{ text_search_button|e }}</button></div>
+      {% if search %}<div class="col-auto"><a class="btn btn-light" href="{{ search_url }}">{{ text_clear_search|e }}</a></div>{% endif %}
+    </form>
+    {% if questions %}
+      {% for item in questions %}
+        <div class="card mb-3"><div class="card-header d-flex flex-wrap justify-content-between gap-2"><strong>{{ item.product_name|default('')|e }}</strong><span>{{ item.date_added|e }}</span>{% if item.is_conversation %}<span class="badge text-bg-info">{{ text_conversation }}</span>{% if item.customer_hidden_at %}<span class="badge text-bg-warning">{{ text_customer_hidden|e }} · {{ item.customer_hidden_at|e }}</span>{% endif %}{% if item.unread %}<span class="badge text-bg-danger">{{ item.unread }} {{ text_unread }}</span>{% endif %}{% endif %}</div>
+          <div class="card-body"><p><strong>{{ item.author|e }}</strong>{% if item.email %} &lt;{{ item.email|e }}&gt;{% endif %} - {{ item.question|e }}</p>
+            {% if item.is_conversation %}
+              <div class="pd-admin-question-thread">
+                {% for message in item.messages %}
+                  <article class="border rounded p-2 mb-2"><strong>{% if message.sender_type == 'admin' %}{{ text_admin_message }}{% else %}{{ text_customer_message }}{% endif %}</strong><p class="mb-1">{{ message.message|e }}</p><small>{{ message.date_added|e }}</small></article>
+                {% endfor %}
+              </div>
+              {% if item.audit %}
+                <details class="mb-3"><summary>{{ text_archive_audit|e }}</summary>
+                  {% for event in item.audit %}<p class="small text-muted mb-1">{% if event.action == 'customer_hide' %}{{ text_customer_hide_action|e }}{% else %}{{ text_admin_restore_action|e }}{% endif %} · {{ event.actor_type|e }} #{{ event.actor_id }} · {{ event.date_added|e }}</p>{% endfor %}
+                </details>
+              {% endif %}
+            {% endif %}
+            <form method="post" action="{{ save }}">
+              <input type="hidden" name="question_id" value="{{ item.question_id }}"/>
+              <input type="hidden" name="search" value="{{ search|e }}"/>
+              {% if item.is_conversation %}
+                <input type="hidden" name="action" value="reply"/>
+                <div class="mb-3"><label class="form-label" for="message-{{ item.question_id }}">{{ text_reply }}</label><textarea id="message-{{ item.question_id }}" name="message" rows="3" class="form-control" maxlength="2000" {% if not can_modify %}readonly{% endif %}></textarea></div>
+              {% else %}
+                <div class="mb-3"><label class="form-label" for="answer-{{ item.question_id }}">{{ text_answer }}</label><textarea id="answer-{{ item.question_id }}" name="answer" rows="3" class="form-control" {% if not can_modify %}readonly{% endif %}>{{ item.answer|e }}</textarea></div>
+              {% endif %}
+              <div class="d-flex flex-wrap align-items-center gap-3">
+                {% if item.is_conversation %}<span class="text-muted">{{ text_private }}</span>
+                {% else %}<label class="form-check"><input class="form-check-input" type="checkbox" name="status" value="1"{% if item.status %} checked{% endif %}{% if not can_modify %} disabled{% endif %}/> {{ text_approved }}</label>
+                <span class="text-muted">{% if item.status %}{{ text_approved }}{% else %}{{ text_pending }}{% endif %}</span>{% endif %}
+                {% if can_modify %}<button class="btn btn-primary" type="submit">{% if item.is_conversation %}{{ text_send }}{% else %}{{ text_save }}{% endif %}</button>{% endif %}
+              </div>
+            </form>
+            {% if item.is_conversation and item.customer_hidden_at and can_modify %}
+              <form method="post" action="{{ save }}" class="mt-2">
+                <input type="hidden" name="question_id" value="{{ item.question_id }}"/>
+                <input type="hidden" name="action" value="restore"/>
+                <input type="hidden" name="search" value="{{ search|e }}"/>
+                <button class="btn btn-outline-primary btn-sm" type="submit">{{ text_restore|e }}</button>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}<div class="card"><div class="card-body">{{ text_empty }}</div></div>{% endif %}
+    <div class="row"><div class="col-sm-6 text-start">{{ pagination }}</div><div class="col-sm-6 text-end">{{ results }}</div></div>
+  </div>
+</div>
+{{ footer }}

@@ -1,0 +1,72 @@
+<?php
+// Heading
+$_['heading_title']     = 'Tìm kiếm';
+$_['heading_tag']       = 'Thẻ - ';
+
+// Text
+$_['text_search']       = 'Sản phẩm phù hợp với từ khóa';
+$_['text_keyword']      = 'Từ khóa';
+$_['text_category']     = 'Tất cả danh mục';
+$_['text_sub_category'] = 'Tìm trong danh mục con';
+$_['text_no_results']   = 'Không có sản phẩm phù hợp với từ khóa tìm kiếm.';
+$_['text_compare']      = 'So sánh sản phẩm (%s)';
+$_['text_sort']         = 'Sắp xếp';
+$_['text_default']      = 'Mặc định';
+$_['text_date_desc']      = 'Mới nhất';
+$_['text_name_asc']     = 'Tên (A - Z)';
+$_['text_name_desc']    = 'Tên (Z - A)';
+$_['text_price_asc']    = 'Giá (thấp đến cao)';
+$_['text_price_desc']   = 'Giá (cao đến thấp)';
+$_['text_rating_asc']   = 'Đánh giá (thấp nhất)';
+$_['text_rating_desc']  = 'Đánh giá (cao nhất)';
+$_['text_model_asc']    = 'Mã sản phẩm (A - Z)';
+$_['text_model_desc']   = 'Mã sản phẩm (Z - A)';
+$_['text_limit']        = 'Hiển thị';
+$_['text_filter_in_stock'] = 'Chỉ hiển thị sản phẩm còn hàng';
+
+// Entry
+$_['entry_search']      = 'Từ khóa tìm kiếm';
+$_['entry_description'] = 'Tìm trong mô tả sản phẩm';
+$_['text_search_eyebrow'] = 'PANDA SHOP · TÌM KIẾM';
+$_['text_search_found'] = 'Tìm thấy';
+$_['text_products_matching'] = 'sản phẩm phù hợp với từ khóa';
+$_['text_search_category_results'] = 'Đang hiển thị';
+$_['text_products'] = 'sản phẩm';
+$_['text_search_intro'] = 'Tìm nhanh sản phẩm, danh mục và thiết bị bạn đang cần.';
+$_['text_find_products'] = 'TÌM SẢN PHẨM';
+$_['text_search_keyword'] = 'Từ khóa tìm kiếm';
+$_['text_clear_search'] = 'Xóa bộ lọc';
+$_['text_clear_keyword'] = 'Xóa từ khóa';
+$_['text_product_category'] = 'Danh mục sản phẩm';
+$_['text_popular_keywords'] = 'Từ khóa phổ biến';
+$_['text_results'] = 'KẾT QUẢ';
+$_['text_matching_products'] = 'Sản phẩm phù hợp';
+$_['text_search_result_controls'] = 'Điều khiển kết quả tìm kiếm';
+$_['text_view_type'] = 'Kiểu hiển thị';
+$_['text_grid_view'] = 'Dạng lưới';
+$_['text_list_view'] = 'Dạng danh sách';
+$_['text_compare_button'] = 'So sánh';
+$_['text_no_matching_products'] = 'Chưa tìm thấy sản phẩm phù hợp';
+$_['text_search_suggestions_hint'] = 'Thử từ khóa ngắn hơn, kiểm tra chính tả hoặc chọn một từ khóa phổ biến bên dưới.';
+$_['text_clear_and_search_again'] = 'Xóa bộ lọc và tìm lại';
+$_['text_search_prompt'] = 'Bạn đang tìm món đồ nào?';
+$_['text_search_prompt_hint'] = 'Nhập tên sản phẩm hoặc chọn từ khóa phổ biến để xem các sản phẩm mới nhất.';
+$_['text_enter_search_keyword'] = 'Vui lòng nhập từ khóa tìm kiếm.';
+$_['text_new_arrivals_title'] = 'Hàng mới về';
+$_['text_arrivals_eyebrow'] = 'MỚI NHẤT TẠI PANDASHOP';
+$_['text_arrivals_intro'] = 'Khám phá những sản phẩm vừa cập bến, cập nhật mới nhất từ các thương hiệu bạn yêu thích.';
+$_['text_arrivals_updated'] = 'Danh sách đổi mới mỗi 2 ngày';
+$_['text_arrivals_authentic'] = 'Sản phẩm chính hãng';
+$_['text_arrivals_categories'] = 'Khám phá theo danh mục';
+$_['text_arrivals_all'] = 'Tất cả sản phẩm mới';
+$_['text_arrivals_collection'] = 'BỘ SƯU TẬP MỚI';
+$_['text_arrivals_badge'] = 'Mới về';
+$_['text_arrivals_empty_title'] = 'Chưa có sản phẩm trong danh mục này';
+$_['text_arrivals_empty_description'] = 'Hãy xem các danh mục khác để khám phá sản phẩm mới vừa được cập nhật.';
+$_['text_products'] = 'sản phẩm';
+$_['text_arrivals_random_sort'] = 'Khám phá ngẫu nhiên';
+$_['text_suggestion_loading'] = 'Đang tìm sản phẩm…';
+$_['text_suggestion_empty'] = 'Không tìm thấy sản phẩm hoặc danh mục phù hợp.';
+$_['text_suggestion_error'] = 'Không thể tải gợi ý. Hãy thử tìm kiếm.';
+$_['text_suggestion_products'] = 'Sản phẩm';
+$_['text_suggestion_categories'] = 'Danh mục';

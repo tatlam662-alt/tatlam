@@ -1,0 +1,44 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header"><div class="container-fluid">
+    <div class="float-end">
+      <button type="submit" form="form-vietnam-ecommerce" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+      <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+    </div>
+    <h1>{{ heading_title }}</h1>
+    <ol class="breadcrumb"><li class="breadcrumb-item"><a href="index.php?route=common/dashboard&amp;user_token={{ user_token }}">{{ text_home }}</a></li><li class="breadcrumb-item"><a href="{{ back }}">{{ text_extension }}</a></li><li class="breadcrumb-item">{{ heading_title }}</li></ol>
+  </div></div>
+  <div class="container-fluid">
+    {% if error_warning %}<div class="alert alert-danger"><i class="fa-solid fa-circle-exclamation"></i> {{ error_warning }}</div>{% endif %}
+    {% if success %}<div class="alert alert-success"><i class="fa-solid fa-check"></i> {{ success }}</div>{% endif %}
+    <div class="alert alert-info">{{ text_install }}: <a class="btn btn-sm btn-outline-primary" href="{{ install }}">{{ text_install }}</a></div>
+    <form id="form-vietnam-ecommerce" action="{{ save }}" method="post">
+      <div class="card"><div class="card-header"><i class="fa-solid fa-truck"></i> {{ text_shipping }}</div><div class="card-body">
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_ghtk_status }}</label><div class="col-sm-9"><select name="shipping_ghtk_status" class="form-select"><option value="1"{% if shipping_ghtk_status %} selected{% endif %}>{{ text_enabled }}</option><option value="0"{% if not shipping_ghtk_status %} selected{% endif %}>{{ text_disabled }}</option></select></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_ghtk_token }}</label><div class="col-sm-9"><input type="password" name="shipping_ghtk_token" value="" autocomplete="new-password" class="form-control" placeholder="{% if ghtk_token_configured %}{{ text_secret_kept }}{% endif %}"></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_pick_province }}</label><div class="col-sm-9"><input name="shipping_ghtk_pick_province" value="{{ shipping_ghtk_pick_province|escape }}" class="form-control"></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_pick_district }}</label><div class="col-sm-9"><input name="shipping_ghtk_pick_district" value="{{ shipping_ghtk_pick_district|escape }}" class="form-control"></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_default_weight }}</label><div class="col-sm-9"><input type="number" min="1" name="shipping_ghtk_default_weight" value="{{ shipping_ghtk_default_weight|escape }}" class="form-control"></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_fallback_enabled }}</label><div class="col-sm-9"><select name="shipping_ghtk_fallback_enabled" class="form-select"><option value="1"{% if shipping_ghtk_fallback_enabled %} selected{% endif %}>{{ text_enabled }}</option><option value="0"{% if not shipping_ghtk_fallback_enabled %} selected{% endif %}>{{ text_disabled }}</option></select></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_fallback_fee }}</label><div class="col-sm-9"><input type="number" min="0" name="shipping_ghtk_fallback_fee" value="{{ shipping_ghtk_fallback_fee|escape }}" class="form-control"></div></div>
+        <input type="hidden" name="shipping_ghtk_tax_class_id" value="0"><input type="hidden" name="shipping_ghtk_sort_order" value="1">
+      </div></div>
+      <div class="card"><div class="card-header"><i class="fa-solid fa-qrcode"></i> {{ text_payment }}</div><div class="card-body">
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_vietqr_status }}</label><div class="col-sm-9"><select name="payment_vietqr_status" class="form-select"><option value="1"{% if payment_vietqr_status %} selected{% endif %}>{{ text_enabled }}</option><option value="0"{% if not payment_vietqr_status %} selected{% endif %}>{{ text_disabled }}</option></select></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_bank_id }}</label><div class="col-sm-9"><input name="payment_vietqr_bank_id" value="{{ payment_vietqr_bank_id|escape }}" class="form-control"></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_bank_name }}</label><div class="col-sm-9"><input name="payment_vietqr_bank_name" value="{{ payment_vietqr_bank_name|escape }}" class="form-control"></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_account_no }}</label><div class="col-sm-9"><input name="payment_vietqr_account_no" value="{{ payment_vietqr_account_no|escape }}" class="form-control"></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_account_name }}</label><div class="col-sm-9"><input name="payment_vietqr_account_name" value="{{ payment_vietqr_account_name|escape }}" class="form-control"></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_webhook_secret }}</label><div class="col-sm-9"><input type="password" name="payment_vietqr_webhook_secret" value="" autocomplete="new-password" class="form-control" placeholder="{% if webhook_secret_configured %}{{ text_secret_kept }}{% endif %}"></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_pending_status }}</label><div class="col-sm-9"><input type="number" min="0" name="payment_vietqr_pending_status_id" value="{{ payment_vietqr_pending_status_id|escape }}" class="form-control"></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_paid_status }}</label><div class="col-sm-9"><input type="number" min="1" name="payment_vietqr_paid_status_id" value="{{ payment_vietqr_paid_status_id|escape }}" class="form-control"></div></div>
+        <input type="hidden" name="payment_vietqr_sort_order" value="1">
+      </div></div>
+      <div class="card"><div class="card-header"><i class="fa-brands fa-telegram"></i> {{ text_telegram }}</div><div class="card-body">
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_telegram_token }}</label><div class="col-sm-9"><input type="password" name="vietnam_ecommerce_telegram_bot_token" value="" autocomplete="new-password" class="form-control" placeholder="{% if telegram_token_configured %}{{ text_secret_kept }}{% endif %}"></div></div>
+        <div class="row mb-3"><label class="col-sm-3 col-form-label">{{ entry_telegram_chat }}</label><div class="col-sm-9"><input name="vietnam_ecommerce_telegram_chat_id" value="{{ vietnam_ecommerce_telegram_chat_id|escape }}" class="form-control"></div></div>
+      </div></div>
+    </form>
+  </div>
+</div>
+{{ footer }}

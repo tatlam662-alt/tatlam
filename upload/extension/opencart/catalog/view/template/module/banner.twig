@@ -1,0 +1,131 @@
+<section class="pd-hero-layout" aria-label="{{ text_explore_store }}">
+  <nav class="pd-hero-categories" aria-label="{{ text_featured_categories }}">
+    <h2>{{ text_catalog_categories }}</h2>
+    <div class="pd-hero-category-list">
+    {% for category in categories %}
+      {% set category_icon = 'fa-layer-group' %}
+      {% if 'Flycam' in category.name or 'DJI' in category.name %}{% set category_icon = 'fa-paper-plane' %}{% elseif 'Camera' in category.name or 'Gimbal' in category.name %}{% set category_icon = 'fa-camera' %}{% elseif 'Gaming' in category.name or 'Bàn phím' in category.name or 'Chuột' in category.name %}{% set category_icon = 'fa-keyboard' %}{% elseif 'PC' in category.name or 'Linh kiện' in category.name %}{% set category_icon = 'fa-microchip' %}{% elseif 'Tai nghe' in category.name or 'Âm thanh' in category.name %}{% set category_icon = 'fa-headphones' %}{% endif %}
+      <div class="pd-hero-category-item">
+        <a href="{{ category.href }}"><i class="fa-solid {{ category_icon }}" aria-hidden="true"></i><span>{{ category.name }}</span>{% if category.children %}<i class="fa-solid fa-chevron-right" aria-hidden="true"></i>{% endif %}</a>
+        {% if category.children %}
+          <section class="pd-hero-mega" aria-label="{{ text_catalog_categories }}: {{ category.name }}">
+            <header class="pd-hero-mega-header"><span>{{ text_catalog_categories }}</span><strong>{{ category.name }}</strong><a href="{{ category.href }}">{{ text_view_all }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></header>
+            <div class="pd-hero-mega-columns">
+              <section class="pd-hero-mega-column">
+                <h3>{{ text_product_lines }}</h3>
+                <div class="pd-hero-mega-links">
+                  {% for child in category.children %}<a href="{{ child.href }}"><span>{{ child.name }}</span><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></a>{% endfor %}
+                </div>
+              </section>
+              <section class="pd-hero-mega-column pd-hero-mega-prices">
+                <h3>{{ text_reference_prices }}</h3>
+                {% for price in category.reference_prices %}<a href="{{ price.href }}">{{ price.name }}</a>{% endfor %}
+                <small>{{ text_budget_help }}</small>
+              </section>
+            </div>
+          </section>
+        {% endif %}
+      </div>
+    {% endfor %}
+    </div>
+  </nav>
+
+<div id="carousel-banner-{{ module }}" class="carousel slide pd-home-carousel" data-bs-ride="carousel">
+  {% if indicators and banners|length > 1 %}
+    <div class="carousel-indicators">
+      {% for banner in banners %}
+        <button type="button" data-bs-target="#carousel-banner-{{ module }}" data-bs-slide-to="{{ loop.index0 }}"{% if loop.first %} class="active" aria-current="true"{% endif %} aria-label="Slide {{ loop.index }}"></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="carousel-inner">
+    {% for banner in banners %}
+      {% set hero_copy = banner.title|split('||') %}
+      {% if hero_copy|length >= 3 %}
+        {% set hero_kicker = hero_copy[0] %}
+        {% set hero_title = hero_copy[1] %}
+        {% set hero_cta = hero_copy[2] %}
+      {% else %}
+        {% set hero_kicker = 'PanDaShop · DJI / CREATOR / GAMING' %}
+        {% set hero_title = hero_copy[0] %}
+        {% set hero_cta = hero_copy[1]|default(text_explore) %}
+      {% endif %}
+      <div class="carousel-item{% if loop.first %} active{% endif %}">
+        <a href="{{ banner.link }}" class="pd-home-hero">
+          <img src="{{ banner.image }}" alt="{{ hero_title }}" class="pd-home-hero-image"{% if loop.first %} fetchpriority="high"{% else %} loading="lazy"{% endif %}/>
+          <span class="pd-home-hero-scrim" aria-hidden="true"></span>
+          <span class="pd-home-hero-copy">
+            <span class="pd-home-hero-kicker">{{ hero_kicker }}</span>
+            <span class="pd-home-hero-title">{{ hero_title }}</span>
+            <span class="pd-home-hero-cta">{{ hero_cta }} <i class="fa-solid fa-arrow-right"></i></span>
+          </span>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+  {% if controls and banners|length > 1 %}
+    <button type="button" class="carousel-control-prev" data-bs-target="#carousel-banner-{{ module }}" data-bs-slide="prev" aria-label="{{ text_previous_slide }}">
+      <span class="pd-home-carousel-control"><i class="fa-solid fa-chevron-left"></i></span>
+    </button>
+    <button type="button" class="carousel-control-next" data-bs-target="#carousel-banner-{{ module }}" data-bs-slide="next" aria-label="{{ text_next_slide }}">
+      <span class="pd-home-carousel-control"><i class="fa-solid fa-chevron-right"></i></span>
+    </button>
+  {% endif %}
+</div>
+  <aside class="pd-hero-promos" aria-label="{{ text_promotions }}">
+    <a class="pd-hero-promo pd-hero-promo-new" href="{{ new_product_href }}">
+      <span class="pd-hero-promo-icon"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span>
+      <span class="pd-hero-promo-label">{{ text_just_updated }}</span>
+      <strong>{{ text_latest_arrivals }}</strong>
+      <span class="pd-hero-promo-link">{{ text_explore }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+    </a>
+    <a class="pd-hero-promo pd-hero-promo-deal" href="{{ special_href }}">
+      <span class="pd-hero-promo-icon"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span>
+      <span class="pd-hero-promo-label">{{ text_daily_offer }}</span>
+      <strong>{{ text_technology_deals }}</strong>
+      <span class="pd-hero-promo-link">{{ text_hunt_deals }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+    </a>
+  </aside>
+</section>
+<section class="pd-home-departments" aria-labelledby="home-departments-title">
+  <div class="pd-home-departments-heading">
+    <div>
+      <span class="pd-home-catalog-eyebrow">{{ text_shop_by_interest }}</span>
+      <h2 id="home-departments-title" class="pd-section-title">{{ text_explore_departments }}</h2>
+      <p>{{ text_department_intro }}</p>
+    </div>
+  </div>
+  <div class="pd-home-department-grid">
+    {% for category in categories %}
+      {% set category_icon = 'fa-layer-group' %}
+      {% if 'Flycam' in category.name or 'Drone' in category.name %}{% set category_icon = 'fa-paper-plane' %}{% elseif 'Camera' in category.name or 'Gimbal' in category.name %}{% set category_icon = 'fa-camera' %}{% elseif 'PC' in category.name or 'Linh kiện' in category.name %}{% set category_icon = 'fa-microchip' %}{% elseif 'Gaming' in category.name or 'phím' in category.name or 'Chuột' in category.name %}{% set category_icon = 'fa-keyboard' %}{% elseif 'Âm thanh' in category.name or 'Tai nghe' in category.name %}{% set category_icon = 'fa-headphones' %}{% elseif 'Màn hình' in category.name %}{% set category_icon = 'fa-display' %}{% endif %}
+      <a class="pd-home-department-card" href="{{ category.href }}">
+        <span class="pd-home-department-icon"><i class="fa-solid {{ category_icon }}" aria-hidden="true"></i></span>
+        <span class="pd-home-department-copy"><strong>{{ category.name }}</strong><small>{{ text_explore_products }}</small></span>
+        <i class="fa-solid fa-arrow-up-right-from-square pd-home-department-arrow" aria-hidden="true"></i>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% if home_brands %}
+  <section class="pd-home-brand-wall" aria-label="{{ text_featured_brands }}">
+    <div class="pd-home-brand-heading"><span class="pd-home-catalog-eyebrow">{{ text_brands_heading }}</span><span>{{ text_explore_brands }}</span></div>
+    <div class="pd-home-brand-list">
+      {% for brand in home_brands %}
+        <a class="pd-home-brand-chip" href="{{ brand.href }}">
+          {% if brand.image %}<img src="{{ brand.image }}" alt="{{ brand.name }}" loading="lazy"/>{% endif %}
+          <span>{{ brand.name }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+<script type="text/javascript"><!--
+$(document).ready(function() {
+    new bootstrap.Carousel(document.querySelector('#carousel-banner-{{ module }}'), {
+        ride: 'carousel',
+        interval: {{ interval|escape('js') }},
+        wrap: true
+    });
+});
+//--></script>

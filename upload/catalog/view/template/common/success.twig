@@ -1,0 +1,113 @@
+{{ header }}
+<div id="common-success" class="container pd-success-page">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      {% for breadcrumb in breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{ breadcrumb.href|escape }}">{{ breadcrumb.text|escape }}</a></li>
+      {% endfor %}
+    </ol>
+  </nav>
+
+  <div class="row">
+    {{ column_left }}
+    <main id="content" class="col pd-success-content">
+      {{ content_top }}
+
+      {% if order_successful %}
+        <section class="pd-success-hero pd-success-hero--celebration" aria-labelledby="pd-success-title">
+          <div class="pd-success-hero__icon"><i class="fa-solid fa-check" aria-hidden="true"></i></div>
+          <span class="pd-success-kicker">PANDASHOP · ĐẶT HÀNG HOÀN TẤT</span>
+          <h1 id="pd-success-title">Đặt hàng thành công!</h1>
+          <p>Cảm ơn bạn đã mua sắm tại <strong>PanDaShop</strong>. Hệ thống đã ghi nhận đơn hàng của bạn.</p>
+          <div class="pd-success-order-pill"><span>Mã đơn hàng:</span><strong>#{{ order_id }}</strong><i aria-hidden="true">·</i><small>{{ order_date|escape }}</small></div>
+
+          {% if earned_coins %}
+            <div class="pd-success-coins pd-success-coins--hero">
+              <span class="pd-success-coins__icon"><i class="fa-solid fa-coins" aria-hidden="true"></i></span>
+              <div><small>ĐIỂM THƯỞNG ƯỚC TÍNH</small><strong>+{{ earned_coins }} PanDaCoins</strong><p>Tạm tính theo mỗi 100.000đ tiền sản phẩm.</p></div>
+            </div>
+          {% endif %}
+
+          <div class="pd-success-stepper" aria-label="Tiến trình đơn hàng">
+            <div class="pd-success-step is-current"><span><i class="fa-solid fa-file-circle-check" aria-hidden="true"></i></span><strong>Đã đặt hàng</strong></div>
+            <div class="pd-success-step"><span><i class="fa-solid fa-box" aria-hidden="true"></i></span><strong>Đã xác nhận</strong></div>
+            <div class="pd-success-step"><span><i class="fa-solid fa-truck-fast" aria-hidden="true"></i></span><strong>Đang giao hàng</strong></div>
+            <div class="pd-success-step"><span><i class="fa-solid fa-house-circle-check" aria-hidden="true"></i></span><strong>Giao thành công</strong></div>
+          </div>
+        </section>
+
+        <div class="pd-success-grid pd-success-grid--details">
+          <section class="pd-success-panel pd-success-products" aria-labelledby="pd-success-products-title">
+            <div class="pd-success-panel__heading">
+              <div><span class="pd-success-overline">ĐƠN HÀNG #{{ order_id }}</span><h2 id="pd-success-products-title">Chi tiết sản phẩm đã đặt</h2></div>
+              <span class="pd-success-status"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> {{ order_status|escape }}</span>
+            </div>
+            <div class="pd-success-table-wrap">
+              <table class="pd-success-table">
+                <thead><tr><th>Sản phẩm</th><th class="is-center">Số lượng</th><th class="is-right">Đơn giá</th><th class="is-right">Thành tiền</th></tr></thead>
+                <tbody>
+                  {% for product in products %}
+                    <tr>
+                      <td><div class="pd-success-table-product">
+                        {% if product.thumb %}<a class="pd-success-product__image" href="{{ product.href|escape }}"><img src="{{ product.thumb|escape }}" alt="{{ product.name|escape }}" loading="lazy" /></a>{% endif %}
+                        <div><a class="pd-success-product__name" href="{{ product.href|escape }}">{{ product.name|escape }}</a>{% if product.model %}<small>Mã SP: {{ product.model|escape }}</small>{% endif %}</div>
+                      </div></td>
+                      <td class="is-center">{{ product.quantity }}</td>
+                      <td class="is-right">{{ product.price|escape }}</td>
+                      <td class="is-right is-cyan">{{ product.total|escape }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            {% if totals %}
+              <div class="pd-success-totals">
+                {% for total in totals %}
+                  <div class="pd-success-total-row{% if loop.last %} is-grand{% endif %}"><span>{{ total.title|escape }}</span><strong>{{ total.text|escape }}</strong></div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="pd-success-totals"><div class="pd-success-total-row is-grand"><span>Tổng cộng</span><strong>{{ order_summary.total|escape }}</strong></div></div>
+            {% endif %}
+          </section>
+
+          <aside class="pd-success-aside" aria-label="Thông tin giao hàng và thanh toán">
+            <section class="pd-success-panel pd-success-recipient">
+              <div class="pd-success-panel__heading"><div><span class="pd-success-overline">THÔNG TIN GIAO NHẬN</span><h2>Thông tin nhận hàng</h2></div><i class="fa-solid fa-truck-ramp-box pd-success-panel-icon" aria-hidden="true"></i></div>
+              <div class="pd-success-info-block"><span><i class="fa-regular fa-user" aria-hidden="true"></i> Người nhận</span><strong>{{ customer_name|escape }}</strong>{% if telephone %}<small><i class="fa-solid fa-phone" aria-hidden="true"></i> {{ telephone|escape }}</small>{% endif %}{% if email %}<small><i class="fa-regular fa-envelope" aria-hidden="true"></i> {{ email|escape }}</small>{% endif %}</div>
+              <div class="pd-success-info-block"><span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Địa chỉ giao hàng</span><strong>{{ shipping_address ? shipping_address|escape : 'Đơn hàng không yêu cầu giao hàng' }}</strong></div>
+              <div class="pd-success-info-block"><span><i class="fa-regular fa-credit-card" aria-hidden="true"></i> Phương thức thanh toán</span><strong>{{ payment_method ? payment_method|escape : 'Đang cập nhật' }}</strong></div>
+              {% if shipping_method %}<div class="pd-success-info-block"><span><i class="fa-solid fa-truck-fast" aria-hidden="true"></i> Vận chuyển</span><strong>{{ shipping_method|escape }}</strong></div>{% endif %}
+              <div class="pd-success-actions">
+                <a href="{{ continue|escape }}" class="btn btn-cyan"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Tiếp tục mua sắm</a>
+                {% if account_orders %}<a href="{{ account_orders|escape }}" class="btn btn-outline-secondary"><i class="fa-solid fa-receipt" aria-hidden="true"></i> Xem lịch sử đơn hàng</a>{% endif %}
+                {% if guest_order_lookup %}<a href="{{ guest_order_lookup|escape }}" class="btn btn-outline-secondary"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> {{ text_guest_order_lookup|default('Tra cứu đơn hàng')|escape }}</a>{% endif %}
+              </div>
+            </section>
+          </aside>
+        </div>
+      {% elseif text_message %}
+        <section class="pd-success-empty pd-system-notice{% if is_logout %} pd-system-notice--logout{% endif %}" aria-labelledby="pd-system-notice-title">
+          <span class="pd-system-notice__icon" aria-hidden="true"><i class="fa-solid fa-circle-check"></i></span>
+          <h1 id="pd-system-notice-title">{{ heading_title|default('Thông báo hệ thống')|escape }}</h1>
+          <div class="pd-system-notice__message">{{ text_message }}</div>
+          <div class="pd-system-notice__actions">
+            <a href="{{ continue|escape }}" class="pd-system-notice__continue">TIẾP TỤC <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          </div>
+        </section>
+      {% else %}
+        <section class="pd-success-empty">
+          <span class="pd-success-empty__icon"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
+          <h1>Không tìm thấy đơn hàng gần đây</h1>
+          <p>Để bảo vệ thông tin mua hàng, trang này chỉ hiển thị đơn hàng vừa được đặt trong phiên hiện tại.</p>
+          <a href="{{ continue|escape }}" class="btn btn-cyan">Tiếp tục mua sắm</a>
+        </section>
+      {% endif %}
+
+      {{ content_bottom }}
+    </main>
+    {{ column_right }}
+  </div>
+</div>
+{{ footer }}

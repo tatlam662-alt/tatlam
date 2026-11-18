@@ -1,0 +1,30 @@
+{% if products %}
+  {% if active_filters %}
+    <div id="pd-active-filters" class="pd-active-filters" aria-label="{{ text_active_filters }}">
+      <span class="pd-active-filters-label">{{ text_active_filters }}:</span>
+      {% for active_filter in active_filters %}<a href="{{ active_filter.href }}" class="pd-active-filter-chip">{{ active_filter.name }} <i class="fa-solid fa-xmark" aria-hidden="true"></i></a>{% endfor %}
+      <a href="{{ clear_filters }}" class="pd-filter-clear">{{ text_clear_filters }}</a>
+    </div>
+  {% endif %}
+
+  <div id="product-list" class="pd-product-grid row g-3 row-cols-2 row-cols-md-3 row-cols-xl-4 mb-4">
+    {% for product in products %}
+      <div class="col mb-3">{{ product }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="row align-items-center py-3 border-top mt-2">
+    <div class="col-sm-6 text-start mb-2 mb-sm-0">{{ pagination }}</div>
+    <div class="col-sm-6 text-sm-end text-muted small">{{ results }}</div>
+  </div>
+{% else %}
+  <div class="pd-empty-state text-center py-5 p-4 my-3">
+    <i class="fa-solid fa-box-open" aria-hidden="true"></i>
+    <h2>{{ text_no_products_found }}</h2>
+    <p>{{ text_try_other_filters }}</p>
+    <div class="d-flex justify-content-center flex-wrap gap-2 mt-3">
+      {% if clear_filters %}<a href="{{ clear_filters }}" class="btn btn-nx-outline">{{ text_clear_filters }}</a>{% endif %}
+      <a href="{{ continue }}" class="btn btn-nx-primary">{{ text_return_home }}</a>
+    </div>
+  </div>
+{% endif %}

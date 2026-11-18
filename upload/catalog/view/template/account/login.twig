@@ -1,0 +1,101 @@
+{{ header }}
+<div id="account-login" class="container pd-login-page">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb pd-login-breadcrumb">
+      {% for breadcrumb in breadcrumbs %}
+        {% if loop.last %}
+          <li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.text }}</li>
+        {% else %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+  </nav>
+
+  {% if success %}
+    <div class="alert alert-success alert-dismissible pd-login-alert" role="status"><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>{{ success }}</span><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ text_close }}"></button></div>
+  {% endif %}
+  {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible pd-login-alert" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span>{{ error_warning }}</span><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ text_close }}"></button></div>
+  {% endif %}
+
+  <div class="pd-login-layout">
+    <section class="pd-login-panel" aria-labelledby="pd-login-title">
+      <div class="pd-login-panel-heading">
+        <span class="pd-login-panel-icon" aria-hidden="true"><i class="fa-solid fa-arrow-right-to-bracket"></i></span>
+        <div>
+          <span class="pd-login-eyebrow">{{ text_member_badge }}</span>
+          <h1 id="pd-login-title">{{ heading_title }}</h1>
+        </div>
+      </div>
+      <p class="pd-login-panel-copy">{{ text_login_intro }}</p>
+
+      <form id="form-login" action="{{ login }}" method="post" data-oc-toggle="ajax">
+        <div class="mb-4">
+          <label for="input-email" class="form-label">{{ entry_email }}</label>
+          <div class="pd-login-field">
+            <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+            <input type="email" name="email" value="{{ email }}" placeholder="email@example.com" id="input-email" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+          </div>
+          <div id="error-email" class="invalid-feedback"></div>
+        </div>
+
+        <div class="mb-3">
+          <div class="pd-login-label-row">
+            <label for="input-password" class="form-label">{{ entry_password }}</label>
+            <a href="{{ forgotten }}">{{ text_forgotten }}</a>
+          </div>
+          <div class="pd-login-field pd-login-password-field">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            <input type="password" name="password" value="" placeholder="{{ entry_password }}" id="input-password" autocomplete="current-password" required>
+            <button type="button" class="pd-login-password-toggle" id="btn-toggle-password" aria-label="{{ text_show_password }}" aria-pressed="false"><i class="fa-regular fa-eye" aria-hidden="true"></i></button>
+          </div>
+          <div id="error-password" class="invalid-feedback"></div>
+        </div>
+
+        {% if redirect %}
+          <input type="hidden" name="redirect" value="{{ redirect }}">
+        {% endif %}
+        <button type="submit" class="pd-login-submit">
+          <span>{{ button_login }}</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </button>
+        <div class="pd-login-secure-note"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span>{{ text_login_secure }}</span></div>
+      </form>
+    </section>
+
+    <section class="pd-login-intro" aria-labelledby="pd-login-welcome">
+      <div class="pd-login-orbit pd-login-orbit-one" aria-hidden="true"></div>
+      <div class="pd-login-orbit pd-login-orbit-two" aria-hidden="true"></div>
+      <div class="pd-login-brandmark" aria-hidden="true"><i class="fa-solid fa-user-plus"></i></div>
+      <span class="pd-login-eyebrow">{{ text_member_welcome }}</span>
+      <h2 id="pd-login-welcome">{{ text_new_customer_question }}</h2>
+      <p class="pd-login-lead">{{ text_register_benefit_intro }}</p>
+      <div class="pd-login-benefits">
+        <div><i class="fa-solid fa-bolt" aria-hidden="true"></i><span>{{ text_benefit_fast_checkout }}</span></div>
+        <div><i class="fa-solid fa-box-open" aria-hidden="true"></i><span>{{ text_benefit_order_tracking }}</span></div>
+        <div><i class="fa-solid fa-heart" aria-hidden="true"></i><span>{{ text_benefit_wishlist }}</span></div>
+      </div>
+      <div class="pd-login-register">
+        <div><strong>{{ text_new_customer }}</strong><span>{{ text_register_account }}</span></div>
+        <a href="{{ register }}" class="pd-login-register-link">{{ button_continue }}<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </section>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var toggle = document.getElementById('btn-toggle-password');
+  var password = document.getElementById('input-password');
+
+  if (toggle && password) {
+    toggle.addEventListener('click', function () {
+      var show = password.type === 'password';
+      password.type = show ? 'text' : 'password';
+      toggle.setAttribute('aria-pressed', show ? 'true' : 'false');
+      toggle.setAttribute('aria-label', show ? '{{ text_hide_password|e('js') }}' : '{{ text_show_password|e('js') }}');
+      toggle.innerHTML = show ? '<i class="fa-regular fa-eye-slash" aria-hidden="true"></i>' : '<i class="fa-regular fa-eye" aria-hidden="true"></i>';
+    });
+  }
+});
+</script>
+{{ footer }}

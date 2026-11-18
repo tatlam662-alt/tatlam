@@ -1,0 +1,12 @@
+{% if products %}
+  <div class="pd-wishlist-grid">
+    {% for product in products %}<div class="pd-wishlist-grid-item">{{ product }}</div>{% endfor %}
+  </div>
+{% else %}
+  <section class="pd-wishlist-empty">
+    <span class="pd-wishlist-empty-icon" aria-hidden="true"><i class="fa-regular fa-heart"></i></span>
+    <h2>{{ text_no_results }}</h2>
+    <p>{{ text_wishlist_empty_hint }}</p>
+    <a href="{{ continue }}" class="btn pd-btn-neon">{{ button_explore_products }} <i class="fa-solid fa-arrow-right ms-1" aria-hidden="true"></i></a>
+  </section>
+{% endif %}

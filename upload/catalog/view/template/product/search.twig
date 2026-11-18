@@ -1,0 +1,200 @@
+{{ header }}
+<main id="product-search" class="container pd-standard-page{% if is_new_arrivals %} pd-new-arrivals-page{% endif %}">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+
+  {% if is_new_arrivals %}
+    <section class="pd-arrivals-hero">
+      <div class="pd-arrivals-hero-copy">
+        <span class="pd-arrivals-eyebrow"><i class="fa-solid fa-box-open" aria-hidden="true"></i> {{ text_arrivals_eyebrow }}</span>
+        <h1>{{ heading_title|escape }}</h1>
+        <p>{{ text_arrivals_intro }}</p>
+        <div class="pd-arrivals-proof"><span><i class="fa-solid fa-box-open" aria-hidden="true"></i> {{ text_arrivals_updated }}</span><span><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> {{ text_arrivals_authentic }}</span></div>
+      </div>
+      <div class="pd-arrivals-hero-art" aria-hidden="true"><span class="pd-arrivals-orbit"></span><i class="fa-solid fa-box-open"></i><span class="pd-arrivals-spark pd-arrivals-spark-one">+</span><span class="pd-arrivals-spark pd-arrivals-spark-two">+</span></div>
+      <div class="pd-arrivals-count"><strong>{{ product_count }}</strong><span>{{ text_products }}</span></div>
+    </section>
+    <nav class="pd-arrivals-categories" aria-label="{{ text_arrivals_categories }}">
+      <span class="pd-arrivals-categories-label">{{ text_arrivals_categories }}</span>
+      <a class="pd-arrivals-chip{% if not category_id %} is-active{% endif %}" href="{{ search_home }}">{{ text_arrivals_all }}</a>
+      {% for category in new_arrivals_categories %}<a class="pd-arrivals-chip{% if category.active %} is-active{% endif %}" href="{{ category.href }}">{{ category.name }}</a>{% endfor %}
+    </nav>
+  {% else %}
+    <div class="pd-search-hero">
+      <div class="pd-search-hero-copy">
+        <span class="pd-search-eyebrow"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> {{ text_search_eyebrow }}</span>
+        <h1>{{ heading_title|escape }}</h1>
+        {% if search %}
+          <p>{{ text_search_found }} <strong>{{ product_count }}</strong> {{ text_products_matching }} <strong>“{{ search|escape }}”</strong>.</p>
+        {% elseif category_id %}
+          <p>{{ text_search_category_results }} <strong>{{ product_count }}</strong> {{ text_products }}</p>
+        {% else %}
+          <p>{{ text_search_intro }}</p>
+        {% endif %}
+      </div>
+      <div class="pd-search-hero-icon" aria-hidden="true"><i class="fa-solid fa-box-open"></i></div>
+    </div>
+  {% endif %}
+
+  {% if not is_new_arrivals %}
+  <section class="pd-search-panel" aria-labelledby="pd-search-form-title">
+    <div class="pd-search-panel-heading">
+      <div>
+        <span class="pd-search-step">01 · {{ text_find_products }}</span>
+        <h2 id="pd-search-form-title">{{ text_search_keyword }}</h2>
+      </div>
+      {% if search %}<a class="pd-search-reset" href="{{ search_home }}"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> {{ text_clear_search }}</a>{% endif %}
+    </div>
+
+    <form id="pd-search-form" action="index.php" method="get">
+      <input type="hidden" name="route" value="product/search"/>
+      <input type="hidden" name="language" value="{{ language }}"/>
+      <div class="pd-search-fields">
+        <div class="pd-search-field pd-search-keyword-field">
+          <label for="input-search">{{ entry_search }}</label>
+          <div class="pd-search-autocomplete">
+            <div class="pd-search-keyword-control">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input type="search" name="search" value="{{ search|escape }}" placeholder="{{ text_keyword }}" id="input-search" class="pd-search-input-autocomplete" aria-label="{{ entry_search }}" aria-autocomplete="list" aria-expanded="false" autocomplete="off" data-suggest-url="{{ search_suggest_url }}" data-suggestion-loading="{{ text_suggestion_loading|e('html_attr') }}" data-suggestion-empty="{{ text_suggestion_empty|e('html_attr') }}" data-suggestion-error="{{ text_suggestion_error|e('html_attr') }}" data-suggestion-products="{{ text_suggestion_products|e('html_attr') }}" data-suggestion-categories="{{ text_suggestion_categories|e('html_attr') }}"/>
+              <button type="button" id="pd-clear-search" class="pd-search-clear" aria-label="{{ text_clear_keyword }}" title="{{ text_clear_keyword }}"{% if not search %} hidden{% endif %}><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+              <button type="submit" id="button-search" class="pd-search-submit" aria-label="{{ button_search }}"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i><span>{{ button_search }}</span></button>
+            </div>
+            <ul class="pd-search-suggestions" role="listbox" hidden></ul>
+          </div>
+          <label class="pd-search-check"><input type="checkbox" name="description" value="1" id="input-description"{% if description %} checked{% endif %}/><span>{{ entry_description }}</span></label>
+        </div>
+
+        <div class="pd-search-field">
+          <label for="input-category">{{ text_product_category }}</label>
+          <select name="category_id" id="input-category" class="form-select">
+            <option value="0">{{ text_category }}</option>
+            {% for category_1 in categories %}
+              <option value="{{ category_1.category_id }}"{% if category_1.category_id == category_id %} selected{% endif %}>{{ category_1.name }}</option>
+              {% for category_2 in category_1.children %}
+                <option value="{{ category_2.category_id }}"{% if category_2.category_id == category_id %} selected{% endif %}>　└ {{ category_2.name }}</option>
+                {% for category_3 in category_2.children %}
+                  <option value="{{ category_3.category_id }}"{% if category_3.category_id == category_id %} selected{% endif %}>　　　└ {{ category_3.name }}</option>
+                {% endfor %}
+              {% endfor %}
+            {% endfor %}
+          </select>
+          <label class="pd-search-check{% if not category_id %} is-muted{% endif %}"><input type="checkbox" name="sub_category" value="1" id="input-sub-category"{% if sub_category %} checked{% endif %}{% if not category_id %} disabled{% endif %}/><span>{{ text_sub_category }}</span></label>
+        </div>
+      </div>
+      <label class="pd-search-check pd-search-stock-check"><input type="checkbox" name="in_stock" value="1"{% if in_stock %} checked{% endif %}/><span>{{ text_filter_in_stock }}</span></label>
+    </form>
+
+    {% if not search %}
+      <div class="pd-search-quick-links">
+        <span>{{ text_popular_keywords }}</span>
+        {% for item in quick_searches %}<a href="{{ item.href }}">{{ item.name }} <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>{% endfor %}
+      </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {% if products %}
+    <section class="pd-search-results-heading">
+      <div><span class="pd-search-step">{% if is_new_arrivals %}{{ text_arrivals_collection }}{% else %}02 · {{ text_results }}{% endif %}</span><h2>{% if is_new_arrivals %}{{ text_new_arrivals_title }}{% else %}{{ text_matching_products }}{% endif %}</h2></div>
+      <span class="pd-search-result-count"><i class="fa-solid fa-cubes" aria-hidden="true"></i> {{ product_count }} {{ text_products }}</span>
+    </section>
+
+    <section id="display-control" class="ps-toolbar" aria-label="{{ text_search_result_controls }}">
+      <div class="ps-toolbar__left">
+        <div class="ps-view-toggle" role="group" aria-label="{{ text_view_type }}">
+          <button type="button" id="button-grid" class="ps-view is-active" data-view="grid" title="{{ text_grid_view }}" aria-label="{{ text_grid_view }}" aria-pressed="true"><i class="fa-solid fa-table-cells" aria-hidden="true"></i></button>
+          <button type="button" id="button-list" class="ps-view" data-view="list" title="{{ text_list_view }}" aria-label="{{ text_list_view }}" aria-pressed="false"><i class="fa-solid fa-list" aria-hidden="true"></i></button>
+        </div>
+        <label class="ps-toolbar__field"><span class="ps-toolbar__label">{{ text_sort }}</span>
+          <select id="input-sort" class="ps-select" onchange="window.pdNavigateWithinShop(this.value);">
+            {% for sorts in sorts %}<option value="{{ sorts.href }}"{% if sorts.value == '%s-%s'|format(sort, order) %} selected{% endif %}>{{ sorts.text }}</option>{% endfor %}
+          </select>
+        </label>
+        {% if not is_new_arrivals %}
+          <label class="ps-toolbar__field"><span class="ps-toolbar__label">{{ text_limit }}</span>
+            <select id="input-limit" class="ps-select" onchange="window.pdNavigateWithinShop(this.value);">
+              {% for limits in limits %}<option value="{{ limits.href }}"{% if limits.value == limit %} selected{% endif %}>{{ limits.text }}</option>{% endfor %}
+            </select>
+          </label>
+        {% endif %}
+      </div>
+      <div class="ps-toolbar__right"><a href="{{ compare }}" id="compare-total" class="ps-btn-compare{% if compare_count > 0 %} has-items{% endif %}"><i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i><span>{{ text_compare_button }}</span><span class="ps-badge pd-compare-count-badge">{{ compare_count }}</span></a></div>
+    </section>
+
+    <div id="product-list" class="ps-product-results ps-view-grid row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+      {% for product in products %}<div class="col mb-3">{{ product }}</div>{% endfor %}
+    </div>
+    {% if not is_new_arrivals %}<div class="pd-search-pagination"><div>{{ pagination }}</div><small>{{ results }}</small></div>{% endif %}
+  {% elseif has_search_filter %}
+    <section class="pd-search-empty">
+      <span class="pd-search-empty-icon"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span>
+      {% if is_new_arrivals %}
+        <h2>{{ text_arrivals_empty_title }}</h2>
+        <p>{{ text_arrivals_empty_description }}</p>
+        <a class="pd-search-reset pd-search-reset-primary" href="{{ search_home }}">{{ text_arrivals_all }}</a>
+      {% else %}
+        <h2>{{ text_no_matching_products }}</h2>
+        <p>{{ text_search_suggestions_hint }}</p>
+        <div class="pd-search-quick-links">
+          {% for item in quick_searches %}<a href="{{ item.href }}">{{ item.name }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>{% endfor %}
+        </div>
+        <a class="pd-search-reset pd-search-reset-primary" href="{{ search_home }}">{{ text_clear_and_search_again }}</a>
+      {% endif %}
+    </section>
+  {% else %}
+    <section class="pd-search-empty pd-search-empty-start">
+      <span class="pd-search-empty-icon"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i></span>
+      <h2>{{ text_search_prompt }}</h2>
+      <p>{{ text_search_prompt_hint }}</p>
+    </section>
+  {% endif %}
+  {{ content_bottom }}
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('pd-search-form');
+  const input = document.getElementById('input-search');
+  const clear = document.getElementById('pd-clear-search');
+  const category = document.getElementById('input-category');
+  const subCategory = document.getElementById('input-sub-category');
+
+  if (input && clear) {
+    input.addEventListener('input', function() { clear.hidden = input.value.length === 0; });
+    clear.addEventListener('click', function() {
+      input.value = '';
+      clear.hidden = true;
+      input.focus();
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+
+  if (category && subCategory) {
+    const updateSubCategory = function() {
+      subCategory.disabled = category.value === '0';
+      if (subCategory.disabled) subCategory.checked = false;
+      subCategory.closest('.pd-search-check').classList.toggle('is-muted', subCategory.disabled);
+    };
+    category.addEventListener('change', updateSubCategory);
+    updateSubCategory();
+  }
+
+  if (form) {
+    form.addEventListener('submit', function(event) {
+      if (!input.value.trim() && category.value === '0') {
+        event.preventDefault();
+        input.focus();
+        input.setCustomValidity('{{ text_enter_search_keyword|e('js') }}');
+        input.reportValidity();
+      } else {
+        input.setCustomValidity('');
+      }
+    });
+    input.addEventListener('input', function() { input.setCustomValidity(''); });
+  }
+});
+</script>
+{{ footer }}

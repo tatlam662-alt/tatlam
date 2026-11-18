@@ -1,0 +1,42 @@
+{{ header }}
+<div id="information-information" class="container my-5 information-page">
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb panda-breadcrumb px-3 py-2 rounded-3">
+      {% for breadcrumb in breadcrumbs %}
+        {% if loop.last %}
+          <li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.text }}</li>
+        {% else %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+  </nav>
+
+  <div class="row justify-content-center">
+    {{ column_left }}
+    <div id="content" class="col">
+      {{ content_top }}
+      <article class="card information-dark-card text-light shadow-lg rounded-4 p-4 p-md-5">
+        <header class="information-page-heading border-bottom pb-3 mb-4">
+          <h1 class="m-0 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+            {{ heading_title }}
+          </h1>
+        </header>
+
+        <div class="info-content-body">
+          {{ description }}
+        </div>
+
+        <div class="mt-5 pt-3 border-top text-end">
+          <a href="{{ continue }}" class="btn btn-outline-cyan px-4 py-2 rounded-3 fw-bold">
+            <i class="fa-solid fa-arrow-left me-2" aria-hidden="true"></i>{{ button_back }}
+          </a>
+        </div>
+      </article>
+      {{ content_bottom }}
+    </div>
+    {{ column_right }}
+  </div>
+</div>
+{{ footer }}

@@ -1,0 +1,272 @@
+{{ header }}
+<div id="checkout-checkout" class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ breadcrumb.href|escape }}">{{ breadcrumb.text|escape }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <div class="row">
+    {{ column_left }}
+    <div id="content" class="col">
+      {{ content_top }}
+      <h1>{{ heading_title|escape }}</h1>
+      {% if text_checkout_intro %}<div class="alert alert-info">{{ text_checkout_intro|escape }}</div>{% endif %}
+
+      <div class="row g-3">
+        <div class="col-12 col-xl-7">
+          {% if register %}<section class="card mb-3"><div class="card-header">{{ text_customer|escape }}</div><div class="card-body" id="checkout-register">{{ register }}</div></section>{% endif %}
+          {% if payment_address %}<section class="card mb-3"><div class="card-header">{{ text_billing_address|escape }}</div><div class="card-body" id="checkout-payment-address">{{ payment_address }}</div></section>{% endif %}
+          {% if shipping_address %}<section class="card mb-3"><div class="card-header">{{ text_shipping_address|escape }}</div><div class="card-body" id="checkout-shipping-address">{{ shipping_address }}</div></section>{% endif %}
+        </div>
+        <div class="col-12 col-xl-5">
+          {% if shipping_method %}<section class="card mb-3"><div class="card-header">{{ text_shipping_method|escape }}</div><div class="card-body" id="checkout-shipping-method">{{ shipping_method }}</div></section>{% endif %}
+          <section class="card mb-3"><div class="card-header">{{ text_payment_method|escape }}</div><div class="card-body" id="checkout-payment-method">{{ payment_method }}</div></section>
+          <section class="card mb-3"><div class="card-header">{{ text_order_review|escape }}</div><div class="card-body" id="checkout-confirm">{{ confirm }}</div></section>
+        </div>
+      </div>
+
+      {{ content_bottom }}
+    </div>
+    {{ column_right }}
+  </div>
+</div>
+
+<script>
+(function ($, window, document) {
+  'use strict';
+
+  var districtUrl = {{ districts_url|json_encode|raw }};
+  var wardsUrl = {{ wards_url|json_encode|raw }};
+  var saveAddressUrl = {{ save_address_url|json_encode|raw }};
+  var selectText = {{ text_select|json_encode|raw }};
+  var addressError = {{ error_address|json_encode|raw }};
+  var requestSequence = { districts: 0, wards: 0 };
+
+  function appendQuery(url, key, value) {
+    return url + (url.indexOf('?') === -1 ? '?' : '&') + encodeURIComponent(key) + '=' + encodeURIComponent(value);
+  }
+
+  function resetSelect($select, disabled) {
+    $select.empty().append($('<option>', { value: '', text: selectText })).prop('disabled', disabled).removeClass('is-invalid');
+  }
+
+  function fillSelect($select, rows, idKey) {
+    resetSelect($select, false);
+    if (!Array.isArray(rows)) return;
+    rows.forEach(function (row) {
+      if (row && row[idKey] !== undefined && row.name !== undefined) {
+        $select.append($('<option>', { value: row[idKey], text: row.name }));
+      }
+    });
+  }
+
+  function activeZone() {
+    var $zone = $();
+    if ($('#form-register').length && (!$('#input-address-match').length || $('#input-address-match').is(':checked'))) {
+      $zone = $('#input-payment-zone:visible').first();
+    }
+    if (!$zone.length) $zone = $('#input-shipping-zone:visible').first();
+    if (!$zone.length) $zone = $('#input-shipping-zone').first();
+    if (!$zone.length) $zone = $('#input-payment-zone').first();
+    return { field: $zone, value: $zone.val() || '' };
+  }
+
+  function loadDistricts() {
+    var zoneId = activeZone().value;
+    var $district = $('#input-shipping-district');
+    var $ward = $('#input-shipping-ward');
+    var sequence = ++requestSequence.districts;
+
+    resetSelect($district, true);
+    resetSelect($ward, true);
+    if (!zoneId) return;
+
+    fetch(appendQuery(districtUrl, 'zone_id', zoneId), {
+      credentials: 'same-origin',
+      headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+    }).then(function (response) {
+      if (!response.ok) throw new Error('district_request_failed');
+      return response.json();
+    }).then(function (rows) {
+      if (sequence === requestSequence.districts) fillSelect($district, rows, 'district_id');
+    }).catch(function (error) {
+      console.error('[PanDaShop checkout] district lookup failed', { zoneId: zoneId, error: error });
+      if (sequence === requestSequence.districts) $district.addClass('is-invalid');
+    });
+  }
+
+  function loadWards() {
+    var districtId = $('#input-shipping-district').val();
+    var $ward = $('#input-shipping-ward');
+    var sequence = ++requestSequence.wards;
+
+    resetSelect($ward, true);
+    if (!districtId) return;
+
+    fetch(appendQuery(wardsUrl, 'district_id', districtId), {
+      credentials: 'same-origin',
+      headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+    }).then(function (response) {
+      if (!response.ok) throw new Error('ward_request_failed');
+      return response.json();
+    }).then(function (rows) {
+      if (sequence === requestSequence.wards) fillSelect($ward, rows, 'ward_id');
+    }).catch(function (error) {
+      console.error('[PanDaShop checkout] ward lookup failed', { districtId: districtId, error: error });
+      if (sequence === requestSequence.wards) $ward.addClass('is-invalid');
+    });
+  }
+
+  function removeRedundantFields(root) {
+    var selectors = [
+      '#input-company', '#input-address-2', '#input-postcode', '#input-fax',
+      '#input-shipping-company', '#input-shipping-address-2', '#input-shipping-postcode', '#input-shipping-fax',
+      '#input-payment-company', '#input-payment-address-2', '#input-payment-postcode', '#input-payment-fax'
+    ].join(',');
+
+    $(root).find(selectors).addBack(selectors).each(function () {
+      var $field = $(this);
+      var $row = $field.closest('.col.mb-3');
+      if ($row.length) $row.remove(); else $field.remove();
+    });
+
+    $(root).find('#input-payment-country, #input-shipping-country, #input-payment-city, #input-shipping-city').each(function () {
+      $(this).closest('.col.mb-3').hide();
+    });
+
+    // OpenCart's stock save endpoints expect a postcode key even when it is
+    // not shown. Keep it blank so no invented postal code is stored.
+    $('#form-shipping-address, #form-payment-address').each(function () {
+      var $form = $(this);
+      if (!$form.find('[name="postcode"]').length) {
+        $('<input>', { type: 'hidden', name: 'postcode', value: '' }).appendTo($form);
+      }
+    });
+    $('#form-register').each(function () {
+      var $form = $(this);
+      [['shipping_postcode', ''], ['payment_postcode', '']].forEach(function (field) {
+        if (!$form.find('[name="' + field[0] + '"]').length) {
+          $('<input>', { type: 'hidden', name: field[0], value: field[1] }).appendTo($form);
+        }
+      });
+    });
+  }
+
+  function ensureDistrictWardFields() {
+    var $zone = activeZone().field;
+    if (!$zone.length || $('#input-shipping-district').length) return;
+    var $zoneRow = $zone.closest('.col.mb-3');
+    if (!$zoneRow.length) return;
+    var html = '<div class="col mb-3 required"><label for="input-shipping-district" class="form-label">' + $('<div>').text({{ entry_district|json_encode|raw }}).html() + '</label><select id="input-shipping-district" class="form-select" autocomplete="address-level2" required><option value="">' + $('<div>').text(selectText).html() + '</option></select></div>' +
+      '<div class="col mb-3 required"><label for="input-shipping-ward" class="form-label">' + $('<div>').text({{ entry_ward|json_encode|raw }}).html() + '</label><select id="input-shipping-ward" class="form-select" autocomplete="address-level3" disabled required><option value="">' + $('<div>').text(selectText).html() + '</option></select><div id="error-shipping-vn-address" class="invalid-feedback">' + $('<div>').text(addressError).html() + '</div></div>';
+    $zoneRow.after(html);
+  }
+
+  $(function () {
+    $('#input-comment').val('');
+    removeRedundantFields(document);
+    ensureDistrictWardFields();
+
+    if (window.MutationObserver) {
+      var observer = new MutationObserver(function (records) {
+        records.forEach(function (record) {
+          record.addedNodes.forEach(function (node) {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              removeRedundantFields(node);
+              ensureDistrictWardFields();
+            }
+          });
+        });
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    $(document).on('change', '#input-shipping-zone, #input-payment-zone', function () {
+      $('#input-shipping-district, #input-shipping-ward').closest('.col.mb-3').remove();
+      ensureDistrictWardFields();
+      loadDistricts();
+    });
+    $(document).on('change', '#input-address-match', function () {
+      $('#input-shipping-district, #input-shipping-ward').closest('.col.mb-3').remove();
+      ensureDistrictWardFields();
+      loadDistricts();
+    });
+    $(document).on('change', '#input-shipping-district', loadWards);
+    $(document).on('change', '#input-shipping-ward', function () {
+      var zoneId = activeZone().value;
+      var districtId = $('#input-shipping-district').val();
+      var wardId = $(this).val();
+      if (!zoneId || !districtId || !wardId) return;
+
+      fetch(saveAddressUrl, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
+        body: new URLSearchParams({ zone_id: zoneId, district_id: districtId, ward_id: wardId }).toString()
+      }).then(function (response) {
+        return response.json().then(function (data) {
+          if (!response.ok || !data.success) throw new Error(data.error || 'address_save_failed');
+          return data;
+        });
+      }).then(function () {
+        $('#error-shipping-vn-address').hide();
+        var districtName = $('#input-shipping-district option:selected').text();
+        if (activeZone().field.attr('id') === 'input-payment-zone') {
+          $('#input-payment-city').val(districtName);
+        } else {
+          $('#input-shipping-city').val(districtName);
+        }
+        if ($('#form-register').length) {
+          $('#form-register').trigger('submit');
+        } else if ($('#input-shipping-existing:checked').length) {
+          $('#input-shipping-address').trigger('change');
+        } else if ($('#button-shipping-address').length) {
+          $('#button-shipping-address').trigger('click');
+        } else if ($('#button-shipping-methods').length) {
+          $('#button-shipping-methods').trigger('click');
+        }
+      }).catch(function (error) {
+        console.error('[PanDaShop checkout] address selection could not be saved', error);
+        $('#input-shipping-district, #input-shipping-ward').addClass('is-invalid');
+        $('#error-shipping-vn-address').text(addressError).show();
+      });
+    });
+
+    $(document).on('change', 'input[name="payment_method"]', function () {
+      $('#button-payment-method').trigger('click');
+    });
+
+    if (activeZone().value) loadDistricts();
+
+    $(document).on('shown.bs.modal', '#modal-shipping', function () {
+      var $ghtk = $('#form-shipping-method input[name="shipping_method"][value^="ghtk."]').first();
+      if ($ghtk.length) $ghtk.prop('checked', true);
+      if ($('#form-shipping-method input[name="shipping_method"]:checked').length) {
+        window.setTimeout(function () { $('#form-shipping-method').trigger('submit'); }, 120);
+      }
+    });
+
+    $(document).on('ajaxComplete', function (event, xhr, settings) {
+      if (settings && /checkout\/register\.save|checkout\/shipping_address\.save/.test(settings.url || '')) {
+        window.setTimeout(function () {
+          if ($('#button-shipping-methods').length) $('#button-shipping-methods').trigger('click');
+        }, 150);
+      }
+    });
+
+    $(document).on('submit', '#form-register, #form-shipping-address, #form-payment-address', function () {
+      var districtName = $('#input-shipping-district option:selected').text();
+      if (districtName && districtName !== selectText) {
+        if (activeZone().field.attr('id') === 'input-payment-zone') {
+          $('#input-payment-city').val(districtName);
+        } else {
+          $('#input-shipping-city').val(districtName);
+        }
+      }
+    });
+  });
+})(jQuery, window, document);
+</script>
+
+{{ footer }}

@@ -1,0 +1,19 @@
+<?php
+$_['text_home_title'] = 'PanDaShop — Flycams, creator gear, gaming and PC components';
+$_['text_service_commitment'] = 'PanDaShop service commitment';
+$_['text_genuine'] = 'Genuine products';
+$_['text_return_policy'] = '7-day returns';
+$_['text_technical_support'] = 'Technical support';
+$_['text_fast_delivery'] = 'Fast delivery';
+$_['text_discover_categories'] = 'Explore PanDaShop categories';
+$_['text_all_deals'] = 'View all deals';
+$_['text_flash_sale'] = 'Flash Sale';
+$_['text_home_explore'] = 'Explore';
+$_['text_brand'] = 'Brands';
+$_['text_flash_eyebrow'] = 'Limited-time deals';
+$_['text_view_all'] = 'View all';
+$_['text_refresh_in'] = 'New deals in';
+$_['text_category_aria_label'] = '%s category';
+$_['text_category_eyebrow'] = 'Explore this category';
+$_['text_category_description'] = 'Explore products in %s at PanDaShop.';
+$_['text_explore_now'] = 'Explore now';

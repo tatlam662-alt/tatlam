@@ -1,0 +1,102 @@
+<fieldset class="pd-checkout-method-fieldset">
+  <legend>{{ heading_title|escape }}</legend>
+  <input type="hidden" value="{{ code|escape }}" id="input-shipping-code"/>
+  <div id="pd-shipping-options" class="pd-checkout-options" role="radiogroup" aria-label="Phương thức vận chuyển">
+    <p class="pd-checkout-method-status">Nhập địa chỉ nhận hàng để xem phí giao hàng.</p>
+  </div>
+  <div id="pd-shipping-error" class="invalid-feedback" role="alert"></div>
+</fieldset>
+<script>
+(function ($, window) {
+  'use strict';
+  var quoteUrl = 'index.php?route=checkout/shipping_method.quote&language={{ language|escape('js') }}';
+  var saveUrl = 'index.php?route=checkout/shipping_method.save&language={{ language|escape('js') }}';
+  var confirmUrl = 'index.php?route=checkout/confirm.confirm&language={{ language|escape('js') }}';
+  var loading = false;
+
+  function showError(message) {
+    $('#pd-shipping-error').text(message || '').toggleClass('d-block', !!message);
+  }
+
+  function saveShipping(code) {
+    showError('');
+    var previousCode = $('#input-shipping-code').val();
+    if (previousCode !== code) {
+      $('#input-payment-code').val('');
+      $('#pd-bank-transfer-placeholder').remove();
+      $('#button-confirm').prop('disabled', true).attr('aria-disabled', 'true');
+    }
+    $('#pd-shipping-options').addClass('is-loading');
+    $.ajax({ url: saveUrl, type: 'post', dataType: 'json', data: { shipping_method: code } })
+      .done(function (json) {
+        if (json.redirect) { window.pdNavigateWithinShop(json.redirect); return; }
+        if (json.error) { showError(json.error); return; }
+        $('#input-shipping-code').val(code);
+        $('#cart').load('index.php?route=common/cart.info&language={{ language|escape('js') }}');
+        $('#checkout-confirm').load(confirmUrl);
+        if (typeof window.pdLoadPaymentOptions === 'function') window.pdLoadPaymentOptions();
+      })
+      .fail(function () { showError('Không lưu được phương thức giao hàng. Vui lòng thử lại.'); })
+      .always(function () { $('#pd-shipping-options').removeClass('is-loading'); });
+  }
+
+  function loadShipping() {
+    if (loading) return;
+    loading = true;
+    showError('');
+    $('#pd-shipping-options').html('<p class="pd-checkout-method-status">Đang tải phương thức giao hàng…</p>');
+    $.getJSON(quoteUrl).done(function (json) {
+      if (json.redirect) { window.pdNavigateWithinShop(json.redirect); return; }
+      if (json.error) {
+        $('#pd-shipping-options').empty();
+        showError('Chưa lấy được báo giá vận chuyển: ' + String(json.error) + ' Vui lòng kiểm tra địa chỉ rồi thử lại.');
+        return;
+      }
+
+      var $list = $('<div>', { class: 'pd-checkout-option-list' });
+      var currentCode = $('#input-shipping-code').val();
+      var count = 0;
+
+      $.each(json.shipping_methods || {}, function (groupCode, group) {
+        if (group.error) return;
+        $.each(group.quote || {}, function (quoteKey, quote) {
+          var code = quote.code || (groupCode + '.' + quoteKey);
+          var id = 'pd-shipping-' + count++;
+          var $input = $('<input>', { type: 'radio', name: 'pd_shipping_method', id: id, value: code, class: 'form-check-input' });
+          var text = String(quote.text || '').replace(/[đĐ]/g, '₫');
+          var $label = $('<label>', { class: 'pd-checkout-option shipping-card-option', for: id });
+          $label.append($input, $('<span>', { class: 'pd-checkout-option-copy' }).append(
+            $('<strong>').text(quote.name || group.name || 'Giao hàng tiêu chuẩn'),
+            $('<small>').text(text)
+          ));
+          $list.append($label);
+          if (code === currentCode) {
+            $input.prop('checked', true);
+            $label.addClass('active-shipping-card');
+          }
+        });
+      });
+
+      if (!count) { $('#pd-shipping-options').html('<p class="pd-checkout-method-status">Chưa có phương thức giao hàng phù hợp với địa chỉ này.</p>'); return; }
+      $('#pd-shipping-options').empty().append($list);
+      var selectedCode = $list.find('input:checked').val();
+      if (selectedCode) {
+        saveShipping(selectedCode);
+      } else {
+        $('#pd-checkout-guidance').text('Vui lòng chọn phương thức giao hàng để tiếp tục.');
+      }
+    }).fail(function () {
+      $('#pd-shipping-options').empty();
+      showError('Không kết nối được dịch vụ vận chuyển. Vui lòng thử lại.');
+    }).always(function () { loading = false; });
+  }
+
+  $(document).on('change', 'input[name="pd_shipping_method"]', function () {
+    $('#pd-shipping-options .shipping-card-option').removeClass('active-shipping-card');
+    $(this).closest('.shipping-card-option').addClass('active-shipping-card');
+    saveShipping(this.value);
+  });
+  window.pdLoadShippingMethods = loadShipping;
+  $(loadShipping);
+})(jQuery, window);
+</script>

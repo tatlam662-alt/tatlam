@@ -1,0 +1,19 @@
+{{ header }}
+<div id="error-not-found" class="container pd-standard-page">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    <div id="content" class="col">{{ content_top }}
+      <div class="pd-empty-state">
+        <span class="pd-empty-icon"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></span>
+        <h1>{{ heading_title }}</h1>
+        <p>{{ text_error }}</p>
+        <a href="{{ continue }}" class="btn btn-primary px-4 py-2">{{ button_continue }}</a>
+      </div>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

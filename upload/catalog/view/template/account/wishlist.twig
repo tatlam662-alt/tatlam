@@ -1,0 +1,62 @@
+{{ header }}
+<div id="account-wishlist" class="container pd-standard-page pd-account-page">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb pd-account-breadcrumb">
+      {% for breadcrumb in breadcrumbs %}
+        {% if loop.last %}<li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.text }}</li>{% else %}<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endif %}
+      {% endfor %}
+    </ol>
+  </nav>
+
+  {% if success %}<div class="alert alert-success alert-dismissible fade show" role="status">{{ success }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button></div>{% endif %}
+  <div id="wishlist-alert" aria-live="polite"></div>
+
+  <div class="row pd-account-layout">
+    {{ column_left }}
+    <main id="content" class="col pd-account-main">
+      {{ content_top }}
+      <div class="pd-wishlist-heading">
+        <div><span class="pd-account-eyebrow">HỘI VIÊN PANDASHOP</span><h1>{{ heading_title }} <span id="wishlist-count">({{ wishlist_total }})</span></h1></div>
+      </div>
+      <div id="wishlist">{{ list }}</div>
+      {{ content_bottom }}
+    </main>
+    {{ column_right }}
+  </div>
+</div>
+<script type="text/javascript"><!--
+(function($) {
+  function updateWishlistCount(count) {
+    $('#wishlist-count').text('(' + count + ')');
+    $('.pd-wishlist-count-badge').text(count);
+  }
+
+  function showWishlistMessage(message, type) {
+    $('#wishlist-alert').html('<div class="alert alert-' + type + ' alert-dismissible fade show" role="status">' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button></div>');
+  }
+
+  $('#wishlist').on('click', '.pd-wishlist-remove', function(event) {
+    event.preventDefault();
+    var button = this;
+
+    $.ajax({
+      url: $(button).attr('href'),
+      dataType: 'json',
+      beforeSend: function() { $(button).addClass('is-loading'); },
+      complete: function() { $(button).removeClass('is-loading'); },
+      success: function(json) {
+        if (json.error) {
+          showWishlistMessage(json.error, 'danger');
+        } else if (json.success) {
+          updateWishlistCount(json.wishlist_count);
+          $('#wishlist').load('index.php?route=account/wishlist.list&language={{ language }}&customer_token={{ customer_token }}');
+          showWishlistMessage(json.success, 'success');
+        }
+      },
+      error: function() { showWishlistMessage('Không thể cập nhật danh sách. Vui lòng thử lại.', 'danger'); }
+    });
+  });
+
+})(jQuery);
+//--></script>
+{{ footer }}

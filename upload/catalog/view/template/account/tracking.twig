@@ -1,0 +1,120 @@
+{{ header }}
+<div id="account-tracking" class="container pd-affiliate-tracking-page">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    <main id="content" class="col pd-affiliate-tracking-content">{{ content_top }}
+      <section class="pd-affiliate-tracking-hero">
+        <span class="pd-affiliate-kicker"><i class="fa-solid fa-link" aria-hidden="true"></i> PanDaShop Partner</span>
+        <h1>{{ heading_title }}</h1>
+        <p>{{ text_description }}</p>
+      </section>
+      <section class="pd-affiliate-tracking-card" aria-labelledby="affiliate-link-tools-title">
+        <div class="pd-affiliate-panel-heading">
+          <span class="pd-affiliate-panel-icon"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i></span>
+          <div><h2 id="affiliate-link-tools-title">{{ text_tracking_tools }}</h2><p>{{ text_tracking_generator_hint }}</p></div>
+        </div>
+        <div class="pd-affiliate-code-box">
+          <label for="input-code">{{ entry_code }}</label>
+          <div class="pd-affiliate-copy-field">
+            <input type="text" value="{{ code }}" id="input-code" class="form-control" readonly aria-describedby="tracking-code-hint"/>
+            <button type="button" class="pd-affiliate-copy-button" data-copy-target="#input-code" data-copy-label="{{ text_copy }}" data-copied-label="{{ text_copied }}" data-copy-failed-label="{{ text_copy_failed }}"><i class="fa-regular fa-copy" aria-hidden="true"></i><span>{{ text_copy }}</span></button>
+          </div>
+          <small id="tracking-code-hint">{{ text_tracking_code_hint }}</small>
+        </div>
+        <div class="pd-affiliate-generator">
+          <label for="input-generator">{{ entry_generator }}</label>
+          <div class="pd-affiliate-search-wrap">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" name="product" value="" placeholder="{{ help_generator }}" id="input-generator" data-oc-target="autocomplete-generator" class="form-control" autocomplete="off" aria-autocomplete="list" aria-controls="autocomplete-generator"/>
+            <ul id="autocomplete-generator" class="dropdown-menu"></ul>
+          </div>
+        </div>
+        <div class="pd-affiliate-generated-link">
+          <label for="input-link">{{ entry_link }}</label>
+          <div class="pd-affiliate-copy-field">
+            <input type="url" name="link" value="" placeholder="{{ text_tracking_link_hint }}" id="input-link" class="form-control" readonly/>
+            <button type="button" class="pd-affiliate-copy-button" data-copy-target="#input-link" data-copy-label="{{ text_copy }}" data-copied-label="{{ text_copied }}" data-copy-failed-label="{{ text_copy_failed }}" disabled><i class="fa-regular fa-copy" aria-hidden="true"></i><span>{{ text_copy }}</span></button>
+          </div>
+          <small>{{ text_tracking_link_hint }}</small>
+        </div>
+      </section>
+      <div class="pd-affiliate-tracking-footer"><a href="{{ continue }}" class="pd-affiliate-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>{{ text_account }}</a></div>
+      {{ content_bottom }}</main>
+    {{ column_right }}</div>
+</div>
+<script type="text/javascript"><!--
+$('#input-generator').autocomplete({
+    'source': function(request, response) {
+        return $.ajax({
+            url: 'index.php?route=account/tracking.autocomplete&customer_token={{ customer_token }}&search=' + encodeURIComponent(request) + '&tracking=' + encodeURIComponent($('#input-code').val()) + '&language={{ language }}',
+            dataType: 'json',
+            success: function(json) {
+                response($.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['link']
+                    }
+                }));
+            }
+        });
+    },
+    'select': function(item) {
+        $('#input-link').val(item['value']);
+        $('[data-copy-target="#input-link"]').prop('disabled', !item['value']);
+    }
+});
+
+$(document).on('click', '.pd-affiliate-copy-button[data-copy-target]', function() {
+    var button = this;
+    var target = document.querySelector(button.getAttribute('data-copy-target'));
+    var value = target ? target.value : '';
+
+    if (!value) return;
+
+    var fallbackCopy = function() {
+        target.focus();
+        target.select();
+        return document.execCommand('copy');
+    };
+    var copyValue;
+
+    if (navigator.clipboard && window.isSecureContext) {
+        copyValue = navigator.clipboard.writeText(value).catch(function() {
+            return Promise.resolve().then(fallbackCopy);
+        });
+    } else {
+        copyValue = Promise.resolve().then(fallbackCopy);
+    }
+
+    copyValue.then(function(copied) {
+        var feedbackLabel = copied ? button.getAttribute('data-copied-label') : button.getAttribute('data-copy-failed-label');
+        var feedbackClass = copied ? 'is-copied' : 'is-copy-failed';
+        var label = button.getAttribute('data-copy-label');
+        button.querySelector('span').textContent = feedbackLabel;
+        button.classList.remove('is-copied', 'is-copy-failed');
+        button.classList.add(feedbackClass);
+        window.clearTimeout(button._copyTimeout);
+        button._copyTimeout = window.setTimeout(function() {
+            button.querySelector('span').textContent = label;
+            button.classList.remove('is-copied', 'is-copy-failed');
+        }, 1600);
+    }).catch(function() {
+        target.focus();
+        target.select();
+        var label = button.getAttribute('data-copy-label');
+        button.querySelector('span').textContent = button.getAttribute('data-copy-failed-label');
+        button.classList.remove('is-copied');
+        button.classList.add('is-copy-failed');
+        window.clearTimeout(button._copyTimeout);
+        button._copyTimeout = window.setTimeout(function() {
+            button.querySelector('span').textContent = label;
+            button.classList.remove('is-copy-failed');
+        }, 1600);
+    });
+});
+//--></script>
+{{ footer }}

@@ -1,0 +1,115 @@
+{{ header }}
+<div id="account-order" class="container pd-standard-page">
+  <nav aria-label="breadcrumb"><ol class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      {% if loop.last %}<li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.text }}</li>{% else %}<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endif %}
+    {% endfor %}
+  </ol></nav>
+  <div class="row">
+    {{ column_left }}
+    <div id="content" class="col">
+      <header class="pd-order-list-heading"><div><span class="pd-order-eyebrow">PanDaShop</span><h1>{{ heading_title }}</h1></div><span class="pd-order-list-count">{{ orders|length }}</span></header>
+      <nav class="pd-order-filters" aria-label="{{ heading_title }}">
+        {% for filter in order_filters %}
+          <a href="{{ filter.href }}" class="pd-order-filter{% if filter.active %} active{% endif %}">{{ filter.label }}</a>
+        {% endfor %}
+      </nav>
+      {% if orders %}
+        <div class="pd-order-list">
+          {% for order in orders %}
+            <article class="pd-order-card pd-order-list-card">
+              {% if order.first_product %}
+                <div class="pd-order-preview">
+                  {% if order.first_product.thumb %}<img src="{{ order.first_product.thumb }}" alt="{{ order.first_product.name }}" width="56" height="56" loading="lazy">{% else %}<span class="pd-order-preview-placeholder"><i class="fa-solid fa-box" aria-hidden="true"></i></span>{% endif %}
+                  <div><span class="pd-order-detail-label">{{ text_order_product }}</span><strong>{{ order.first_product.name }}</strong><small>{{ text_quantity }}: {{ order.first_product.quantity }}{% if order.product_total > 1 %} · {{ order.product_total - 1 }} {{ text_other_products }}{% endif %}</small></div>
+                </div>
+              {% endif %}
+              <div class="pd-order-card-main">
+                <div class="pd-order-number"><span>{{ text_order_number }}</span><strong>#{{ order.order_id }}</strong><span class="pd-order-status is-{{ order.status_class }}">{{ order.status }}</span></div>
+                <div class="pd-order-detail"><span>{{ text_date_ordered }}</span><strong>{{ order.date_added }}</strong></div>
+                <div class="pd-order-detail"><span>{{ text_product_count }}</span><strong>{{ order.product_total }}</strong></div>
+                <div class="pd-order-total"><span>{{ text_order_total }}</span><strong>{{ order.total }}</strong></div>
+              </div>
+              <div class="pd-order-card-actions">
+                <a href="{{ order.view }}" class="btn btn-outline-secondary pd-order-view"><i class="fa-solid fa-arrow-up-right-from-square me-1" aria-hidden="true"></i> {{ button_view }}</a>
+                {% if order.can_cancel %}<button type="button" class="btn btn-outline-danger pd-order-cancel-button pd-order-list-cancel" data-url="{{ order.cancel }}" data-confirm="{{ text_cancel_order_confirm }}" data-error="{{ error_cancel_order }}"><i class="fa-solid fa-ban me-1" aria-hidden="true"></i>{{ text_cancel_order }}</button>{% endif %}
+                {% if order.can_delete %}<button type="button" class="btn btn-outline-danger pd-order-delete" data-url="{{ order.delete }}" data-confirm="{{ text_delete_cancelled_order_confirm }}" data-error="{{ error_delete_cancelled_order }}"><i class="fa-regular fa-trash-can me-1" aria-hidden="true"></i>{{ text_delete_cancelled_order }}</button>{% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+        <div class="row mb-3 align-items-center">
+          <div class="col-sm-6 text-start">{{ pagination }}</div>
+          <div class="col-sm-6 text-sm-end pd-pagination-results">{{ results }}</div>
+        </div>
+      {% else %}
+        <div class="pd-order-empty"><span class="pd-order-empty-icon"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span><h2>{{ text_no_results }}</h2><a href="{{ shop }}" class="btn btn-primary"><i class="fa-solid fa-arrow-right me-1" aria-hidden="true"></i>Kh&#225;m ph&#225; s&#7843;n ph&#7849;m</a></div>
+      {% endif %}
+      {% if orders %}<div class="text-end mt-3"><a href="{{ continue }}" class="btn btn-outline-secondary">{{ button_continue }}</a></div>{% endif %}
+      {{ content_bottom }}
+    </div>
+    {{ column_right }}
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('#account-order').on('click', '.pd-order-delete', function() {
+    var button = this;
+    window.pdConfirm($(button).data('confirm'), { title: 'Xóa đơn hàng', confirmText: 'Xóa đơn', danger: true }).then(function(confirmed) {
+        if (!confirmed) return;
+
+        // Keep the trailing slash: Apache converts a redirected POST to GET.
+        var deleteUrl = new URL($(button).attr('data-url'), window.location.href);
+        if (!deleteUrl.pathname.endsWith('/') && !/\.php$/i.test(deleteUrl.pathname)) deleteUrl.pathname += '/';
+
+        $.ajax({
+            url: deleteUrl.href,
+            type: 'POST',
+            data: { delete_cancelled_order: '1' },
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            dataType: 'json',
+            cache: false,
+            beforeSend: function() { $(button).prop('disabled', true); },
+            complete: function() { $(button).prop('disabled', false); },
+            success: function(json) {
+                if (json.redirect) {
+                    window.pdNavigateWithinShop(json.redirect);
+                } else {
+                    window.pdAlert(json.error || $(button).data('error'), { title: 'Không thể xóa đơn', variant: 'error' });
+                }
+            },
+            error: function(xhr) {
+                var response = xhr && xhr.responseJSON;
+                window.pdAlert((response && response.error) || $(button).data('error'), { title: 'Không thể xóa đơn', variant: 'error' });
+            }
+        });
+    });
+});
+
+$('#account-order').on('click', '.pd-order-list-cancel', function() {
+    var button = this;
+    window.pdConfirm($(button).data('confirm'), { title: 'Hủy đơn hàng', confirmText: 'Hủy đơn', danger: true }).then(function(confirmed) {
+        if (!confirmed) return;
+        $.ajax({
+            url: $(button).attr('data-url'),
+            type: 'POST',
+            data: { cancel_order: '1' },
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            dataType: 'json',
+            cache: false,
+            beforeSend: function() { $(button).prop('disabled', true); },
+            complete: function() { $(button).prop('disabled', false); },
+            success: function(json) {
+                if (json.redirect) {
+                    window.pdNavigateWithinShop(json.redirect);
+                }
+                else window.pdAlert(json.error || $(button).data('error'), { title: 'Không thể hủy đơn', variant: 'error' });
+            },
+            error: function(xhr) {
+                var response = xhr && xhr.responseJSON;
+                window.pdAlert((response && response.error) || $(button).data('error'), { title: 'Không thể hủy đơn', variant: 'error' });
+            }
+        });
+    });
+});
+//--></script>
+{{ footer }}

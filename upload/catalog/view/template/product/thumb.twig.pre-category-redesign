@@ -1,0 +1,81 @@
+﻿<div class="product-thumb pd-product-card">
+  <form id="form-thumb-{{ product_id }}" action="{{ cart_add }}" method="post" data-oc-toggle="ajax" data-oc-load="{{ cart }}" data-oc-target="#cart" class="d-flex flex-column h-100">
+    <div class="pd-card-image-wrap">
+      <a href="{{ href }}">
+        <img src="{{ thumb }}" alt="{{ name }}" title="{{ name }}" loading="lazy" width="220" height="220" class="img-fluid"/>
+      </a>
+
+      {% if badge %}
+        <span class="pd-card-badge pd-card-badge-new">{{ badge }}</span>
+      {% endif %}
+      {% if special %}
+        <span class="pd-card-badge pd-card-badge-sale" data-calc-sale data-price="{{ price }}" data-special="{{ special }}">{{ text_sale }}</span>
+      {% endif %}
+      {% if coins %}
+        <span class="pd-card-badge pd-card-badge-coins"><i class="fa-solid fa-coins" aria-hidden="true"></i> +{{ coins }} Coins</span>
+      {% endif %}
+
+      <div class="pd-card-quick-actions">
+        {% if is_wishlist %}
+          <a href="{{ wishlist_remove }}" class="pd-btn-icon-action pd-wishlist-remove btn-danger" title="{{ button_wishlist_remove }}" aria-label="{{ button_wishlist_remove }}: {{ name }}"><i class="fa-solid fa-heart" aria-hidden="true"></i></a>
+        {% else %}
+          <button type="button" data-product-id="{{ product_id }}" data-wishlist-add="{{ wishlist_add }}" class="pd-btn-icon-action pd-btn-wishlist-add" data-bs-toggle="tooltip" title="{{ button_wishlist }}" aria-label="{{ button_wishlist }}">
+            <i class="fa-regular fa-heart"></i>
+          </button>
+        {% endif %}
+        <button type="button" data-product-id="{{ product_id }}" data-compare-add="{{ compare_add }}" class="pd-btn-icon-action pd-btn-compare-add" data-bs-toggle="tooltip" title="{{ button_compare }}" aria-label="{{ button_compare }}">
+          <i class="fa-solid fa-arrow-right-arrow-left"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="pd-card-body">
+      <h3 class="pd-card-title">
+        <a href="{{ href }}" title="{{ name }}">{{ name }}</a>
+      </h3>
+
+      {% if stock_status %}
+        <div class="pd-card-stock{% if not stock_available %} is-out-of-stock{% endif %}">
+          <span aria-hidden="true"></span>{{ stock_status }}
+        </div>
+      {% endif %}
+
+      {% if review_status and rating %}
+        <div class="pd-card-rating">
+          {% for i in 1..5 %}
+            {% if rating < i %}
+              <i class="fa-regular fa-star text-muted"></i>
+            {% else %}
+              <i class="fa-solid fa-star text-warning"></i>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if price %}
+        <div class="pd-card-price-wrap">
+          {% if not special %}
+            <span class="pd-price-current">{{ price }}</span>
+          {% else %}
+            <span class="pd-price-current has-sale">{{ special }}</span>
+            <span class="pd-price-old">{{ price }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <div class="mt-auto pd-card-buy-actions">
+        <button type="button" data-product-id="{{ product_id }}" data-cart-add="{{ cart_add }}" data-cart-info="{{ cart_info }}" data-checkout="{{ checkout }}" data-cart-success="{{ text_cart_added }}" class="pd-btn-add-cart btn-add-cart">
+          <i class="fa-solid fa-cart-plus"></i>
+          <span>{{ button_cart }}</span>
+        </button>
+        <button type="button" data-product-id="{{ product_id }}" data-cart-add="{{ cart_add }}" data-cart-info="{{ cart_info }}" data-checkout="{{ checkout }}" data-cart-success="{{ text_cart_added }}" class="pd-btn-buy-now btn-buy-now">
+          <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+          <span>{{ button_buy_now }}</span>
+        </button>
+      </div>
+    </div>
+
+    <input type="hidden" name="product_id" value="{{ product_id }}"/>
+    <input type="hidden" name="quantity" value="{{ minimum }}"/>
+  </form>
+</div>

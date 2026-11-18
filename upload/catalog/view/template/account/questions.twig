@@ -1,0 +1,72 @@
+{{ header }}
+<div id="account-questions" class="container pd-question-chat-page">
+  <nav aria-label="breadcrumb"><ol class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      {% if loop.last %}<li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.text }}</li>{% else %}<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endif %}
+    {% endfor %}
+  </ol></nav>
+  <div class="row">{{ column_left }}
+    <main id="content" class="col">
+      {{ content_top }}
+      <header class="pd-question-inbox-heading"><div><span>PanDaShop</span><h1>{{ heading_title }}</h1><p>{{ text_intro }}</p></div><a class="pd-question-refresh" href="{{ refresh }}"><i class="fa-solid fa-rotate" aria-hidden="true"></i> {{ text_refresh|e }}</a></header>
+      {% if error %}<div class="alert alert-danger">{{ error|e }}</div>{% endif %}
+      {% if success %}<div class="alert alert-success">{{ success|e }}</div>{% endif %}
+      {% if conversations %}
+        <div class="pd-question-inbox-layout">
+          <nav class="pd-question-inbox-list" aria-label="{{ text_inbox|e }}">
+            <h2>{{ text_inbox|e }}</h2>
+            {% for conversation in conversations %}
+              <div class="pd-question-inbox-row{% if conversation.selected %} is-selected{% endif %}">
+                <a class="pd-question-inbox-item{% if conversation.selected %} is-selected{% endif %}" href="{{ conversation.select_url }}"{% if conversation.selected %} aria-current="page"{% endif %}>
+                  <span class="pd-question-inbox-item-heading">
+                    <strong>{{ conversation.product_name|e }}</strong>
+                    {% if conversation.unread %}<span class="pd-question-unread" aria-label="{{ conversation.unread }} {{ text_unread|e }}">{{ conversation.unread }}</span>{% endif %}
+                  </span>
+                  <span class="pd-question-inbox-preview">{{ conversation.last_message|e }}</span>
+                  <time>{{ conversation.last_activity|e }}</time>
+                </a>
+                <form method="post" action="{{ conversation.delete_url }}">
+                  <input type="hidden" name="question_id" value="{{ conversation.question_id }}"/>
+                  <button type="submit" class="pd-question-delete" aria-label="{{ text_delete|e }}" onclick="return confirm('{{ text_delete_confirm|e('js') }}')"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button>
+                </form>
+              </div>
+            {% endfor %}
+          </nav>
+          {% if selected_conversation %}
+            <section class="pd-question-chat-card is-selected">
+              <header class="pd-question-chat-header">
+                <span class="pd-question-chat-icon"><i class="fa-solid fa-box" aria-hidden="true"></i></span>
+                <div><span>{{ text_product }}</span><h2><a href="{{ selected_conversation.product_url }}">{{ selected_conversation.product_name|e }}</a></h2></div>
+              </header>
+              <div class="pd-question-chat-thread">
+                <article class="pd-question-chat-message is-customer">
+                  <strong>{{ text_initial_question|e }}</strong><p>{{ selected_conversation.question|e }}</p><time>{{ selected_conversation.date_added|e }}</time>
+                </article>
+                {% for message in selected_conversation.messages %}
+                  <article class="pd-question-chat-message{% if message.sender_type == 'admin' %} is-shop{% else %} is-customer{% endif %}">
+                    <strong>{{ message.sender_type == 'admin' ? text_shop|e : text_you|e }}</strong><p>{{ message.message|e }}</p><time>{{ message.date_added|e }}</time>
+                  </article>
+                {% endfor %}
+              </div>
+              <form method="post" action="{{ selected_conversation.reply_url }}">
+                <input type="hidden" name="question_id" value="{{ selected_conversation.question_id }}"/>
+                <input type="hidden" name="page" value="{{ page }}"/>
+                <label for="question-reply-{{ selected_conversation.question_id }}">{{ text_reply|e }}</label>
+                <textarea id="question-reply-{{ selected_conversation.question_id }}" name="message" rows="3" maxlength="2000" required></textarea>
+                <button type="submit" class="btn btn-primary">{{ text_send|e }}</button>
+              </form>
+            </section>
+          {% endif %}
+        </div>
+        <p class="pd-question-history-note">{{ text_history_retention }}</p>
+        <div class="pd-question-pagination">{{ pagination }}</div>
+      {% else %}
+        <div class="pd-question-inbox-empty"><i class="fa-regular fa-comments" aria-hidden="true"></i><p>{{ text_empty }}</p></div>
+      {% endif %}
+      <p class="mt-3"><a href="{{ back }}">{{ text_account }}</a></p>
+      {{ content_bottom }}
+    </main>
+    {{ column_right }}
+  </div>
+</div>
+{{ footer }}

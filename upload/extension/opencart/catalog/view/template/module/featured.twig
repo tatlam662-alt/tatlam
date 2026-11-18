@@ -1,0 +1,14 @@
+<section class="pd-section pd-home-product-section pd-home-featured-section{% if is_flash_sale %} pd-flash-sale{% endif %} my-4" aria-label="{{ heading_title }}">
+  <div class="pd-section-header">
+    <div>
+      {% if is_flash_sale %}<span class="pd-flash-kicker"><i class="fa-solid fa-bolt me-1" aria-hidden="true"></i>{{ text_flash_kicker }}</span>{% endif %}
+      <h2 class="pd-section-title">{{ heading_title }}</h2>
+    </div>
+    {% if is_flash_sale %}<a href="{{ special }}" class="pd-flash-all">{{ text_flash_all }} <i class="fa-solid fa-arrow-right ms-1" aria-hidden="true"></i></a>{% endif %}
+  </div>
+  <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-xl-4 pd-home-product-grid">
+    {% for product in products %}
+      <div class="col">{{ product }}</div>
+    {% endfor %}
+  </div>
+</section>

@@ -1,0 +1,98 @@
+{{ header }}
+<div id="product-compare" class="container pd-standard-page">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      {% for breadcrumb in breadcrumbs %}
+        {% if loop.last %}<li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.text }}</li>{% else %}<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>{% endif %}
+      {% endfor %}
+    </ol>
+  </nav>
+
+  {% if success %}
+    <div class="alert alert-success alert-dismissible mb-3" role="status"><i class="fa-solid fa-circle-check me-2" aria-hidden="true"></i> {{ success }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ text_close_alert }}"></button>
+    </div>
+  {% endif %}
+
+  <div class="row">
+    {{ column_left }}
+    <div id="content" class="col">
+      {{ content_top }}
+      <h1 class="pd-section-title mb-4">{{ heading_title }}</h1>
+
+      {% if products %}
+        <div class="pd-compare-scroll">
+          <table class="pd-compare-table">
+            <thead>
+              <tr>
+                <th scope="col" class="pd-compare-label">{{ text_product }}</th>
+                {% for product in products %}
+                  <th scope="col">
+                    <article class="pd-compare-product">
+                      <a href="{{ product.href }}" class="pd-compare-image">
+                        {% if product.thumb %}<img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy" width="180" height="180"/>{% endif %}
+                      </a>
+                      <h2><a href="{{ product.href }}">{{ product.name }}</a></h2>
+                      <div class="pd-compare-price">
+                        {% if product.special %}<strong>{{ product.special|replace({'đ': '₫', 'Đ': '₫'}) }}</strong><del>{{ product.price|replace({'đ': '₫', 'Đ': '₫'}) }}</del>{% else %}<strong>{{ product.price|replace({'đ': '₫', 'Đ': '₫'}) }}</strong>{% endif %}
+                      </div>
+                      <form action="{{ cart_add }}" method="post" data-oc-toggle="ajax" data-oc-load="{{ cart }}" data-oc-target="#cart">
+                        <input type="hidden" name="product_id" value="{{ product.product_id }}"/>
+                        <input type="hidden" name="quantity" value="{{ product.minimum }}"/>
+                        <button type="submit" class="btn pd-btn-neon w-100"><i class="fa-solid fa-cart-plus me-1" aria-hidden="true"></i> {{ button_cart }}</button>
+                      </form>
+                      <a href="{{ product.remove }}" class="pd-compare-remove"><i class="fa-solid fa-xmark me-1" aria-hidden="true"></i>{{ button_remove }}</a>
+                    </article>
+                  </th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">{{ text_model }}</th>{% for product in products %}<td>{{ product.model }}</td>{% endfor %}</tr>
+              <tr><th scope="row">{{ text_manufacturer }}</th>{% for product in products %}<td>{{ product.manufacturer }}</td>{% endfor %}</tr>
+              <tr><th scope="row">{{ text_availability }}</th>{% for product in products %}<td>{{ product.availability }}</td>{% endfor %}</tr>
+              {% if review_status %}
+                <tr>
+                  <th scope="row">{{ text_rating }}</th>
+                  {% for product in products %}
+                    <td>
+                      <span class="pd-compare-stars" aria-label="{{ product.rating }} / 5">
+                        {% for i in 1..5 %}{% if product.rating < i %}<i class="fa-regular fa-star" aria-hidden="true"></i>{% else %}<i class="fa-solid fa-star" aria-hidden="true"></i>{% endif %}{% endfor %}
+                      </span>
+                      <small class="d-block">{{ product.reviews }}</small>
+                    </td>
+                  {% endfor %}
+                </tr>
+              {% endif %}
+              <tr><th scope="row">{{ text_summary }}</th>{% for product in products %}<td class="pd-compare-description">{{ product.description }}</td>{% endfor %}</tr>
+              <tr><th scope="row">{{ text_weight }}</th>{% for product in products %}<td>{{ product.weight }}</td>{% endfor %}</tr>
+              <tr><th scope="row">{{ text_dimension }}</th>{% for product in products %}<td>{{ product.length }} × {{ product.width }} × {{ product.height }}</td>{% endfor %}</tr>
+              {% for attribute_group in attribute_groups %}
+                <tr class="pd-compare-group"><th colspan="{{ products|length + 1 }}" scope="colgroup">{{ attribute_group.name }}</th></tr>
+                {% for key, attribute in attribute_group.attribute %}
+                  <tr>
+                    <th scope="row">{{ attribute.name }}</th>
+                    {% for product in products %}
+                      <td>{% if product.attribute[key] %}{{ product.attribute[key] }}{% else %}<span class="pd-compare-empty-value">—</span>{% endif %}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="pd-compare-empty">
+          <span aria-hidden="true"><i class="fa-solid fa-arrow-right-arrow-left"></i></span>
+          <h2>{{ text_no_results }}</h2>
+          <p>{{ text_compare_empty_hint }}</p>
+          <a href="{{ continue }}" class="btn pd-btn-neon">{{ text_continue_shopping }} <i class="fa-solid fa-arrow-right ms-1" aria-hidden="true"></i></a>
+        </div>
+      {% endif %}
+
+      {{ content_bottom }}
+    </div>
+    {{ column_right }}
+  </div>
+</div>
+{{ footer }}

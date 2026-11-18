@@ -1,0 +1,26 @@
+<?php
+$_['text_reviews'] = '%s đánh giá';
+$_['text_write'] = 'Gửi đánh giá';
+$_['text_login'] = 'Vui lòng <a href="%s">đăng nhập</a> bằng tài khoản đã mua sản phẩm này để gửi đánh giá.';
+$_['text_purchase_required'] = 'Chỉ khách hàng đã mua sản phẩm này bằng tài khoản đang đăng nhập và có đơn hàng đã hoàn tất mới có thể gửi đánh giá.';
+$_['text_no_results'] = 'Chưa có đánh giá. Hãy là người đầu tiên đánh giá sản phẩm này.';
+$_['text_stars'] = 'sao';
+$_['text_review_list_empty'] = 'Chưa có đánh giá';
+$_['text_review_write'] = 'Viết đánh giá';
+$_['text_verified_purchase'] = 'Đã mua hàng';
+$_['text_note'] = '<span class="text-danger">Lưu ý:</span> Nội dung HTML không được hỗ trợ.';
+$_['text_success'] = 'Đánh giá của bạn đang chờ duyệt.';
+$_['entry_author'] = 'Tên của bạn';
+$_['entry_review'] = 'Đánh giá của bạn';
+$_['entry_rating'] = 'Số sao';
+$_['entry_good'] = 'Tốt';
+$_['entry_bad'] = 'Chưa tốt';
+$_['tab_review'] = 'Đánh giá (%s)';
+$_['error_token'] = 'Phiên gửi đánh giá không hợp lệ. Vui lòng tải lại trang.';
+$_['error_product'] = 'Không tìm thấy sản phẩm.';
+$_['error_author'] = 'Tên cần có từ 3 đến 25 ký tự.';
+$_['error_text'] = 'Nội dung đánh giá cần có từ 25 đến 1000 ký tự.';
+$_['error_rating'] = 'Vui lòng chọn số sao.';
+$_['error_login'] = 'Vui lòng đăng nhập để đánh giá sản phẩm.';
+$_['error_purchased'] = 'Bạn chỉ có thể đánh giá sau khi đơn mua sản phẩm này được hoàn tất.';
+$_['error_status'] = 'Chức năng đánh giá hiện chưa được bật.';

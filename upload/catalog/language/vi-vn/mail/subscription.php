@@ -1,0 +1,33 @@
+<?php
+// Text
+$_['text_subject']               = '%s - Gói đăng ký %s';
+$_['text_greeting']              = 'Cảm ơn bạn đã quan tâm đến sản phẩm %s. Yêu cầu đăng ký của bạn đã được tiếp nhận và sẽ được xử lý sau khi xác nhận thanh toán.';
+$_['text_link']                  = 'Để xem gói đăng ký, vui lòng nhấp vào liên kết bên dưới:';
+$_['text_promotion']             = 'Thành công: Tính năng khuyến mãi đã được thêm vào gói đăng ký này!';
+$_['text_subscription_duration'] = '%s mỗi %d %s, trong %d kỳ thanh toán';
+$_['text_subscription_cancel']   = '%s mỗi %d %s cho đến khi hủy';
+$_['text_subscription_detail']   = 'Chi tiết gói đăng ký';
+$_['text_instruction']           = 'Hướng dẫn';
+$_['text_orders_id']             = 'Mã đơn hàng:';
+$_['text_date_added']            = 'Ngày tạo:';
+$_['text_order_status']          = 'Trạng thái đơn hàng:';
+$_['text_payment_method']        = 'Phương thức thanh toán:';
+$_['text_payment_address']       = 'Địa chỉ thanh toán';
+$_['text_email']                 = 'Email:';
+$_['text_telephone']             = 'Điện thoại:';
+$_['text_ip']                    = 'Địa chỉ IP:';
+$_['text_products']              = 'Sản phẩm';
+$_['text_product']               = 'Sản phẩm';
+$_['text_model']                 = 'Mã sản phẩm';
+$_['text_quantity']              = 'Số lượng';
+$_['text_price']                 = 'Giá';
+$_['text_order_total']           = 'Tổng tiền đơn hàng';
+$_['text_total']                 = 'Tổng cộng';
+$_['text_comment']               = 'Nội dung ghi chú cho gói đăng ký:';
+$_['text_description']           = 'Mô tả';
+$_['text_day']                   = 'ngày';
+$_['text_week']                  = 'tuần';
+$_['text_semi_month']            = 'nửa tháng';
+$_['text_month']                 = 'tháng';
+$_['text_year']                  = 'năm';
+$_['text_footer']                = 'Vui lòng trả lời email này nếu bạn có bất kỳ câu hỏi nào.';

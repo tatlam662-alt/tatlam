@@ -1,0 +1,35 @@
+{{ header }}
+<div class="container pd-question-chat-page">
+  <nav aria-label="breadcrumb"><ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{ question.product_url }}">{{ question.product_name|e }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ heading_title }}</li>
+  </ol></nav>
+  <section class="pd-question-chat-card">
+    <header class="pd-question-chat-header">
+      <span class="pd-question-chat-icon"><i class="fa-regular fa-comments" aria-hidden="true"></i></span>
+      <div><span>{{ text_product }}</span><h1>{{ question.product_name|e }}</h1><small>{{ email|e }}</small></div>
+    </header>
+    <div class="pd-question-chat-thread">
+      <article class="pd-question-chat-message is-customer">
+        <strong>{{ author|e }} · {{ text_initial_question }}</strong>
+        <p>{{ initial_message|e }}</p>
+        <time>{{ question.date_added|e }}</time>
+      </article>
+      {% for message in messages %}
+        <article class="pd-question-chat-message{% if message.sender_type == 'admin' %} is-shop{% else %} is-customer{% endif %}">
+          <strong>{{ message.sender_type == 'admin' ? text_shop : author|e }}</strong>
+          <p>{{ message.message|e }}</p>
+          <time>{{ message.date_added|e }}</time>
+        </article>
+      {% endfor %}
+    </div>
+    {% if error %}<div class="alert alert-danger">{{ error|e }}</div>{% endif %}
+    {% if success %}<div class="alert alert-success">{{ success|e }}</div>{% endif %}
+    <form method="post" action="{{ reply_url }}">
+      <label for="question-chat-reply">{{ text_reply }}</label>
+      <textarea id="question-chat-reply" name="message" rows="4" minlength="1" maxlength="2000" required></textarea>
+      <button type="submit" class="btn btn-primary">{{ text_send }}</button>
+    </form>
+  </section>
+</div>
+{{ footer }}

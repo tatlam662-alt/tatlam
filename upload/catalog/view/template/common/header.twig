@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html dir="{{ direction }}" lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{{ title }}</title>
+  <base href="{{ base }}"/>
+  {% if description %}
+    <meta name="description" content="{{ description }}"/>
+  {% endif %}
+  {% if keywords %}
+    <meta name="keywords" content="{{ keywords }}"/>
+  {% endif %}
+  <script src="{{ jquery }}" type="text/javascript"></script>
+  <link href="{{ bootstrap }}" type="text/css" rel="stylesheet" media="screen"/>
+  <link href="{{ icons }}" rel="stylesheet" type="text/css"/>
+  <link href="{{ stylesheet }}" type="text/css" rel="stylesheet"/>
+  <!-- PanDaShop Theme CSS & JS -->
+  <link href="{{ panda_stylesheet }}" type="text/css" rel="stylesheet"/>
+  <link href="{{ pandashop_ui_stylesheet }}" type="text/css" rel="stylesheet"/>
+  <link href="{{ pandashop_checkout_stylesheet }}" type="text/css" rel="stylesheet"/>
+  <script src="{{ pd_dialog_script }}" type="text/javascript"></script>
+  <script src="{{ common_script }}" type="text/javascript"></script>
+  <script src="{{ panda_script }}" type="text/javascript" defer></script>
+  <link rel="icon" href="image/catalog/pandashop-panda-logo.svg" type="image/svg+xml">
+  {% for style in styles %}
+    <link href="{{ style.href }}" type="text/css" rel="{{ style.rel }}" media="{{ style.media }}"/>
+  {% endfor %}
+  {% for script in scripts %}
+    <script src="{{ script.href }}" type="text/javascript"></script>
+  {% endfor %}
+  {% for link in links %}
+    <link href="{{ link.href }}" rel="{{ link.rel }}"/>
+  {% endfor %}
+  {% for analytic in analytics %}
+    {{ analytic }}
+  {% endfor %}
+</head>
+<body{% if logged %} data-pd-exit-logout-url="{{ auto_logout_url|e('html_attr') }}" data-pd-exit-logout-token="{{ auto_logout_token|e('html_attr') }}"{% endif %}{% if smember_checkout_login_required %} data-pd-checkout-login-required="true"{% endif %}>
+<div id="container">
+  <div id="alert"></div>
+  {% if not logged %}
+    <div id="pd-smember-prompt" class="pd-smember-prompt" hidden data-login-url="{{ login|e('html_attr') }}" data-register-url="{{ register|e('html_attr') }}" aria-hidden="true">
+      <button type="button" class="pd-smember-backdrop" data-smember-close aria-label="{{ text_smember_close }}"></button>
+      <section class="pd-smember-card" role="dialog" aria-modal="true" aria-labelledby="pd-smember-title" aria-describedby="pd-smember-description">
+        <button type="button" class="pd-smember-close" data-smember-close aria-label="{{ text_smember_close }}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        <h2 id="pd-smember-title">{{ name|e('html') }}</h2>
+        <div class="pd-smember-mascot" aria-hidden="true">
+          <img src="{{ (logo ? logo : 'image/catalog/pandashop-panda-logo.svg')|e('html_attr') }}" alt="{{ name|e('html_attr') }}" width="92" height="92" />
+        </div>
+        <p id="pd-smember-description">{{ text_smember_description }}</p>
+        <div class="pd-smember-actions">
+          <a class="pd-smember-register" data-smember-register href="{{ register|e('html_attr') }}">{{ text_register }}</a>
+          <a class="pd-smember-login" data-smember-login href="{{ login|e('html_attr') }}">{{ text_login }}</a>
+        </div>
+      </section>
+    </div>
+  {% endif %}
+
+  <!-- 1. Top Bar: ThÃ´ng bÃ¡o má»ng vÃ  thÃ´ng tin tiá»‡n Ã­ch -->
+  <div id="top" class="pd-topbar">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 col-12">
+          <div class="pd-topbar-notice">
+            <i class="fa-solid fa-bolt"></i>
+            <span>{{ text_header_notice }}</span>
+          </div>
+        </div>
+        <div class="col-lg-6 d-none d-lg-block">
+          <ul class="pd-topbar-links">
+            <li><a href="{{ contact }}"><i class="fa-solid fa-headset me-1"></i>{{ text_support }}</a></li>
+            <li><a href="{{ topbar_store }}"><i class="fa-solid fa-location-dot me-1"></i>{{ text_store_system }}</a></li>
+            <li><a href="{{ topbar_order }}"><i class="fa-solid fa-box-open me-1"></i>{{ text_order_lookup }}</a></li>
+            <li><a href="{{ topbar_news }}"><i class="fa-regular fa-newspaper me-1"></i>{{ text_technology_news }}</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Header chÃ­nh: Sticky trÃªn desktop, co giÃ£n hoÃ n háº£o trÃªn mobile -->
+  <header class="pd-header">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between gap-3 py-2">
+        <!-- NÃºt má»Ÿ drawer trÃªn mobile -->
+        <button type="button" class="pd-mobile-nav-toggle d-lg-none" aria-label="{{ text_open_menu|escape }}" aria-controls="pd-mobile-menu" aria-expanded="false">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <!-- Logo -->
+        <div id="logo" style="max-width: 180px;">
+          <a href="{{ home }}" class="pd-logo">
+            <img class="pd-brand-mark" src="image/catalog/pandashop-panda-logo.svg" alt="" width="44" height="44" />
+            <span>{{ name }}</span>
+          </a>
+        </div>
+
+        <div class="dropdown pd-catalog-menu d-none d-lg-block">
+          <button type="button" class="pd-catalog-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-bars" aria-hidden="true"></i><span>{{ text_catalog_categories }}</span>
+          </button>
+          <div class="dropdown-menu pd-catalog-dropdown">
+            {% for category in header_categories %}
+              <div class="pd-catalog-dropdown-group">
+                <a class="pd-catalog-category" href="{{ category.href }}">{{ category.name }}</a>
+                {% for child in category.children %}
+                  <a class="pd-catalog-child" href="{{ child.href }}">{{ child.name }}</a>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Thanh tÃ¬m kiáº¿m to á»Ÿ giá»¯a (Desktop) -->
+        <div class="pd-search-box d-none d-lg-block flex-grow-1 mx-3">
+          {{ search }}
+        </div>
+
+        <!-- Cá»¥m hÃ nh Ä‘á»™ng ngÆ°á»i dÃ¹ng -->
+        <div class="pd-header-actions d-flex align-items-center gap-2">
+          <div class="pd-header-language pd-language-control d-none d-md-block">{{ language }}</div>
+          <div class="pd-header-currency d-none d-xxl-block">{{ currency }}</div>
+          <!-- TÃ i khoáº£n (áº¨n text trÃªn mÃ n hÃ¬nh nhá») -->
+          <div class="dropdown d-none d-md-block">
+            <button type="button" class="pd-action-btn pd-header-icon-button" title="{{ text_account }}" aria-label="{{ text_account }}" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="pd-action-icon"><i class="fa-regular fa-user"></i></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="border-radius: 8px;">
+              {% if not logged %}
+                <li><a href="{{ login }}" class="dropdown-item"><i class="fa-solid fa-arrow-right-to-bracket me-2 text-muted"></i>{{ text_login }}</a></li>
+                <li><a href="{{ register }}" class="dropdown-item"><i class="fa-solid fa-user-plus me-2 text-muted"></i>{{ text_register }}</a></li>
+              {% else %}
+                <li><a href="{{ account }}" class="dropdown-item"><i class="fa-regular fa-id-badge me-2 text-muted"></i>{{ text_account }}</a></li>
+                <li><a href="{{ questions }}" class="dropdown-item"><i class="fa-regular fa-comments me-2 text-muted"></i>{{ text_product_questions }}{% if questions_unread %} <span class="badge rounded-pill text-bg-info">{{ questions_unread }}</span>{% endif %}</a></li>
+                <li><a href="{{ order }}" class="dropdown-item"><i class="fa-solid fa-box-archive me-2 text-muted"></i>{{ text_order }}</a></li>
+                <li><a href="{{ transaction }}" class="dropdown-item"><i class="fa-solid fa-credit-card me-2 text-muted"></i>{{ text_transaction }}</a></li>
+                <li><a href="{{ download }}" class="dropdown-item"><i class="fa-solid fa-download me-2 text-muted"></i>{{ text_download }}</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a href="{{ logout }}" class="dropdown-item text-danger"><i class="fa-solid fa-power-off me-2"></i>{{ text_logout }}</a></li>
+              {% endif %}
+            </ul>
+          </div>
+
+          <!-- YÃªu thÃ­ch -->
+          <a href="{{ wishlist }}" id="wishlist-total" class="pd-action-btn pd-header-icon-button d-none d-sm-inline-flex" title="{{ text_wishlist }}" aria-label="{{ text_wishlist_label }}">
+            <span class="pd-action-icon"><i class="fa-regular fa-heart"></i></span>
+            <span class="pd-count-badge pd-wishlist-count-badge">{{ wishlist_count }}</span>
+          </a>
+
+          <a href="{{ compare }}" class="pd-action-btn pd-header-icon-button d-none d-sm-inline-flex" title="{{ text_compare }}" aria-label="{{ text_compare_label }}">
+            <span class="pd-action-icon"><i class="fa-solid fa-arrow-right-arrow-left"></i></span>
+            <span class="pd-count-badge pd-compare-count-badge">{{ compare_count }}</span>
+          </a>
+
+          <!-- Giá» hÃ ng -->
+          <div id="cart">
+            {{ cart }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Ã” tÃ¬m kiáº¿m trÃªn Mobile (Chiáº¿m full 1 hÃ ng dÆ°á»›i logo vÃ  nÃºt báº¥m) -->
+      <div class="d-lg-none pb-2 pt-1">
+        {{ search }}
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Offcanvas Menu Drawer & Backdrop -->
+  <div class="pd-offcanvas-backdrop"></div>
+  <div id="pd-mobile-menu" class="pd-offcanvas" aria-hidden="true" inert>
+    <div class="d-flex align-items-center justify-content-between pb-3 border-bottom mb-3">
+      <div class="d-flex align-items-center gap-2">
+        <img class="pd-brand-mark pd-brand-mark-small" src="image/catalog/pandashop-panda-logo.svg" alt="" width="34" height="34" />
+        <strong>{{ name }}</strong>
+      </div>
+      <button type="button" class="btn-close pd-offcanvas-close" aria-label="{{ text_close_menu|escape }}"></button>
+    </div>
+    <div class="pd-offcanvas-content">
+      <div class="pd-mobile-language mb-3">{{ language }}</div>
+      <div class="pd-mobile-currency mb-3">{{ currency }}</div>
+      <h6 class="text-uppercase text-muted small fw-bold mb-2">{{ text_catalog_categories }}</h6>
+      <div id="pd-mobile-categories"></div>
+      <h6 class="text-uppercase text-muted small fw-bold mt-4 mb-2">{{ text_utilities }}</h6>
+      <ul class="list-unstyled">
+        <li class="py-2 border-bottom"><a href="{{ wishlist }}" class="pd-mobile-utility-link"><i class="fa-regular fa-heart"></i><span>{{ text_wishlist_label }}</span><span class="pd-mobile-link-count pd-wishlist-count-badge">{{ wishlist_count }}</span></a></li>
+        <li class="py-2 border-bottom"><a href="{{ compare }}" class="pd-mobile-utility-link"><i class="fa-solid fa-arrow-right-arrow-left"></i><span>{{ text_compare_label }}</span><span class="pd-mobile-link-count pd-compare-count-badge">{{ compare_count }}</span></a></li>
+        <li class="py-2 border-bottom"><a href="{{ shopping_cart }}" class="pd-mobile-utility-link"><i class="fa-solid fa-cart-shopping"></i><span>{{ text_cart_label }}</span></a></li>
+        <li class="py-2 border-bottom"><a href="{{ contact }}" class="pd-mobile-utility-link"><i class="fa-solid fa-headset"></i><span>{{ text_support }}</span></a></li>
+        {% if not logged %}
+          <li class="py-2 border-bottom"><a href="{{ login }}" class="pd-mobile-utility-link"><i class="fa-solid fa-arrow-right-to-bracket"></i><span>{{ text_login }}</span></a></li>
+          <li class="py-2"><a href="{{ register }}" class="pd-mobile-utility-link"><i class="fa-solid fa-user-plus"></i><span>{{ text_register }}</span></a></li>
+        {% else %}
+          <li class="py-2 border-bottom"><a href="{{ account }}" class="pd-mobile-utility-link"><i class="fa-regular fa-user"></i><span>{{ text_account }}</span></a></li>
+          <li class="py-2 border-bottom"><a href="{{ questions }}" class="pd-mobile-utility-link"><i class="fa-regular fa-comments"></i><span>{{ text_product_questions }}{% if questions_unread %} ({{ questions_unread }}){% endif %}</span></a></li>
+          <li class="py-2"><a href="{{ logout }}" class="pd-mobile-utility-link is-danger"><i class="fa-solid fa-power-off"></i><span>{{ text_logout }}</span></a></li>
+        {% endif %}
+      </ul>
+      <h6 class="text-uppercase text-muted small fw-bold mt-4 mb-2">{{ text_service_links }}</h6>
+      <ul id="pd-mobile-service-links" class="list-unstyled mb-0"></ul>
+    </div>
+  </div>
+
+  {{ checkin_login_prompt }}
+
+  <main>
+    {{ menu }}

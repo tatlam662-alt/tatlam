@@ -1,0 +1,116 @@
+{{ header }}
+<div id="product-category" class="container pd-standard-page">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row pd-category-layout">{{ column_left }}
+    <div id="content" class="col">{{ content_top }}
+      <header class="pd-category-title">
+        <h1>{{ heading_title }}</h1>
+        <span>{{ product_count }} {{ text_product }}</span>
+      </header>
+      {% if image or description %}
+        <div class="row">
+          {% if image %}
+            <div class="col-3"><img src="{{ image }}" alt="{{ heading_title }}" title="{{ heading_title }}" class="img-thumbnail"/></div>
+          {% endif %}
+          {% if description %}
+            <div class="col-9">{{ description }}</div>
+          {% endif %}
+        </div>
+        <hr/>
+      {% endif %}
+
+      {% if products %}
+        <section class="ps-toolbar" aria-label="{{ text_filter_heading }}">
+          <div class="ps-toolbar__left">
+            <div class="ps-view-toggle" role="img" aria-label="{{ text_grid_view }}">
+              <span class="ps-view is-active" aria-hidden="true"><i class="fa-solid fa-table-cells"></i></span>
+            </div>
+            <label class="ps-toolbar__field"><span class="ps-toolbar__label">{{ text_sort }}</span>
+              <select id="input-sort" class="ps-select" onchange="window.pdNavigateWithinShop(this.value);">
+                {% for sorts in sorts %}<option value="{{ sorts.href }}"{% if sorts.value == '%s-%s'|format(sort, order) %} selected{% endif %}>{{ sorts.text }}</option>{% endfor %}
+              </select>
+            </label>
+          </div>
+          <div class="ps-toolbar__right">
+            {% if column_left %}<button type="button" class="pd-toolbar-filter-toggle ps-filter-toggle" aria-controls="pd-toolbar-filter-slot" aria-expanded="false"><i class="fa-solid fa-sliders" aria-hidden="true"></i> {{ text_filter_heading }}</button>{% endif %}
+            <a href="{{ compare }}" id="compare-total" class="ps-btn-compare{% if compare_count > 0 %} has-items{% endif %}"><i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i><span>{{ text_compare_button }}</span><span class="ps-badge pd-compare-count-badge">{{ compare_count }}</span></a>
+          </div>
+        </section>
+        <div class="pd-stock-filter">
+          <a href="{{ stock_filter_href }}" class="{% if in_stock %}is-active{% endif %}" aria-pressed="{{ in_stock ? 'true' : 'false' }}"><i class="fa-solid {% if in_stock %}fa-square-check{% else %}fa-box{% endif %}" aria-hidden="true"></i>{{ text_filter_in_stock }}</a>
+        </div>
+        <div class="pd-toolbar-filters">
+          <div id="pd-toolbar-filter-slot" class="pd-toolbar-filter-slot"></div>
+        </div>
+        <button type="button" class="pd-toolbar-filter-backdrop" aria-label="{{ text_close_filters }}" hidden></button>
+      {% endif %}
+      {% if not products and column_left %}
+        <section class="pd-listing-panel d-lg-none" aria-label="{{ text_filter_heading }}">
+          <button type="button" class="pd-category-filter-toggle" aria-controls="column-left" aria-expanded="false">
+            <i class="fa-solid fa-sliders" aria-hidden="true"></i> {{ text_filter_heading }}
+          </button>
+        </section>
+      {% endif %}
+
+      {% if products %}
+        {% if active_filters %}
+          <div class="pd-active-filters" aria-label="{{ text_active_filters }}">
+            <span class="pd-active-filters-label">{{ text_active_filters }}:</span>
+            {% for active_filter in active_filters %}<a href="{{ active_filter.href }}" class="pd-active-filter-chip">{{ active_filter.name }} <i class="fa-solid fa-xmark" aria-hidden="true"></i></a>{% endfor %}
+            <a href="{{ clear_filters }}" class="pd-filter-clear">{{ text_clear_filters }}</a>
+          </div>
+        {% endif %}
+
+        <div id="product-list" class="pd-product-grid ps-product-results ps-view-grid row g-3 row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+          {% for product in products %}
+            <div class="col mb-3">{{ product }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="row pd-pagination-row">
+          <div class="col-sm-6 text-start">{{ pagination }}</div>
+          <div class="col-sm-6 text-end">{{ results }}</div>
+        </div>
+      {% endif %}
+      {% if not products %}
+        <div class="pd-empty-state p-4 text-center my-4">
+          <i class="fa-solid fa-box-open fs-2 text-info mb-3" aria-hidden="true"></i>
+          <p class="mb-3">{{ text_no_results }}</p>
+          <a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a>
+        </div>
+      {% endif %}
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+<button type="button" class="pd-filter-backdrop" aria-label="{{ text_close_filters }}" hidden></button>
+<script>
+(() => {
+  const filter = document.querySelector('#column-left .panda-top-filter-controls');
+  const slot = document.getElementById('pd-toolbar-filter-slot');
+  if (filter && slot) slot.appendChild(filter);
+
+  const mobileToggle = document.querySelector('.pd-toolbar-filter-toggle');
+  const backdrop = document.querySelector('.pd-toolbar-filter-backdrop');
+  const setFilterOpen = (open) => {
+    document.body.classList.toggle('pd-toolbar-filter-open', open);
+    if (mobileToggle) mobileToggle.setAttribute('aria-expanded', String(open));
+    if (backdrop) backdrop.hidden = !open;
+  };
+  if (mobileToggle && mobileToggle.dataset.bound !== 'true') {
+    mobileToggle.dataset.bound = 'true';
+    mobileToggle.addEventListener('click', () => setFilterOpen(!document.body.classList.contains('pd-toolbar-filter-open')));
+  }
+  if (backdrop) backdrop.addEventListener('click', () => setFilterOpen(false));
+  document.querySelectorAll('.panda-filter-mobile-actions .panda-filter-apply-button').forEach((button) => {
+    button.addEventListener('click', () => setFilterOpen(false));
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && document.body.classList.contains('pd-toolbar-filter-open')) setFilterOpen(false);
+  });
+})();
+</script>
+{{ footer }}

@@ -1,0 +1,20 @@
+<?php
+$_['heading_title'] = 'Chỉnh Sửa Thông Tin Cá Nhân';
+$_['text_account'] = 'Tài khoản';
+$_['text_edit'] = 'Chỉnh sửa thông tin';
+$_['text_your_details'] = 'Thông tin cá nhân';
+$_['text_success'] = 'Thành công: Thông tin tài khoản đã được cập nhật.';
+$_['entry_firstname'] = 'Tên người nhận';
+$_['entry_lastname'] = 'Họ & Tên đệm';
+$_['entry_email'] = 'Địa chỉ Email';
+$_['entry_telephone'] = 'Số điện thoại';
+$_['button_continue'] = 'Lưu thay đổi';
+$_['button_back'] = 'Quay lại';
+$_['error_token'] = 'Cảnh báo: Mã xác thực chỉnh sửa không hợp lệ!';
+$_['error_exists'] = 'Email này đã được đăng ký!';
+$_['error_firstname'] = 'Tên phải có từ 1 đến 32 ký tự!';
+$_['error_lastname'] = 'Họ phải có từ 1 đến 32 ký tự!';
+$_['error_email'] = 'Địa chỉ Email không hợp lệ!';
+$_['error_telephone'] = 'Số điện thoại phải có từ 3 đến 32 ký tự!';
+$_['error_custom_field'] = 'Trường %s là bắt buộc!';
+$_['error_regex'] = 'Giá trị trường %s không hợp lệ!';

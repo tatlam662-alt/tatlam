@@ -1,0 +1,130 @@
+{{ header }}
+<div id="account-reward" class="container pd-reward-page">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <div class="row">
+    {{ column_left }}
+    <div id="content" class="col">
+      {{ content_top }}
+
+      <section class="pd-reward-hero">
+        <div class="pd-reward-summary">
+          <div class="pd-reward-heading">
+            <span class="pd-reward-icon" aria-hidden="true"><i class="fa-solid fa-coins"></i></span>
+            <div>
+              <span class="pd-reward-eyebrow">ĐIỂM THƯỞNG PANDASHOP</span>
+              <h1>{{ heading_title }}</h1>
+              <p>{{ text_intro }}</p>
+            </div>
+          </div>
+          <div class="pd-reward-balance" aria-label="{{ text_available_points }}">
+            <span>{{ text_available_points }}</span>
+            <strong id="pd-reward-total">{{ total_points }} <small>{{ text_points }}</small></strong>
+            <span class="pd-reward-estimate"><i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i> {{ text_estimated_value }} <b>{{ equivalent_money }}</b></span>
+          </div>
+        </div>
+
+        <div class="pd-checkin-card">
+          <span class="pd-checkin-icon" aria-hidden="true"><i class="fa-solid fa-calendar-check"></i></span>
+          <div class="pd-checkin-copy">
+            <span class="pd-checkin-kicker">{{ text_checkin_reward }}</span>
+            <h2>{{ text_checkin_title }}</h2>
+            <p>{{ text_checkin_description }}</p>
+            <div class="pd-checkin-streak" role="status" aria-label="{{ text_checkin_streak_label }}">
+              <span>{{ text_checkin_streak_label }}</span>
+              <strong id="pd-checkin-streak">{{ checkin_streak_text }}</strong>
+              <div class="pd-checkin-streak-track"><span id="pd-checkin-streak-bar" style="width: {{ checkin_streak_percent }}%"></span></div>
+            </div>
+            <button class="pd-checkin-open btn btn-outline-info" type="button" data-bs-toggle="modal" data-bs-target="#pd-checkin-modal">
+              <i class="fa-solid fa-calendar-week" aria-hidden="true"></i> {{ text_checkin_open }}
+            </button>
+          </div>
+        </div>
+
+        {{ checkin_modal }}
+      </section>
+
+      <section class="pd-mission-card" aria-label="{{ text_missions_title }}">
+        <div class="pd-reward-section-heading">
+          <div><span class="pd-reward-eyebrow">PANDACOINS GUIDE</span><h2>{{ text_missions_title }}</h2></div>
+        </div>
+        <div class="pd-mission-list">
+          <article class="pd-mission-item"><span><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span><div><h3>{{ text_mission_orders_title }}</h3><p>{{ text_mission_orders }}</p></div></article>
+          <article class="pd-mission-item"><span><i class="fa-solid fa-calendar-day" aria-hidden="true"></i></span><div><h3>{{ text_mission_checkin_title }}</h3><p>{{ text_mission_checkin }}</p></div></article>
+          <article class="pd-mission-item"><span><i class="fa-solid fa-star" aria-hidden="true"></i></span><div><h3>{{ text_mission_review_title }}</h3><p>{{ text_mission_review }}</p><small class="pd-mission-status">{{ text_mission_unavailable }}</small></div></article>
+          <article class="pd-mission-item"><span><i class="fa-solid fa-user-plus" aria-hidden="true"></i></span><div><h3>{{ text_mission_referral_title }}</h3><p>{{ text_mission_referral }}</p><small class="pd-mission-status">{{ text_mission_unavailable }}</small></div></article>
+        </div>
+      </section>
+
+      <section class="pd-reward-rules" aria-labelledby="pd-reward-rules-title">
+        <div class="pd-reward-section-heading">
+          <div><span class="pd-reward-eyebrow">PANDACOINS POLICY</span><h2 id="pd-reward-rules-title">{{ text_rules_title }}</h2></div>
+        </div>
+        <div class="pd-reward-rules-grid">
+          <article><i class="fa-solid fa-circle-plus" aria-hidden="true"></i><div><h3>{{ text_rules_earn_title }}</h3><p>{{ text_rules_earn }}</p></div></article>
+          <article><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i><div><h3>{{ text_rules_redeem_title }}</h3><p>{{ text_rules_redeem }}</p></div></article>
+          <article><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i><div><h3>{{ text_rules_value_title }}</h3><p>{{ text_rules_value }}</p></div></article>
+        </div>
+      </section>
+
+      <section class="pd-reward-history" aria-labelledby="pd-reward-history-title">
+        <div class="pd-reward-section-heading">
+          <div>
+            <span class="pd-reward-eyebrow">YOUR ACTIVITY</span>
+            <h2 id="pd-reward-history-title">{{ text_history }}</h2>
+          </div>
+          <span class="pd-reward-count"><i class="fa-regular fa-clock" aria-hidden="true"></i> {{ reward_count_label }}</span>
+        </div>
+
+        {% if rewards %}
+          <div class="table-responsive pd-reward-table-wrap">
+            <table class="table pd-reward-table">
+              <thead>
+                <tr>
+                  <th>{{ column_date_added }}</th>
+                  <th>{{ column_description }}</th>
+                  <th class="text-end">{{ column_points }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for reward in rewards %}
+                  <tr>
+                    <td class="pd-reward-date"><i class="fa-regular fa-calendar" aria-hidden="true"></i> {{ reward.date_added }}</td>
+                    <td class="pd-reward-description">
+                      {% if reward.order_id %}
+                        <a href="{{ reward.href }}">{{ reward.description }} <span class="pd-reward-order">#{{ reward.order_id }}</span></a>
+                      {% else %}
+                        {{ reward.description }}
+                      {% endif %}
+                    </td>
+                    <td class="text-end"><span class="pd-reward-points{% if not reward.is_positive %} is-negative{% endif %}">{{ reward.points }} <small>{{ text_points }}</small></span></td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="pd-reward-pagination">
+            <div>{{ pagination }}</div>
+            <span>{{ results }}</span>
+          </div>
+        {% else %}
+          <div class="pd-reward-empty">
+            <span class="pd-reward-empty-icon"><i class="fa-solid fa-sparkles" aria-hidden="true"></i></span>
+            <h3>{{ text_empty_title }}</h3>
+            <p>{{ text_no_results }}</p>
+          </div>
+        {% endif %}
+      </section>
+
+      <p class="pd-reward-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> {{ conversion_rate }}</p>
+      <div class="pd-reward-footer"><a href="{{ continue }}" class="btn btn-primary"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {{ button_continue }}</a></div>
+      {{ content_bottom }}
+    </div>
+    {{ column_right }}
+  </div>
+</div>
+{{ footer }}

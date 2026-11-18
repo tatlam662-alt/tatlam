@@ -1,0 +1,10 @@
+<div class="pd-section pd-home-product-section my-4">
+  <div class="pd-section-header">
+    <h2 class="pd-section-title">{{ heading_title }}</h2>
+  </div>
+  <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-xl-4 pd-home-product-grid">
+    {% for product in products %}
+      <div class="col mb-3">{{ product }}</div>
+    {% endfor %}
+  </div>
+</div>

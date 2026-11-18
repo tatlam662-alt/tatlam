@@ -1,0 +1,191 @@
+{{ header }}
+
+<style id="pandashop-catalog-home">
+  #common-home.pd-store-home { padding-top:18px; padding-bottom:42px; color:#f1f5f9; }
+  #common-home.pd-store-home #content { min-width:0; }
+  #common-home .pd-home-module { margin-bottom:22px; padding:clamp(12px,1.7vw,20px); overflow:hidden; border:1px solid #1e293b; border-radius:16px; background:linear-gradient(145deg,#101827,#0a0f18 78%); }
+  #common-home .pd-home-module:empty { display:none; }
+  #common-home .pd-home-brand-wall { display:flex; align-items:center; gap:14px; margin:0 0 22px; padding:12px 15px; overflow:auto; border:1px solid #1e293b; border-radius:13px; background:#0d1420; }
+  #common-home .pd-home-brand-label { flex:0 0 auto; color:#20def4; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+  #common-home .pd-home-brand-list { display:flex; flex:1; align-items:center; justify-content:space-between; gap:10px; }
+  #common-home .pd-home-brand { display:flex; min-width:92px; height:38px; align-items:center; justify-content:center; padding:6px 11px; border:1px solid #263449; border-radius:9px; background:#121b2a; color:#dbe7f4; font-size:11px; font-weight:750; text-decoration:none; white-space:nowrap; }
+  #common-home .pd-home-brand img { max-width:82px; max-height:24px; object-fit:contain; }
+  #common-home .pd-home-section { margin:0 0 24px; padding:clamp(13px,1.7vw,20px); border:1px solid #243248; border-radius:17px; background:linear-gradient(145deg,#0f1724,#090e17 78%); }
+  #common-home .pd-home-section[id^="home-category-"] { scroll-margin-top:calc(var(--nx-header-h,68px) + 82px); }
+  #common-home .pd-home-hero-modules { margin:0 0 10px; padding:0; overflow:visible; border:0; background:transparent; }
+  #common-home .pd-home-hero-modules .pd-home-departments,
+  #common-home .pd-home-hero-modules .pd-home-brand-wall { display:none !important; }
+  #common-home .pd-home-category-jump { position:sticky; top:calc(var(--nx-header-h,68px) + 8px); z-index:900; display:flex; align-items:center; gap:7px; margin:8px 0 18px; padding:8px 10px; overflow-x:auto; overscroll-behavior-x:contain; scrollbar-width:thin; border:1px solid rgba(51,65,85,.88); border-radius:12px; background:rgba(9,13,22,.94); box-shadow:0 8px 24px rgba(0,0,0,.2); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+  #common-home .pd-home-category-jump-label { flex:0 0 auto; padding:0 5px; color:#67dced; font-size:10px; font-weight:850; letter-spacing:.1em; text-transform:uppercase; }
+  #common-home .pd-home-category-jump a { flex:0 0 auto; padding:7px 11px; border:1px solid #263449; border-radius:999px; background:#101827; color:#dbe7f5; font-size:11px; font-weight:750; line-height:1.2; text-decoration:none; white-space:nowrap; transition:background .18s ease,border-color .18s ease,color .18s ease; }
+  #common-home .pd-home-category-jump a:hover,
+  #common-home .pd-home-category-jump a:focus-visible,
+  #common-home .pd-home-category-jump a.is-active { border-color:#2ee7ff; background:rgba(46,231,255,.12); color:#2ee7ff; outline:none; }
+  #common-home .pd-home-section.is-sale { border-color:rgba(244,63,94,.55); }
+  #common-home .pd-home-section.is-sale { padding:clamp(12px,1.5vw,18px); background:radial-gradient(ellipse at 50% 0,rgba(244,63,94,.12),transparent 54%),linear-gradient(145deg,#10121d,#0a0e17 76%); box-shadow:0 0 24px rgba(244,63,94,.09),inset 0 0 20px rgba(244,63,94,.035); }
+  #common-home .pd-home-flash-heading { align-items:center; }
+  #common-home .pd-home-flash-title { display:flex; align-items:center; gap:9px; }
+  #common-home .pd-home-flash-icon { display:grid; width:34px; height:34px; flex:0 0 34px; place-items:center; border:1px solid rgba(251,65,96,.45); border-radius:10px; background:rgba(244,63,94,.12); color:#fb4160; box-shadow:0 0 16px rgba(244,63,94,.16); }
+  #common-home .pd-home-flash-copy { display:block; }
+  #common-home .pd-home-flash-copy .pd-home-eyebrow { color:#fb4160; }
+  #common-home .pd-home-flash-copy h2 { margin-top:2px; font-size:clamp(16px,1.7vw,21px); }
+  #common-home .pd-home-flash-timer { display:flex; flex:0 0 auto; align-items:center; gap:8px; padding:7px 10px; border:1px solid rgba(251,65,96,.34); border-radius:9px; background:rgba(244,63,94,.08); color:#fda4af; font-size:10px; font-weight:750; }
+  #common-home .pd-home-flash-timer output { color:#fb7185; font-size:13px; font-variant-numeric:tabular-nums; letter-spacing:.08em; }
+  #common-home .pd-home-flash-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+  #common-home .pd-home-flash-card { position:relative; min-width:0; padding:5px; border:1px solid rgba(71,85,105,.72); border-radius:12px; background:rgba(15,23,42,.58); }
+  #common-home .pd-home-flash-card::before { position:absolute; z-index:2; top:11px; right:11px; padding:3px 7px; border:1px solid rgba(255,255,255,.13); border-radius:999px; background:linear-gradient(135deg,#fb4160,#e11d48); box-shadow:0 2px 9px rgba(225,29,72,.35); color:#fff; content:"HOT"; font-size:9px; font-weight:850; letter-spacing:.06em; pointer-events:none; }
+  #common-home .pd-home-flash-card .pd-product-card { border-color:rgba(71,85,105,.58); border-radius:9px; background:#0b111b; }
+  #common-home .pd-home-flash-card .pd-card-image-wrap { margin-top:0; }
+  #common-home .pd-home-flash-card .pd-card-body { padding:7px !important; }
+  #common-home .pd-home-flash-card .pd-card-title { font-size:11px; }
+  #common-home .pd-home-flash-card .pd-card-price-wrap { margin-bottom:1px !important; }
+  #common-home .pd-home-section-heading { display:flex; align-items:end; justify-content:space-between; gap:12px; margin-bottom:15px; padding-bottom:12px; border-bottom:1px solid rgba(51,65,85,.72); }
+  #common-home .pd-home-eyebrow { color:#2ee7ff; font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+  #common-home .pd-home-section-heading h2 { margin:4px 0 0; color:#f1f5f9; font-size:clamp(18px,2vw,24px); font-weight:800; }
+  #common-home .pd-home-more { display:inline-flex; flex:0 0 auto; align-items:center; gap:7px; color:#2ee7ff; font-size:12px; font-weight:750; text-decoration:none; }
+  #common-home .pd-home-more:hover { color:#fff; }
+  #common-home .pd-home-product-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+  #common-home .pd-home-category-layout { display:grid; grid-template-columns:minmax(190px,.78fr) minmax(0,2.22fr); gap:13px; }
+  #common-home .pd-home-category-promo { position:relative; display:flex; min-height:270px; flex-direction:column; align-items:flex-start; justify-content:space-between; gap:16px; padding:19px; overflow:hidden; border:1px solid rgba(46,231,255,.3); border-radius:13px; background:radial-gradient(ellipse at 12% 0,rgba(46,231,255,.16),transparent 52%),linear-gradient(160deg,#111e30,#0b111c); isolation:isolate; }
+  #common-home .pd-home-category-image { position:absolute; z-index:-2; inset:0 0 0 auto; width:76%; height:100%; object-fit:cover; object-position:center; opacity:.72; transition:transform .45s ease,opacity .25s ease; -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.28) 24%,#000 72%); mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.28) 24%,#000 72%); }
+  #common-home .pd-home-category-promo::after { position:absolute; z-index:-1; inset:0; background:linear-gradient(90deg,rgba(8,13,22,.97) 0%,rgba(8,13,22,.78) 39%,rgba(8,13,22,.12) 100%),linear-gradient(0deg,rgba(8,13,22,.72),transparent 54%); content:""; pointer-events:none; }
+  #common-home .pd-home-category-promo:hover .pd-home-category-image { opacity:.88; transform:scale(1.04); }
+  #common-home .pd-home-category-copy { position:relative; z-index:1; max-width:100%; }
+  #common-home .pd-home-category-promo h3 { margin:9px 0 7px; color:#f8fafc; font-size:clamp(18px,2vw,24px); font-weight:800; text-shadow:0 2px 12px rgba(0,0,0,.34); }
+  #common-home .pd-home-category-promo p { max-width:30ch; margin:0; color:#c3d0df; font-size:12px; line-height:1.55; text-shadow:0 1px 8px rgba(0,0,0,.45); }
+  #common-home .pd-home-category-promo .pd-home-more { position:relative; z-index:1; padding:9px 11px; border:1px solid rgba(46,231,255,.52); border-radius:9px; background:rgba(8,18,29,.72); color:#49e9fa; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
+  #common-home .pd-home-category-products { display:grid; min-width:0; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  #common-home .pd-home-category-products > * { min-width:0; }
+  #common-home .pd-home-products-module { padding:10px 0 0; }
+  #common-home .pd-home-products-module .row { --bs-gutter-x:12px; --bs-gutter-y:12px; }
+  #common-home .pd-home-products-module .product-thumb { min-width:0; max-width:100%; border-color:#263449; border-radius:12px; background:#0e1521; }
+  @media(max-width:991.98px) {
+    #common-home .pd-home-product-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    #common-home .pd-home-category-products { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    #common-home .pd-home-category-layout { grid-template-columns:minmax(170px,.7fr) minmax(0,2.3fr); }
+    #common-home .pd-home-brand-list { justify-content:flex-start; }
+  }
+  @media(max-width:767.98px) {
+    #common-home.pd-store-home { padding:10px 8px 30px; }
+    #common-home .pd-home-module,#common-home .pd-home-section { margin-bottom:14px; padding:11px; border-radius:13px; }
+    #common-home .pd-home-product-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+    #common-home .pd-home-category-layout { grid-template-columns:1fr; }
+    #common-home .pd-home-category-promo { min-height:190px; padding:16px; }
+    #common-home .pd-home-category-image { width:72%; opacity:.78; }
+    #common-home .pd-home-category-promo h3 { max-width:22ch; font-size:20px; }
+    #common-home .pd-home-category-promo p { max-width:34ch; }
+    #common-home .pd-home-category-products { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+    #common-home .pd-home-section-heading { align-items:flex-start; }
+    #common-home .pd-home-flash-heading { align-items:center; flex-wrap:wrap; }
+    #common-home .pd-home-flash-title { flex:1 1 150px; }
+    #common-home .pd-home-flash-heading > .pd-home-more { order:3; margin-right:auto; }
+    #common-home .pd-home-flash-heading > .pd-home-flash-timer { margin-left:auto; }
+    #common-home .pd-home-flash-timer { gap:5px; padding:6px 7px; font-size:9px; }
+    #common-home .pd-home-flash-timer output { font-size:11px; }
+    #common-home .pd-home-flash-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+    #common-home .pd-home-flash-card { padding:3px; }
+    #common-home .pd-home-flash-card::before { top:8px; right:8px; font-size:8px; }
+    #common-home .pd-home-brand-wall { align-items:flex-start; flex-direction:column; }
+    #common-home .pd-home-brand-list { width:100%; overflow:auto; }
+    #common-home .pd-home-more { font-size:11px; }
+  }
+</style>
+
+<main id="common-home" class="container-fluid pd-store-home">
+  <div class="container">
+    <div class="row pd-home-layout">
+      {{ column_left }}
+      <div id="content" class="col">
+        {% if content_top %}<section class="pd-home-module pd-home-hero-modules">{{ content_top }}</section>{% endif %}
+
+        {% if home_catalog_sections %}
+          <nav class="pd-home-category-jump" aria-label="{{ text_discover_categories }}">
+            <span class="pd-home-category-jump-label"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> {{ text_home_explore }}</span>
+            {% for section in home_catalog_sections %}<a href="#home-category-{{ loop.index }}" data-category-jump>{{ section.name }}</a>{% endfor %}
+          </nav>
+        {% endif %}
+
+        {% if home_brands %}
+          <nav class="pd-home-brand-wall" aria-label="{{ text_brand }}">
+            <span class="pd-home-brand-label"><i class="fa-solid fa-award" aria-hidden="true"></i> {{ text_brand }}</span>
+            <div class="pd-home-brand-list">
+              {% for brand in home_brands %}
+                <a class="pd-home-brand" href="{{ brand.href }}">{% if brand.image %}<img src="{{ brand.image }}" alt="{{ brand.name }}" loading="lazy" />{% else %}{{ brand.name }}{% endif %}</a>
+              {% endfor %}
+            </div>
+          </nav>
+        {% endif %}
+
+        {% if home_flash_products %}
+          <section class="pd-home-section is-sale" aria-label="{{ home_flash_title }}">
+            <header class="pd-home-section-heading pd-home-flash-heading">
+              <div class="pd-home-flash-title"><span class="pd-home-flash-icon"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span><div class="pd-home-flash-copy"><span class="pd-home-eyebrow">{{ text_flash_eyebrow }}</span><h2>{{ home_flash_title }}</h2></div></div>
+              {% if home_has_specials %}<a class="pd-home-more" href="{{ home_flash_href }}">{{ text_view_all }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>{% endif %}
+              <div class="pd-home-flash-timer"><span>{{ text_refresh_in }}</span><output data-flash-countdown="{{ remaining_seconds }}" aria-live="off">--:--:--</output></div>
+            </header>
+            <div class="pd-home-flash-grid">{% for product in home_flash_products %}<div class="pd-home-flash-card">{{ product }}</div>{% endfor %}</div>
+          </section>
+        {% endif %}
+
+        {% for section in home_catalog_sections %}
+          <section id="home-category-{{ loop.index }}" class="pd-home-section" aria-label="{{ text_category_aria_label|format(section.name) }}">
+            <header class="pd-home-section-heading">
+              <div><h2>{{ section.name }}</h2></div>
+              <a class="pd-home-more" href="{{ section.href }}">{{ text_view_all }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </header>
+            <div class="pd-home-category-layout">
+              <aside class="pd-home-category-promo">
+                {% if section.image %}<img class="pd-home-category-image" src="{{ section.image }}" alt="" aria-hidden="true" loading="lazy" decoding="async" />{% endif %}
+                <div class="pd-home-category-copy"><span class="pd-home-eyebrow">{{ text_category_eyebrow }}</span><h3>{{ section.name }}</h3><p>{% if section.description %}{{ section.description }}{% else %}{{ text_category_description|format(section.name) }}{% endif %}</p></div>
+                <a class="pd-home-more" href="{{ section.href }}">{{ text_explore_now }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+              </aside>
+              <div class="pd-home-category-products">{% for product in section.products %}<div>{{ product }}</div>{% endfor %}</div>
+            </div>
+          </section>
+        {% endfor %}
+
+      </div>
+      {{ column_right }}
+    </div>
+  </div>
+</main>
+
+<script>
+(() => {
+  const countdown = document.querySelector('[data-flash-countdown]');
+  if (countdown) {
+    let remaining = Math.max(0, parseInt(countdown.dataset.flashCountdown || '0', 10));
+    const updateCountdown = () => {
+      const hours = String(Math.floor(remaining / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
+      const remainder = String(remaining % 60).padStart(2, '0');
+      countdown.textContent = `${hours}:${minutes}:${remainder}`;
+      if (remaining <= 0) {
+        window.pdReloadWithinShop();
+        return;
+      }
+      remaining--;
+    };
+    updateCountdown();
+    window.setInterval(updateCountdown, 1000);
+  }
+
+  const links = [...document.querySelectorAll('#common-home [data-category-jump]')];
+  const sections = links.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+  if (!('IntersectionObserver' in window) || !links.length) return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      links.forEach((link) => {
+        const active = link.getAttribute('href') === `#${entry.target.id}`;
+        link.classList.toggle('is-active', active);
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    });
+  }, { rootMargin: '-25% 0px -65% 0px' });
+  sections.forEach((section) => observer.observe(section));
+})();
+</script>
+
+{{ footer }}

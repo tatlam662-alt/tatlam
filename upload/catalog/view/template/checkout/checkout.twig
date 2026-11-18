@@ -1,0 +1,89 @@
+{{ header }}
+<div id="checkout-checkout" class="container pd-checkout-page">
+  <ul class="breadcrumb pd-checkout-breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ breadcrumb.href|escape }}">{{ breadcrumb.text|escape }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <div class="row">
+    {{ column_left }}
+    <main id="content" class="col">
+      {{ content_top }}
+      <div class="mb-3"><a href="{{ cart_url|escape }}" class="pd-checkout-back-cart"><i class="fa-solid fa-arrow-left me-1" aria-hidden="true"></i> Quay lại giỏ hàng</a></div>
+      <header class="checkout-header-hero">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+          <div>
+            <span class="pd-flash-kicker">PANDASHOP · THANH TOÁN AN TOÀN</span>
+            <h1 class="pd-section-title mb-1"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Thanh toán an toàn PanDaShop</h1>
+            <p class="mb-0">Kiểm tra thông tin người nhận, địa chỉ giao hàng và phương thức thanh toán trước khi xác nhận.</p>
+          </div>
+          <div class="pd-checkout-assurances" aria-label="Cam kết thanh toán"><span><i class="fa-solid fa-lock" aria-hidden="true"></i> Bảo mật SSL</span><span><i class="fa-solid fa-headset" aria-hidden="true"></i> Hỗ trợ khách hàng</span><span><i class="fa-solid fa-truck-fast" aria-hidden="true"></i> Giao hàng toàn quốc</span></div>
+        </div>
+      </header>
+
+      <div class="row g-4 pd-checkout-layout">
+        <section class="col-12 col-lg-7" aria-label="Th&#244;ng tin kh&#225;ch h&#224;ng v&#224; &#273;&#7883;a ch&#7881; giao h&#224;ng">
+          {% if register %}<div id="checkout-register">{{ register }}</div>{% endif %}
+          {% if payment_address %}<div id="checkout-payment-address">{{ payment_address }}</div>{% endif %}
+          {% if shipping_address %}<div id="checkout-shipping-address">{{ shipping_address }}</div>{% endif %}
+        </section>
+        <section class="col-12 col-lg-5" aria-label="V&#7853;n chuy&#7875;n v&#224; &#273;&#417;n h&#224;ng">
+          {% if shipping_method %}<div id="checkout-shipping-method" class="mb-3">{{ shipping_method }}</div>{% endif %}
+          <div id="checkout-payment-method" class="mb-3">{{ payment_method }}</div>
+          <aside class="summary-side-card" aria-label="Tóm tắt đơn hàng">
+            <div class="summary-title-bar"><h2 class="h5 mb-0">Đơn hàng của bạn</h2><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i></div>
+            <div id="checkout-confirm">{{ confirm }}</div>
+          </aside>
+        </section>
+      </div>
+      {{ content_bottom }}
+    </main>
+    {{ column_right }}
+  </div>
+</div>
+
+<script>
+(function () {
+  var bar = document.querySelector('#checkout-checkout > .pd-checkout-breadcrumb');
+  var header = document.querySelector('.pd-header');
+  if (!bar || !header) return;
+
+  var spacer = document.createElement('div');
+  spacer.setAttribute('aria-hidden', 'true');
+  var documentTop = bar.getBoundingClientRect().top + window.scrollY;
+  var pinned = false;
+
+  function updateBreadcrumb() {
+    var headerBottom = Math.max(0, header.getBoundingClientRect().bottom);
+    var shouldPin = window.scrollY + headerBottom >= documentTop;
+
+    if (shouldPin && !pinned) {
+      spacer.style.height = bar.getBoundingClientRect().height + 'px';
+      bar.insertAdjacentElement('afterend', spacer);
+      bar.classList.add('pd-checkout-breadcrumb-fixed');
+      pinned = true;
+    } else if (!shouldPin && pinned) {
+      bar.classList.remove('pd-checkout-breadcrumb-fixed');
+      spacer.remove();
+      pinned = false;
+    }
+
+    if (pinned) {
+      var bounds = document.querySelector('#checkout-checkout').getBoundingClientRect();
+      bar.style.top = headerBottom + 'px';
+      bar.style.left = bounds.left + 'px';
+      bar.style.width = bounds.width + 'px';
+    }
+  }
+
+  window.addEventListener('scroll', updateBreadcrumb, { passive: true });
+  window.addEventListener('resize', function () {
+    if (!pinned) documentTop = bar.getBoundingClientRect().top + window.scrollY;
+    updateBreadcrumb();
+  });
+  updateBreadcrumb();
+})();
+</script>
+
+{{ footer }}
